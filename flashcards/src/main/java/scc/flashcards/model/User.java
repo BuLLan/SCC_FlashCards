@@ -9,9 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 @XmlRootElement
 @ApiModel(value="User", description="Simple User Model for our WebService")
 public class User {
-
-	@XmlElement(name = "user-id", required = true)
-	@ApiModelProperty(value = "Id of the User")
+	
 	private int id;
 	private String firstName;
 	private String lastName;

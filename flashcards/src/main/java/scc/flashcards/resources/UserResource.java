@@ -82,7 +82,7 @@ public class UserResource {
 	 */
 	@Path("/{userid}")
 	@GET
-	@Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
+	@Produces({"application/json","application/xml"})
 	@ApiOperation(value="getUserByID",
 		notes="Returns the user object which has the given ID")
 	public User getUserById(
