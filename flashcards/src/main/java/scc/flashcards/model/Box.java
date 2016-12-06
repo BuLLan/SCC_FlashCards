@@ -19,6 +19,8 @@ public class Box {
 	
 	private User owner;
 	
+	private Collection<FlashCard> flashcards;
+	
 	
 	public Box(String title, int category_id, int subcategory_id, Collection<String> tags, User owner) {
 		super();
@@ -75,6 +77,14 @@ public class Box {
 
 	public void setOwner(User owner) {
 		this.owner = owner;
+	}
+
+	public Collection<FlashCard> getFlashcards() {
+		return flashcards;
+	}
+
+	public void setFlashcards(Collection<FlashCard> flashcards) {
+		this.flashcards = flashcards;
 	}
 	
 	

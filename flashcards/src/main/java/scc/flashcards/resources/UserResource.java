@@ -10,14 +10,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import scc.flashcards.model.User;
+import scc.flashcards.repositories.UserRepository;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
@@ -30,28 +28,31 @@ public class UserResource {
 	
 	@Path("/testdb")
 	@ApiOperation(value="testDbConnection", notes="Tests the MYSQL Database connection")
+	@Produces({"application/json","application/xml"})
 	@GET
-	public boolean testDB(){
+	public User testDB(){
 		boolean result = true;
-		Connection conn = null;
+		UserRepository userRep = new UserRepository();
+		User user = new User();
+		user.setLogin("test_user");
+		user.setPassword("test user Password");
+		
+		/*
+		 * Test DB Write
+		 */
 		try {
-			DriverManager.registerDriver(new com.mysql.jdbc.Driver ());
-		    conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/javabase","root","root");
-		    // Do something with the Connection
-		    conn.close();
-		} catch (SQLException ex) {
-		    // handle any errors
+			userRep.addUser(user);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			result = false;
-		    System.out.println("SQLException: " + ex.getMessage());
-		    System.out.println("SQLState: " + ex.getSQLState());
-		    System.out.println("VendorError: " + ex.getErrorCode());
 		}
-	
-		return result;
+		
+		return user;
 	}
 	
 	/**
-	 * Gets alls users
+	 * Gets all users
 	 * @return a list of users
 	 */
 	@GET
@@ -81,12 +82,12 @@ public class UserResource {
 	 */
 	@Path("/{userid}")
 	@GET
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
 	@ApiOperation(value="getUserByID",
 		notes="Returns the user object which has the given ID")
 	public User getUserById(
 			@ApiParam(value="The ID of the user", required=true) @PathParam("userid") int userid){
-		return new User();
+		return new User(15,"Peter", "Petersen", "peteboy69@yahoo.de","ultrageheimespassword123");
 	}
 	
 	/**

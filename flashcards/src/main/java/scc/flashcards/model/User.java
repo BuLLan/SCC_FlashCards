@@ -12,20 +12,31 @@ public class User {
 
 	@XmlElement(name = "user-id", required = true)
 	@ApiModelProperty(value = "Id of the User")
-	private int Id;
-	@XmlElement(name = "first-name")
+	private int id;
 	private String firstName;
-	@XmlElement(name = "last-name")
 	private String lastName;
-	@XmlElement(name = "login", required = true)
 	private String login;
-	@XmlElement(name = "password", required = true)
 	private String password;
+	
+	/**
+	 * Empty Contructor for JAXB
+	 */
+	public User(){}
+
+	public User(int id, String firstName, String lastName, String login, String password) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.login = login;
+		this.password = password;
+	}
+
 	public int getId() {
-		return Id;
+		return this.id;
 	}
 	public void setId(int id) {
-		Id = id;
+		this.id = id;
 	}
 	public String getFirstName() {
 		return firstName;
