@@ -16,6 +16,7 @@ import io.swagger.annotations.ApiParam;
 import scc.flashcards.model.User;
 import scc.flashcards.repositories.UserRepository;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 
 /**
@@ -28,27 +29,29 @@ public class UserResource {
 	
 	@Path("/testdb")
 	@ApiOperation(value="testDbConnection", notes="Tests the MYSQL Database connection")
-	@Produces({"application/json","application/xml"})
+	//@Produces({"application/json","application/xml"})
+	@Produces(MediaType.TEXT_PLAIN)
 	@GET
-	public User testDB(){
+	public boolean testDB(){		
 		boolean result = true;
-		UserRepository userRep = new UserRepository();
 		User user = new User();
 		user.setLogin("test_user");
 		user.setPassword("test user Password");
-		
+		user.setFirstName("Peter");
+		user.setLastName("Pan");
+		Serializable id = null;
 		/*
 		 * Test DB Write
 		 */
 		try {
-			userRep.addUser(user);
-		} catch (SQLException e) {
+			id = user.persist();
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			result = false;
 		}
 		
-		return user;
+		return (id!=null);
 	}
 	
 	/**
