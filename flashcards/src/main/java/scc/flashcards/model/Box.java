@@ -21,9 +21,11 @@ public class Box {
 	
 	private Collection<FlashCard> flashcards;
 	
+	public Box(){}
 	
-	public Box(String title, int category_id, int subcategory_id, Collection<String> tags, User owner) {
+	public Box(int id, String title, int category_id, int subcategory_id, Collection<String> tags, User owner) {
 		super();
+		this.id = id;
 		this.title = title;
 		this.category_id = category_id;
 		this.subcategory_id = subcategory_id;
