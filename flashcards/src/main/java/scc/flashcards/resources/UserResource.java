@@ -3,18 +3,24 @@ package scc.flashcards.resources;
 import java.util.Collection;
 import java.util.Vector;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
+import org.eclipse.persistence.sessions.factories.SessionFactory;
+import org.hibernate.Session;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import scc.flashcards.model.User;
-import scc.flashcards.repositories.UserRepository;
+import scc.flashcards.persistence.PersistenceHelper;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -26,33 +32,6 @@ import java.sql.SQLException;
 @Api(value="Flashcards REST Service")
 @Produces(MediaType.TEXT_PLAIN)
 public class UserResource {
-	
-	@Path("/testdb")
-	@ApiOperation(value="testDbConnection", notes="Tests the MYSQL Database connection")
-	//@Produces({"application/json","application/xml"})
-	@Produces(MediaType.TEXT_PLAIN)
-	@GET
-	public boolean testDB(){		
-		boolean result = true;
-		User user = new User();
-		user.setLogin("test_user");
-		user.setPassword("test user Password");
-		user.setFirstName("Peter");
-		user.setLastName("Pan");
-		Serializable id = null;
-		/*
-		 * Test DB Write
-		 */
-		try {
-			id = user.persist();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			result = false;
-		}
-		
-		return (id!=null);
-	}
 	
 	/**
 	 * Gets all users
@@ -72,7 +51,27 @@ public class UserResource {
 	 * @return
 	 */
 	@POST
-	public boolean addUser(){
+	@ApiOperation(value="addUser",
+	notes="create a new User")
+	@Produces(MediaType.TEXT_PLAIN)
+	@Consumes("application/x-www-form-urlencoded")
+	public boolean addUser(@ApiParam(value="firstname", required=true) @FormParam("firstname") String firstname,
+						   @ApiParam(value="lastname", required=true) @FormParam("lastname") String lastname,
+						   @ApiParam(value="email", required=true) @FormParam("email") String email,
+						   @ApiParam(value="password", required=true) @FormParam("password") String password){
+		boolean result = true;
+		User user = new User(firstname, lastname, email, password);
+		Serializable id = null;
+		
+		
+		try {
+			user.persist();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			result = false;
+		}
+		
 		return false;
 	}
 	
@@ -88,9 +87,10 @@ public class UserResource {
 	@Produces({"application/json","application/xml"})
 	@ApiOperation(value="getUserByID",
 		notes="Returns the user object which has the given ID")
-	public User getUserById(
-			@ApiParam(value="The ID of the user", required=true) @PathParam("userid") int userid){
-		return new User(15,"Peter", "Petersen", "peteboy69@yahoo.de","ultrageheimespassword123");
+	public User getUserById(@ApiParam(value="The ID of the user", required=true) @PathParam("userid") int userid){
+		org.hibernate.SessionFactory sessionFactory = PersistenceHelper.getInstance().getSessionFactory();
+		Session ses = sessionFactory.openSession();
+		return ses.get(User.class, userid);
 	}
 	
 	/**
@@ -105,10 +105,13 @@ public class UserResource {
 	@ApiOperation(value="deleteUser",
 		notes="Returns true if user was deleted")
 	public boolean deleteUser(
-			@ApiParam(value="The ID of the user", required=true) @PathParam("userid") int userid){
-		/**
-		 * TODO: implement stub
-		 */
+			@ApiParam(value="The ID of the user to delete", required=true) @PathParam("userid") int userid){
+				org.hibernate.SessionFactory sessionFactory = PersistenceHelper.getInstance().getSessionFactory();
+				Session ses = sessionFactory.openSession();
+				ses.beginTransaction();
+				ses.delete(ses.get(User.class, userid));
+				ses.getTransaction().commit();
+				ses.close();
 		return true;
 	}
 	

@@ -1,8 +1,28 @@
 package scc.flashcards.model;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
-public class Box {
+import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.hibernate.annotations.GenericGenerator;
+
+import io.swagger.annotations.ApiModel;
+
+@XmlRootElement
+@ApiModel(value = "Box", description = "Simple Box Model for our WebService")
+@Entity(name = "Box")
+public class Box extends AbstractModel {
 	
 	private int id;
 	
@@ -15,24 +35,26 @@ public class Box {
 	
 	private int subcategory_id;
 	
-	private Collection<String> tags;
+	private String tags;
 	
-	private User owner;
+	private int owner_id;
 	
-	private Collection<FlashCard> flashcards;
+	private Set<FlashCard> flashcards;
 	
 	public Box(){}
 	
-	public Box(int id, String title, int category_id, int subcategory_id, Collection<String> tags, User owner) {
+	public Box(String title, int category_id, int subcategory_id, String tags, int owner_id) {
 		super();
-		this.id = id;
 		this.title = title;
 		this.category_id = category_id;
 		this.subcategory_id = subcategory_id;
 		this.tags = tags;
-		this.owner = owner;
+		this.owner_id = owner_id;
 	}
 
+	@Id
+	@GeneratedValue(generator = "increment")
+	@GenericGenerator(name = "increment", strategy = "increment")
 	public int getId() {
 		return id;
 	}
@@ -65,27 +87,30 @@ public class Box {
 		this.subcategory_id = subcategory_id;
 	}
 
-	public Collection<String> getTags() {
+	public String getTags() {
 		return tags;
 	}
 
-	public void setTags(Collection<String> tags) {
+	public void setTags(String tags) {
 		this.tags = tags;
 	}
 
-	public User getOwner() {
-		return owner;
+	public int getOwner() {
+		return owner_id;
 	}
 
-	public void setOwner(User owner) {
-		this.owner = owner;
+	public void setOwner(int owner) {
+		this.owner_id = owner;
 	}
 
-	public Collection<FlashCard> getFlashcards() {
+	@ElementCollection
+	@OneToMany(cascade=CascadeType.ALL)
+    @JoinColumn(name="box_id")
+	public Set<FlashCard> getFlashcards() {
 		return flashcards;
 	}
 
-	public void setFlashcards(Collection<FlashCard> flashcards) {
+	public void setFlashcards(Set<FlashCard> flashcards) {
 		this.flashcards = flashcards;
 	}
 	

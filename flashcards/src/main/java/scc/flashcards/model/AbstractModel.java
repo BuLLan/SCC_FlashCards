@@ -20,14 +20,12 @@ public abstract class AbstractModel {
 	/**
 	 * Adds or updates Entity in database
 	 */
-	public Serializable persist() {
+	public void persist() {
 		Session session = getSessionFactory().openSession();
 		session.beginTransaction();
-		Serializable id = session.save(this);
+		session.saveOrUpdate(this);
 		session.getTransaction().commit();
 		session.close();
-		
-		return id;
 	}
 	
 	/**
