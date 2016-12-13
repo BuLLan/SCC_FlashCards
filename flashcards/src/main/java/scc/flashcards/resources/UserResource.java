@@ -19,8 +19,10 @@ import org.hibernate.Session;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import scc.flashcards.model.FlashCard;
 import scc.flashcards.model.User;
 import scc.flashcards.persistence.PersistenceHelper;
+import scc.flashcards.service.ScoreService;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -32,6 +34,16 @@ import java.sql.SQLException;
 @Api(value="Flashcards REST Service")
 @Produces(MediaType.TEXT_PLAIN)
 public class UserResource {
+	
+	@GET
+	@Path("/test")
+	@Produces({"application/json","application/xml"})
+	@ApiOperation(value="testFlashCardService",
+	notes="Returns next FlashCard")
+	public FlashCard testFunction(){
+		ScoreService ss = new ScoreService();
+		return ss.getCardWithLowestScore(1, 1);
+	}
 	
 	/**
 	 * Gets all users

@@ -171,13 +171,22 @@ public class BoxResource {
 						   		@ApiParam(value="boxid", required=true) @PathParam("boxid") int boxid){
 		boolean result = true;
 		org.hibernate.SessionFactory sessionFactory = PersistenceHelper.getInstance().getSessionFactory();
-		FlashCard fc = new FlashCard(frontpage, backpage,boxid);
-		Serializable id = null;
 		Session se = sessionFactory.openSession();
-		Box box = se.get(Box.class, boxid);
-		Set<FlashCard> fc_set = box.getFlashcards();
-		fc_set.add(fc);
-		box.setFlashcards(fc_set);
+		
+		Box box;
+		try {
+			box = se.get(Box.class, boxid);
+			FlashCard fc = new FlashCard(frontpage, backpage, box);
+			Serializable id = null;
+			Set<FlashCard> fc_set = box.getFlashcards();
+			fc_set.add(fc);
+			box.setFlashcards(fc_set);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return false;
+		}
+		
 		se.close();
 		
 		try {

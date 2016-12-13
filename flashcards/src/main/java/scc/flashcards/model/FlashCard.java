@@ -23,15 +23,15 @@ public class FlashCard extends AbstractModel{
 	
 	private String backpage;
 	
-	private int box_id;
+	private Box box;
 	
 	public FlashCard(){}
 	
-	public FlashCard(String frontpage, String backpage, int box_id) {
+	public FlashCard(String frontpage, String backpage, Box box) {
 		super();
 		this.frontpage = frontpage;
 		this.backpage = backpage;
-		this.box_id = box_id;
+		this.box = box;
 	}
 	
 	@Id
@@ -61,12 +61,15 @@ public class FlashCard extends AbstractModel{
 		this.backpage = backpage;
 	}
 
-	public int getBox_id() {
-		return box_id;
+	@ManyToOne
+	public Box getBox() {
+		return box;
 	}
 
-	public void setBox_id(int box_id) {
-		this.box_id = box_id;
+	public void setBox(Box box) {
+		this.box = box;
 	}
+
+	
 
 }

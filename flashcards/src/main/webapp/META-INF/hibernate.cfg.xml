@@ -10,5 +10,6 @@
   <mapping class="scc.flashcards.model.User"/>
   <mapping class="scc.flashcards.model.Box"/>
   <mapping class="scc.flashcards.model.FlashCard"/>
+  <mapping class="scc.flashcards.model.FlashCardScore"/>
  </session-factory>
 </hibernate-configuration>
