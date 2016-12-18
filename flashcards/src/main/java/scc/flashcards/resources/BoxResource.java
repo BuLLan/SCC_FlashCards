@@ -2,6 +2,7 @@ package scc.flashcards.resources;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -46,12 +47,14 @@ public class BoxResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value="getAllBoxes",
 	notes="Returns a list of all users")
-	public List<User> getAllBoxes() {
+	public List<Box> getAllBoxes() {
 		org.hibernate.SessionFactory sessionFactory = PersistenceHelper.getInstance().getSessionFactory();
 		Session ses = sessionFactory.openSession();
-		List<User> allBoxes = ses.createCriteria(Box.class).list();
-		ses.close();
-		return allBoxes;
+		final List<Box> list = new LinkedList<>();
+		for(final Object o : ses.createCriteria(Box.class).list()) {
+		    list.add((Box)o);
+		}
+		return list;
 	}
 	
 	/**

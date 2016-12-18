@@ -1,6 +1,8 @@
 package scc.flashcards.resources;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.ws.rs.Consumes;
@@ -19,6 +21,7 @@ import org.hibernate.Session;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import scc.flashcards.model.Box;
 import scc.flashcards.model.User;
 import scc.flashcards.persistence.PersistenceHelper;
 
@@ -41,9 +44,14 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value="getAllUsers",
 	notes="Returns a list of all users")
-	public Collection<User> getAllUsers() {
-		Collection<User> allUsers = new Vector<User>();
-		return allUsers;
+	public List<User> getAllUsers() {
+		org.hibernate.SessionFactory sessionFactory = PersistenceHelper.getInstance().getSessionFactory();
+		Session ses = sessionFactory.openSession();
+		final List<User> list = new LinkedList<>();
+		for(final Object o : ses.createCriteria(User.class).list()) {
+		    list.add((User)o);
+		}
+		return list;
 	}
 	
 	/**
