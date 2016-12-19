@@ -25,6 +25,7 @@ import scc.flashcards.model.Box;
 import scc.flashcards.model.User;
 import scc.flashcards.persistence.PersistenceHelper;
 
+import java.io.Console;
 import java.io.Serializable;
 import java.sql.SQLException;
 
