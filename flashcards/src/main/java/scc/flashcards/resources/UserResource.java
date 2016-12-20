@@ -33,7 +33,7 @@ import java.sql.SQLException;
  * Webservice Resource for User model
  */
 @Path("/users")
-@Api(value="Flashcards REST Service")
+@Api(value="/users", tags={"User Service"})
 @Produces(MediaType.TEXT_PLAIN)
 public class UserResource {
 	
