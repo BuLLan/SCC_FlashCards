@@ -10,5 +10,9 @@
   <mapping class="scc.flashcards.model.User"/>
   <mapping class="scc.flashcards.model.Box"/>
   <mapping class="scc.flashcards.model.FlashCard"/>
+  <mapping class="scc.flashcards.model.Page"/>
+  <mapping class="scc.flashcards.model.Category"/>
+  <mapping class="scc.flashcards.model.Comment"/>
+  <mapping class="scc.flashcards.model.Group"/>
  </session-factory>
 </hibernate-configuration>

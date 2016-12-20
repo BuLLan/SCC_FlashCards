@@ -1,15 +1,28 @@
 package scc.flashcards.model;
 
+import java.util.List;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.GenericGenerator;
 
 import io.swagger.annotations.ApiModel;
+import javassist.expr.Cast;
 
 @XmlRootElement
 @ApiModel(value = "FlashCard", description = "Simple Flash Card Model for our WebService")
@@ -17,56 +30,74 @@ import io.swagger.annotations.ApiModel;
 public class FlashCard extends AbstractModel{
 	
 	
-	private int id;
-	
-	private String frontpage;
-	
-	private String backpage;
-	
-	private int box_id;
-	
-	public FlashCard(){}
-	
-	public FlashCard(String frontpage, String backpage, int box_id) {
-		super();
-		this.frontpage = frontpage;
-		this.backpage = backpage;
-		this.box_id = box_id;
-	}
-	
 	@Id
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
+	private int id;
+	
 	public int getId() {
 		return id;
 	}
-
 	public void setId(int id) {
 		this.id = id;
 	}
-
-	public String getFrontpage() {
+	
+	@Embedded
+	@AttributeOverrides( {
+        @AttributeOverride(name="content", column = @Column(name="frontpage") ),
+        @AttributeOverride(name="contentType", column = @Column(name="frontpage_type") )
+	} )
+	private Page frontpage;
+	public Page getFrontpage() {
 		return frontpage;
 	}
-
-	public void setFrontpage(String frontpage) {
+	public void setFrontpage(Page frontpage) {
 		this.frontpage = frontpage;
 	}
-
-	public String getBackpage() {
+	
+	@Embedded
+	@AttributeOverrides( {
+        @AttributeOverride(name="content", column = @Column(name="backpage") ),
+        @AttributeOverride(name="contentType", column = @Column(name="backpage_type") )
+	} )
+	private Page backpage;
+	public Page getBackpage() {
 		return backpage;
 	}
-
-	public void setBackpage(String backpage) {
+	public void setBackpage(Page backpage) {
 		this.backpage = backpage;
 	}
-
-	public int getBox_id() {
-		return box_id;
+	
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="flashcard_id", referencedColumnName="id")
+	private List<Comment> comments;
+	public List<Comment> getComments() {
+		return comments;
+	}
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
 	}
 
-	public void setBox_id(int box_id) {
-		this.box_id = box_id;
+	@Column(name="box_id")
+	private int boxId;
+	public int getBoxId() {
+		return boxId;
 	}
+	public void setBox(int boxId) {
+		this.boxId = boxId;
+	}
+	
+	public FlashCard(){}
+	
+	public FlashCard(Page frontpage, Page backpage, int boxId) {
+		super();
+		this.frontpage = frontpage;
+		this.backpage = backpage;
+		this.boxId = boxId;
+	}
+	
+
+
+	
 
 }

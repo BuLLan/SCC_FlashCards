@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -31,9 +32,9 @@ public class Box extends AbstractModel {
 	 */
 	private String title;
 	
-	private int category_id;
+	private Category category;
 	
-	private int subcategory_id;
+	private Category subcategory;
 	
 	private String tags;
 	
@@ -43,11 +44,11 @@ public class Box extends AbstractModel {
 	
 	public Box(){}
 	
-	public Box(String title, int category_id, int subcategory_id, String tags, int owner_id) {
+	public Box(String title, Category category, Category subcategory, String tags, int owner_id) {
 		super();
 		this.title = title;
-		this.category_id = category_id;
-		this.subcategory_id = subcategory_id;
+		this.category = category;
+		this.subcategory = subcategory;
 		this.tags = tags;
 		this.owner_id = owner_id;
 	}
@@ -71,20 +72,24 @@ public class Box extends AbstractModel {
 		this.title = title;
 	}
 
-	public int getCategory_id() {
-		return category_id;
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="category_id", referencedColumnName="id")
+	public Category getCategory() {
+		return category;
 	}
 
-	public void setCategory_id(int category_id) {
-		this.category_id = category_id;
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 
-	public int getSubcategory_id() {
-		return subcategory_id;
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="subcategory_id", referencedColumnName="id")
+	public Category getSubcategory() {
+		return subcategory;
 	}
 
-	public void setSubcategory_id(int subcategory_id) {
-		this.subcategory_id = subcategory_id;
+	public void setSubcategory(Category subcategory) {
+		this.subcategory = subcategory;
 	}
 
 	public String getTags() {
@@ -104,8 +109,8 @@ public class Box extends AbstractModel {
 	}
 
 	@ElementCollection
-	@OneToMany(cascade=CascadeType.ALL)
-    @JoinColumn(name="box_id")
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="box_id", referencedColumnName="id")
 	public Set<FlashCard> getFlashcards() {
 		return flashcards;
 	}
@@ -113,6 +118,17 @@ public class Box extends AbstractModel {
 	public void setFlashcards(Set<FlashCard> flashcards) {
 		this.flashcards = flashcards;
 	}
+	
+	private boolean isPublic;
+	public boolean isPublic() {
+		return isPublic;
+	}
+
+	public void setPublic(boolean isPublic) {
+		this.isPublic = isPublic;
+	}
+
+	
 	
 	
 }
