@@ -1,9 +1,8 @@
 package scc.flashcards.resources;
 
-import java.util.Collection;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -15,19 +14,13 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.eclipse.persistence.sessions.factories.SessionFactory;
 import org.hibernate.Session;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import scc.flashcards.model.Box;
 import scc.flashcards.model.User;
 import scc.flashcards.persistence.PersistenceHelper;
-
-import java.io.Console;
-import java.io.Serializable;
-import java.sql.SQLException;
 
 /**
  * Webservice Resource for User model

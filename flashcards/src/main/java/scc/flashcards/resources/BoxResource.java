@@ -1,11 +1,8 @@
 package scc.flashcards.resources;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -18,7 +15,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.hibernate.Session;
@@ -27,16 +23,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import scc.flashcards.model.Box;
+import scc.flashcards.model.Category;
+import scc.flashcards.model.Comment;
 import scc.flashcards.model.ContentType;
 import scc.flashcards.model.FlashCard;
 import scc.flashcards.model.Page;
-import scc.flashcards.model.User;
-import scc.flashcards.model.Category;
-import scc.flashcards.model.Comment;
 import scc.flashcards.persistence.PersistenceHelper;
-
-import java.io.Serializable;
-import java.sql.SQLException;
 
 /**
  * Webservice Resource for Box model

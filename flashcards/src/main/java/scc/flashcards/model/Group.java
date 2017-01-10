@@ -3,76 +3,101 @@ package scc.flashcards.model;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.GenericGenerator;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
-@XmlRootElement
+
 @ApiModel(value = "Group", description = "Groups can share boxes and comments")
-@Entity(name = "FlashCard")
+@Entity(name = "Group")
+@Table(name="groups")
+@XmlRootElement
 public class Group extends AbstractModel{
 
-	private Integer id;
+	private int id;
 	
-	private String name;
+	private String title;
 	
-	private Set<User> members;
+	private String description;
 	
-	private Set<Box> sharedBoxes;
+	private Set<User> users;
+	
+	private Set<Box> boxes;
 	
 	public Group(){}
+
+	public Group(Integer id, String title, String description, Set<User> users, Set<Box> boxes) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.description = description;
+		this.users = users;
+		this.boxes = boxes;
+	}
 
 	@Id
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
-	public Integer getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
-	@ManyToMany
-	@JoinTable(name = "group_members",  joinColumns = {
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	@ApiModelProperty(hidden=true)
+	@ManyToMany(fetch=FetchType.EAGER)
+	@JoinTable(name = "group_users",  joinColumns = {
 			@JoinColumn(name = "group_id", referencedColumnName="id", nullable = false, updatable = false) },
 			inverseJoinColumns = { 
-					@JoinColumn(name = "member_id", referencedColumnName="id", nullable = false, updatable = false) })
-	public Set<User> getMembers() {
-		return members;
+					@JoinColumn(name = "user_id", referencedColumnName="id", nullable = false, updatable = false) })
+	public Set<User> getUsers() {
+		return this.users;
 	}
 
-	public void setMembers(Set<User> members) {
-		this.members = members;
+	public void setUsers(Set<User> users) {
+		this.users = users;
 	}
 
-	@ManyToMany
+	@ApiModelProperty(hidden=true)
+	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "group_boxes",  joinColumns = {
 			@JoinColumn(name = "group_id", referencedColumnName="id", nullable = false, updatable = false) },
 			inverseJoinColumns = { 
 					@JoinColumn(name = "box_id", referencedColumnName="id", nullable = false, updatable = false) })
-	public Set<Box> getSharedBoxes() {
-		return sharedBoxes;
+	public Set<Box> getBoxes() {
+		return boxes;
 	}
 
-	public void setSharedBoxes(Set<Box> sharedBoxes) {
-		this.sharedBoxes = sharedBoxes;
-	};
-	
+	public void setBoxes(Set<Box> boxes) {
+		this.boxes = boxes;
+	}	
 	
 }

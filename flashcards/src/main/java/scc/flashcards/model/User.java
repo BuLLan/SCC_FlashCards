@@ -1,26 +1,20 @@
 package scc.flashcards.model;
 
-import javax.xml.bind.annotation.XmlElement;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import java.util.Set;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 
 @XmlRootElement
 @ApiModel(value = "User", description = "Simple User Model for our WebService")
 @Entity(name = "User")
 public class User extends AbstractModel {
 
-	private Integer id;
+	private int id;
 
 	private String firstName;
 
@@ -48,11 +42,11 @@ public class User extends AbstractModel {
 	@Id
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
-	public Integer getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

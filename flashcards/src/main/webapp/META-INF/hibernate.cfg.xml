@@ -14,5 +14,7 @@
   <mapping class="scc.flashcards.model.Category"/>
   <mapping class="scc.flashcards.model.Comment"/>
   <mapping class="scc.flashcards.model.Group"/>
+  <mapping class="scc.flashcards.model.NaiveLearningProfile"/>
+  <mapping class="scc.flashcards.model.AbstractLearningProfile"/>
  </session-factory>
 </hibernate-configuration>

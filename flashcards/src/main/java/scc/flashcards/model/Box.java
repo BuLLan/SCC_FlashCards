@@ -1,10 +1,7 @@
 package scc.flashcards.model;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,12 +10,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.GenericGenerator;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 @XmlRootElement
 @ApiModel(value = "Box", description = "Simple Box Model for our WebService")
@@ -27,9 +25,6 @@ public class Box extends AbstractModel {
 	
 	private int id;
 	
-	/**
-	 * Title of the Box
-	 */
 	private String title;
 	
 	private Category category;
@@ -41,6 +36,8 @@ public class Box extends AbstractModel {
 	private int owner_id;
 	
 	private Set<FlashCard> flashcards;
+	
+	private boolean isPublic;
 	
 	public Box(){}
 	
@@ -63,7 +60,9 @@ public class Box extends AbstractModel {
 	public void setId(int id) {
 		this.id = id;
 	}
-
+	
+	@ApiModelProperty(required=true)
+	@XmlAttribute(required=true)
 	public String getTitle() {
 		return title;
 	}
@@ -72,6 +71,8 @@ public class Box extends AbstractModel {
 		this.title = title;
 	}
 
+	@ApiModelProperty(required=true)
+	@XmlAttribute(required=true)
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="category_id", referencedColumnName="id")
 	public Category getCategory() {
@@ -100,6 +101,8 @@ public class Box extends AbstractModel {
 		this.tags = tags;
 	}
 
+	@ApiModelProperty(required=true)
+	@XmlAttribute(required=true)
 	public int getOwner() {
 		return owner_id;
 	}
@@ -119,7 +122,8 @@ public class Box extends AbstractModel {
 		this.flashcards = flashcards;
 	}
 	
-	private boolean isPublic;
+	@ApiModelProperty(required=true)
+	@XmlAttribute(required=true)
 	public boolean isPublic() {
 		return isPublic;
 	}
