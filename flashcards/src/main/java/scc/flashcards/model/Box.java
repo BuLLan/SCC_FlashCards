@@ -2,6 +2,7 @@ package scc.flashcards.model;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -111,9 +112,9 @@ public class Box extends AbstractModel {
 		this.owner_id = owner;
 	}
 
+	@ApiModelProperty(hidden = true)
 	@ElementCollection
-	@OneToMany(fetch=FetchType.EAGER)
-	@JoinColumn(name="box_id", referencedColumnName="id")
+	@OneToMany(mappedBy="box",fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	public Set<FlashCard> getFlashcards() {
 		return flashcards;
 	}
@@ -131,8 +132,5 @@ public class Box extends AbstractModel {
 	public void setPublic(boolean isPublic) {
 		this.isPublic = isPublic;
 	}
-
-	
-	
 	
 }

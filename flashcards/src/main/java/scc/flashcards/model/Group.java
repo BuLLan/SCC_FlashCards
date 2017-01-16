@@ -1,6 +1,7 @@
 package scc.flashcards.model;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,24 +18,22 @@ import org.hibernate.annotations.GenericGenerator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-
 @ApiModel(value = "Group", description = "Groups can share boxes and comments")
 @Entity(name = "Group")
-@Table(name="groups")
+@Table(name = "groups")
 @XmlRootElement
-public class Group extends AbstractModel{
+public class Group extends AbstractModel {
 
-	private int id;
-	
 	private String title;
-	
+
 	private String description;
-	
+
 	private Set<User> users;
-	
+
 	private Set<Box> boxes;
-	
-	public Group(){}
+
+	public Group() {
+	}
 
 	public Group(Integer id, String title, String description, Set<User> users, Set<Box> boxes) {
 		super();
@@ -43,17 +42,6 @@ public class Group extends AbstractModel{
 		this.description = description;
 		this.users = users;
 		this.boxes = boxes;
-	}
-
-	@Id
-	@GeneratedValue(generator = "increment")
-	@GenericGenerator(name = "increment", strategy = "increment")
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getTitle() {
@@ -72,12 +60,11 @@ public class Group extends AbstractModel{
 		this.description = description;
 	}
 
-	@ApiModelProperty(hidden=true)
-	@ManyToMany(fetch=FetchType.EAGER)
-	@JoinTable(name = "group_users",  joinColumns = {
-			@JoinColumn(name = "group_id", referencedColumnName="id", nullable = false, updatable = false) },
-			inverseJoinColumns = { 
-					@JoinColumn(name = "user_id", referencedColumnName="id", nullable = false, updatable = false) })
+	@ApiModelProperty(hidden = true)
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "group_users", joinColumns = {
+			@JoinColumn(name = "group_id", referencedColumnName = "id", nullable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false) })
 	public Set<User> getUsers() {
 		return this.users;
 	}
@@ -86,18 +73,29 @@ public class Group extends AbstractModel{
 		this.users = users;
 	}
 
-	@ApiModelProperty(hidden=true)
-	@ManyToMany(fetch=FetchType.EAGER)
-	@JoinTable(name = "group_boxes",  joinColumns = {
-			@JoinColumn(name = "group_id", referencedColumnName="id", nullable = false, updatable = false) },
-			inverseJoinColumns = { 
-					@JoinColumn(name = "box_id", referencedColumnName="id", nullable = false, updatable = false) })
+	@ApiModelProperty(hidden = true)
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "group_boxes", joinColumns = {
+			@JoinColumn(name = "group_id", referencedColumnName = "id", nullable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "box_id", referencedColumnName = "id", nullable = false) })
 	public Set<Box> getBoxes() {
 		return boxes;
 	}
 
 	public void setBoxes(Set<Box> boxes) {
 		this.boxes = boxes;
-	}	
-	
+	}
+
+	@Id
+	@GeneratedValue(generator = "increment")
+	@GenericGenerator(name = "increment", strategy = "increment")
+	public int getId() {
+		return this.id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+
+	}
+
 }

@@ -7,13 +7,13 @@
   <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/flashcards?useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC</property>
   <property name="hibernate.connection.username">root</property>
   <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+  <mapping class="scc.flashcards.model.Group"/>
   <mapping class="scc.flashcards.model.User"/>
   <mapping class="scc.flashcards.model.Box"/>
   <mapping class="scc.flashcards.model.FlashCard"/>
   <mapping class="scc.flashcards.model.Page"/>
   <mapping class="scc.flashcards.model.Category"/>
   <mapping class="scc.flashcards.model.Comment"/>
-  <mapping class="scc.flashcards.model.Group"/>
   <mapping class="scc.flashcards.model.NaiveLearningProfile"/>
   <mapping class="scc.flashcards.model.AbstractLearningProfile"/>
  </session-factory>

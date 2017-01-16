@@ -17,15 +17,8 @@ import io.swagger.annotations.ApiModel;
 @Entity(name = "Category")
 public class Category extends AbstractModel {
 
-	@Id
-	@GeneratedValue(generator = "increment")
-	@GenericGenerator(name = "increment", strategy = "increment")
-	private int id;
-	
 	private String title;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="parent_category_id", referencedColumnName="id")
 	private Category parent_category;
 	
 	public Category(){}
@@ -37,6 +30,9 @@ public class Category extends AbstractModel {
 		this.parent_category = parent_category;
 	}
 
+	@Id
+	@GeneratedValue(generator = "increment")
+	@GenericGenerator(name = "increment", strategy = "increment")
 	public int getId() {
 		return id;
 	}
@@ -53,6 +49,8 @@ public class Category extends AbstractModel {
 		this.title = title;
 	}
 
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="parent_category_id", referencedColumnName="id")
 	public Category getParent_category() {
 		return parent_category;
 	}

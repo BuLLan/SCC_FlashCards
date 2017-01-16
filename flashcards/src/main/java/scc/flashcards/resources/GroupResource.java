@@ -1,10 +1,11 @@
 package scc.flashcards.resources;
 
+import java.util.TreeSet;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -12,18 +13,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-
-import org.hibernate.Session;
 
 import com.owlike.genson.Genson;
-import com.owlike.genson.ext.jsr353.GensonJsonGenerator;
-import com.owlike.genson.ext.jsr353.GensonJsonGeneratorFactory;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import javassist.tools.rmi.ObjectNotFoundException;
 import scc.flashcards.model.Box;
 import scc.flashcards.model.Group;
 import scc.flashcards.model.User;
@@ -31,6 +26,7 @@ import scc.flashcards.persistence.PersistenceHelper;
 
 @Path("/group")
 @Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 @Api(value = "/group", tags = { "Group Resource" })
 public class GroupResource {
 
@@ -47,13 +43,16 @@ public class GroupResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Create a Group")
 	public Group createGroup(@ApiParam(name = "group", value = "The Group to be created") Group group) {
+		Group newGroup = new Group();
+		newGroup.setTitle(group.getTitle());
+		newGroup.setDescription(group.getDescription());
 		try {
-			group.persist();
+			newGroup.persist();
 		} catch (Exception e) {
-			group = null;
+			newGroup = null;
 			throw new ServerErrorException(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
 		}
-		return group;
+		return newGroup;
 	}
 
 	@POST
@@ -98,7 +97,29 @@ public class GroupResource {
 		Group group = PersistenceHelper.getById(group_id, Group.class);
 		Box box = PersistenceHelper.getById(box_id, Box.class);
 		try {
-			group.getBoxes().add(box);
+			TreeSet<Box> boxes = new TreeSet<Box>(group.getBoxes());
+			boxes.add(box);
+			group.setBoxes(boxes);
+			group.persist();
+		} catch (Exception e) {
+			return Response.serverError().entity(e).status(Response.Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.ok("Success").status(Response.Status.OK).build();
+	}
+
+	@DELETE
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@ApiOperation(value = "Remove Box from Group")
+	@Path("/{group_id}/boxes")
+	public Response removeBoxFromGroup(
+			@ApiParam(name = "group_id", value = "The id of the group") @PathParam("group_id") int group_id,
+			@ApiParam(name = "box_id", value = "The id of the box") @FormParam("box_id") int box_id) {
+		Group group = PersistenceHelper.getById(group_id, Group.class);
+		Box box = PersistenceHelper.getById(box_id, Box.class);
+		try {
+			TreeSet<Box> boxes = new TreeSet<Box>(group.getBoxes());
+			boxes.remove(box);
+			group.setBoxes(boxes);
 			group.persist();
 		} catch (Exception e) {
 			return Response.serverError().entity(e).status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -108,21 +129,22 @@ public class GroupResource {
 
 	@POST
 	@ApiOperation(value = "Add User to Group")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Path("/{group_id}/members/{user_id}")
 	public Response inviteUserToGroup(
 			@ApiParam(name = "group_id", value = "The id of the group") @PathParam("group_id") int group_id,
 			@ApiParam(name = "user_id", value = "The id of the new member") @PathParam("user_id") int user_id) {
 		Group group = PersistenceHelper.getById(group_id, Group.class);
-		User user= PersistenceHelper.getById(user_id, User.class);
-		try{
-		group.getUsers().add(user);
-		group.persist();
+		User user = PersistenceHelper.getById(user_id, User.class);
+		try {
+			TreeSet<User> users = new TreeSet<User>(group.getUsers());
+			users.add(user);
+			group.setUsers(users);
+			group.persist();
 		} catch (Exception e) {
 			return Response.serverError().entity(e).status(Response.Status.INTERNAL_SERVER_ERROR).build();
 		}
 		Genson jsonHelper = new Genson();
-		String json = jsonHelper.serialize(new Object(){
+		String json = jsonHelper.serialize(new Object() {
 			public int status = 200;
 			public String message = "User successfully added to group";
 		});
@@ -136,25 +158,25 @@ public class GroupResource {
 			@ApiParam(name = "group_id", value = "The id of the group") @PathParam("group_id") int group_id,
 			@ApiParam(name = "user_id", value = "The id of the new member") @PathParam("user_id") int user_id) {
 		Group group = PersistenceHelper.getById(group_id, Group.class);
-		User user= PersistenceHelper.getById(user_id, User.class);
+		User user = PersistenceHelper.getById(user_id, User.class);
 		boolean result;
-		if(result = group.getUsers().remove(user)){
-			try{
+		if (result = group.getUsers().remove(user)) {
+			try {
 				group.persist();
 			} catch (Exception e) {
 				return Response.serverError().entity(e).status(Response.Status.INTERNAL_SERVER_ERROR).build();
 			}
 		}
 		Genson jsonHelper = new Genson();
-		
+
 		Object responseObj;
-		if(result){
-			responseObj = new Object(){
+		if (result) {
+			responseObj = new Object() {
 				public int status = 200;
 				public String message = "User successfully removed from group.";
 			};
 		} else {
-			responseObj = new Object(){
+			responseObj = new Object() {
 				public int status = 404;
 				public String message = "User not found in group.";
 			};

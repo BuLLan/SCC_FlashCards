@@ -1,7 +1,11 @@
 package scc.flashcards.model;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.annotations.GenericGenerator;
 
 import scc.flashcards.persistence.PersistenceHelper;
 
@@ -15,7 +19,7 @@ public abstract class AbstractModel implements Comparable<AbstractModel> {
 
 	private SessionFactory sessionFactory;
 	
-	private int id;
+	protected int id;
 	
 	/**
 	 * Adds or updates Entity in database
@@ -56,6 +60,12 @@ public abstract class AbstractModel implements Comparable<AbstractModel> {
 			return 0;
 		}
 		return -1;
+	}
+	
+	public boolean equals(Object o) {
+		if(o == null) return false;
+		if(this.compareTo((AbstractModel)o) == 0) return true;
+		return false;
 	}
 	
 	public abstract int getId();
