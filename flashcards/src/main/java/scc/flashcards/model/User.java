@@ -23,7 +23,17 @@ public class User extends AbstractModel {
 	private String login;
 
 	private String password;
+	
+	private String salt;
 
+
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
 
 	/**
 	 * Empty Constructor for JAXB, don't use!

@@ -16,5 +16,9 @@
   <mapping class="scc.flashcards.model.Group"/>
   <mapping class="scc.flashcards.model.NaiveLearningProfile"/>
   <mapping class="scc.flashcards.model.AbstractLearningProfile"/>
+  
+  <mapping class="scc.flashcards.model.UserRole"/>
+  <mapping class="scc.flashcards.model.RolesPermission"/>
+
  </session-factory>
 </hibernate-configuration>

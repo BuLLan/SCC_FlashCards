@@ -90,6 +90,23 @@
 			<artifactId>genson</artifactId>
 			<version>1.4</version>
 		</dependency>
+				
+		<!-- apache shiro -->
+		<dependency>
+		  <groupId>org.apache.shiro</groupId>
+		  <artifactId>shiro-all</artifactId>
+		  <version>1.2.2</version>
+		</dependency>
+		<dependency>
+		  <groupId>org.slf4j</groupId>
+		  <artifactId>slf4j-simple</artifactId>
+		  <version>1.6.1</version>
+		</dependency>
+		<dependency>
+		  <groupId>commons-logging</groupId>
+		  <artifactId>commons-logging</artifactId>
+		  <version>1.1.1</version>
+		</dependency>
 
 
 	</dependencies>
