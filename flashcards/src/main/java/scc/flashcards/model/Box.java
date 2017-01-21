@@ -12,9 +12,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.GenericGenerator;
+
+import com.owlike.genson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -115,6 +119,7 @@ public class Box extends AbstractModel {
 	@ApiModelProperty(hidden = true)
 	@ElementCollection
 	@OneToMany(mappedBy="box",fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@JsonIgnore
 	public Set<FlashCard> getFlashcards() {
 		return flashcards;
 	}

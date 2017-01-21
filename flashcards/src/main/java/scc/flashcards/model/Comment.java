@@ -5,10 +5,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.GenericGenerator;
+
+import com.owlike.genson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -40,6 +45,7 @@ public class Comment extends AbstractModel{
 	}
 
 	@Id
+	@XmlID
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
 	public int getId() {
@@ -52,6 +58,7 @@ public class Comment extends AbstractModel{
 
 	@ManyToOne
 	@JoinColumn(name="author_id", referencedColumnName="id")
+	@XmlIDREF
 	public User getAuthor() {
 		return author;
 	}
@@ -84,10 +91,10 @@ public class Comment extends AbstractModel{
 		this.created_at = created_at;
 	}
 
-	@XmlTransient
 	@ApiModelProperty(hidden=true)
 	@ManyToOne
 	@JoinColumn(name="flashcard_id", referencedColumnName="id")
+	@JsonIgnore
 	public FlashCard getFlashcard() {
 		return flashcard;
 	}

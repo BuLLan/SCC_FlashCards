@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -16,10 +17,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.eclipse.persistence.oxm.annotations.XmlInverseReference;
 import org.hibernate.annotations.GenericGenerator;
+
+import com.owlike.genson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -38,6 +44,7 @@ public class FlashCard extends AbstractModel{
 	private Box box;
 	
 	@Id
+	@XmlID
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
 	public int getId() {
@@ -89,9 +96,10 @@ public class FlashCard extends AbstractModel{
 		this.backpage = backpage;
 	}
 	
+	@ApiModelProperty(hidden=true)
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="box_id", referencedColumnName="id")
-	@XmlTransient
+	@JsonIgnore
 	public Box getBox() {
 		return box;
 	}

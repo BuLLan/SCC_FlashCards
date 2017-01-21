@@ -1,6 +1,7 @@
 package scc.flashcards.resources;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -20,6 +21,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.hibernate.Session;
+
+import com.owlike.genson.Genson;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -126,7 +129,7 @@ public class BoxResource {
 			throw new ServerErrorException(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
 		}
 
-		return Response.ok().status(Response.Status.OK).build();
+		return Response.ok("SUCCESS").status(Response.Status.OK).build();
 	}
 
 	/**
@@ -181,16 +184,23 @@ public class BoxResource {
 			throw new ServerErrorException(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
 		}
 
-		return Response.ok().status(Response.Status.OK).build();
+		return Response.ok("SUCCESS").status(Response.Status.OK).build();
 	}
 
 	@GET
 	@Path("/{boxid}/{fc_id}/comments")
 	@ApiOperation(value = "getFlashcardComments", notes = "Get comments of a FlashCard")
-	public Response getComments(@ApiParam(value = "box_id", required = true) @PathParam("boxid") int box_id,
+	public List<Comment> getComments(@ApiParam(value = "box_id", required = true) @PathParam("boxid") int box_id,
 			@ApiParam(value = "fc_id", required = true) @PathParam("fc_id") int fc_id) {
-		List<Comment> comments = PersistenceHelper.getById(fc_id, FlashCard.class).getComments();
-		return Response.ok(comments).status(Response.Status.OK).build();
+		List<Comment> comments;
+		
+		try{
+			comments = PersistenceHelper.getById(fc_id, FlashCard.class).getComments();
+		} catch (Exception e) {
+			throw new ServerErrorException(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
+		}
+		
+		return comments;
 	}
 
 	@POST
@@ -218,7 +228,7 @@ public class BoxResource {
 			throw new ServerErrorException(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
 		}
 
-		return Response.ok().status(Response.Status.OK).build();
+		return Response.ok("SUCCESS").status(Response.Status.OK).build();
 	}
 
 	@DELETE
@@ -240,6 +250,6 @@ public class BoxResource {
 			throw new ServerErrorException(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
 		}
 
-		return Response.ok().status(Response.Status.OK).build();
+		return Response.ok("SUCCESS").status(Response.Status.OK).build();
 	}
 }
