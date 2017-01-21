@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -25,6 +27,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import scc.flashcards.model.Group;
 import scc.flashcards.model.User;
+import scc.flashcards.model.UserRole;
 import scc.flashcards.persistence.PersistenceHelper;
 
 /**
@@ -33,6 +36,7 @@ import scc.flashcards.persistence.PersistenceHelper;
 @Path("/users")
 @Api(value="/users", tags={"User Service"})
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class UserResource {
 	
 	/**
@@ -141,6 +145,7 @@ public class UserResource {
 	
 	/**
 	 * Returns all groups of a user
+	 * 
 	 * @param userid
 	 * @return
 	 */
@@ -152,9 +157,48 @@ public class UserResource {
 			@ApiParam(value="The ID of the user", required=true) @PathParam("userid") int userid
 			) {
 		User user = PersistenceHelper.getById(userid, User.class);
-		Set<Group> groups = user.getGroups();
+		Set<Group> foundGroups = new TreeSet<Group>();
 		
-		return groups;
+		org.hibernate.SessionFactory sessionFactory = PersistenceHelper.getInstance().getSessionFactory();
+		Session ses = sessionFactory.openSession();
+		List<Group> allGroups = new LinkedList<Group>(ses.createCriteria(Group.class).list());
+		ses.close();
+		for (Group group : allGroups) {
+			TreeSet<User> userSet = new TreeSet<User>(group.getUsers().keySet());
+			if(userSet.contains(user)){
+				foundGroups.add(group);
+			}
+		}
+		
+		return foundGroups;
+	}
+	
+	@Path("/{userid}/groups")
+	@POST
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Create a Group with the user as owner")
+	public Group createGroup(
+			@ApiParam(value = "The ID of the owner", required=true) @PathParam("userid") int userid,
+			@ApiParam(value = "The Group to be created") @FormParam("title") String title,
+			@ApiParam(value = "The Group to be created") @FormParam("description") String description) {
+		Group newGroup = new Group();
+		newGroup.setTitle(title);
+		newGroup.setDescription(description);
+		
+		User owner = PersistenceHelper.getById(userid, User.class);
+		
+		TreeMap<User, UserRole> users = new TreeMap<User, UserRole>();
+		users.put(owner, UserRole.Admin);
+		newGroup.setUsers(users);
+				
+		try {
+			newGroup.persist();
+		} catch (Exception e) {
+			newGroup = null;
+			throw new ServerErrorException(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
+		}
+		return newGroup;
 	}
 	
 }

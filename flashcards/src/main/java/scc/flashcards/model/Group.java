@@ -1,8 +1,12 @@
 package scc.flashcards.model;
 
+import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.TreeMap;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,11 +14,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.MapKeyJoinColumns;
+import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.GenericGenerator;
+
+import com.owlike.genson.annotation.JsonIgnore;
+import com.owlike.genson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -29,14 +39,14 @@ public class Group extends AbstractModel {
 
 	private String description;
 
-	private Set<User> users;
+	private Map<User, UserRole> users = new TreeMap<User, UserRole>();
 
 	private Set<Box> boxes;
 
 	public Group() {
 	}
 
-	public Group(Integer id, String title, String description, Set<User> users, Set<Box> boxes) {
+	public Group(Integer id, String title, String description, Map<User, UserRole> users, Set<Box> boxes) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -62,19 +72,31 @@ public class Group extends AbstractModel {
 	}
 
 	@ApiModelProperty(hidden = true)
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "group_users", joinColumns = {
-			@JoinColumn(name = "group_id", referencedColumnName = "id", nullable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false) })
-	public Set<User> getUsers() {
+	@XmlTransient
+	@JsonIgnore
+	@ElementCollection(fetch=FetchType.EAGER)
+    @CollectionTable(name="group_users",
+                     joinColumns=@JoinColumn(name="group_id"))
+    @Column(name="role")
+	@MapKeyJoinColumn(name="user_id")
+//	@MapKeyJoinColumns(value = {
+//			@MapKeyJoinColumn(table="group_users", name="user_id", referencedColumnName="id"),
+//			@MapKeyJoinColumn(table="group_users", name="group_id", referencedColumnName="id")
+//	})
+////	@JoinTable(name = "group_users", joinColumns = {
+////			@JoinColumn(name = "group_id", referencedColumnName = "id", nullable = false) }, inverseJoinColumns = {
+////					@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false) })
+	public Map<User, UserRole> getUsers() {
 		return this.users;
 	}
 
-	public void setUsers(Set<User> users) {
+	public void setUsers(Map<User, UserRole> users) {
 		this.users = users;
 	}
 
 	@ApiModelProperty(hidden = true)
+	@XmlTransient
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "group_boxes", joinColumns = {
 			@JoinColumn(name = "group_id", referencedColumnName = "id", nullable = false) }, inverseJoinColumns = {

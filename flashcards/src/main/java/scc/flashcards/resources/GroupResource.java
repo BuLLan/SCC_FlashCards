@@ -1,5 +1,6 @@
 package scc.flashcards.resources;
 
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.ws.rs.Consumes;
@@ -22,6 +23,7 @@ import io.swagger.annotations.ApiParam;
 import scc.flashcards.model.Box;
 import scc.flashcards.model.Group;
 import scc.flashcards.model.User;
+import scc.flashcards.model.UserRole;
 import scc.flashcards.persistence.PersistenceHelper;
 
 @Path("/group")
@@ -36,23 +38,6 @@ public class GroupResource {
 	public Group getGroupById(
 			@ApiParam(name = "group_id", value = "The id of the group") @PathParam("group_id") int group_id) {
 		return PersistenceHelper.getById(group_id, Group.class);
-	}
-
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Create a Group")
-	public Group createGroup(@ApiParam(name = "group", value = "The Group to be created") Group group) {
-		Group newGroup = new Group();
-		newGroup.setTitle(group.getTitle());
-		newGroup.setDescription(group.getDescription());
-		try {
-			newGroup.persist();
-		} catch (Exception e) {
-			newGroup = null;
-			throw new ServerErrorException(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
-		}
-		return newGroup;
 	}
 
 	@POST
@@ -136,19 +121,15 @@ public class GroupResource {
 		Group group = PersistenceHelper.getById(group_id, Group.class);
 		User user = PersistenceHelper.getById(user_id, User.class);
 		try {
-			TreeSet<User> users = new TreeSet<User>(group.getUsers());
-			users.add(user);
+			TreeMap<User, UserRole> users = new TreeMap<User, UserRole>(group.getUsers());
+			users.put(user, UserRole.Member);
 			group.setUsers(users);
 			group.persist();
 		} catch (Exception e) {
 			return Response.serverError().entity(e).status(Response.Status.INTERNAL_SERVER_ERROR).build();
 		}
-		Genson jsonHelper = new Genson();
-		String json = jsonHelper.serialize(new Object() {
-			public int status = 200;
-			public String message = "User successfully added to group";
-		});
-		return Response.ok(json).status(Response.Status.OK).build();
+		
+		return Response.ok("User successfully added to group").status(Response.Status.OK).build();
 	}
 
 	@DELETE
@@ -159,30 +140,14 @@ public class GroupResource {
 			@ApiParam(name = "user_id", value = "The id of the new member") @PathParam("user_id") int user_id) {
 		Group group = PersistenceHelper.getById(group_id, Group.class);
 		User user = PersistenceHelper.getById(user_id, User.class);
-		boolean result;
-		if (result = group.getUsers().remove(user)) {
+		if (group.getUsers().remove(user) != null) {
 			try {
 				group.persist();
 			} catch (Exception e) {
 				return Response.serverError().entity(e).status(Response.Status.INTERNAL_SERVER_ERROR).build();
 			}
 		}
-		Genson jsonHelper = new Genson();
-
-		Object responseObj;
-		if (result) {
-			responseObj = new Object() {
-				public int status = 200;
-				public String message = "User successfully removed from group.";
-			};
-		} else {
-			responseObj = new Object() {
-				public int status = 404;
-				public String message = "User not found in group.";
-			};
-		}
-		String json = jsonHelper.serialize(responseObj);
-		return Response.ok(json).status(Response.Status.OK).build();
+		return Response.ok("Deleted User from Group").status(Response.Status.OK).build();
 	}
 
 }

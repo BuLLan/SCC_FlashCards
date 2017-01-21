@@ -6,11 +6,16 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
@@ -95,17 +100,6 @@ public class User extends AbstractModel {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-	
-	@ApiModelProperty(hidden=true)
-	@ManyToMany(mappedBy="users", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonIgnore
-	public Set<Group> getGroups() {
-		return this.groups;
-	}
-	
-	public void setGroups(Set<Group> groups) {
-		this.groups = groups;
 	}
 
 }
