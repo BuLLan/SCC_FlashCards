@@ -1,17 +1,16 @@
 package scc.flashcards.resources;
 
-import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -22,6 +21,8 @@ import javax.ws.rs.core.Response;
 
 import org.hibernate.Session;
 
+import com.owlike.genson.Genson;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -29,6 +30,8 @@ import scc.flashcards.model.Group;
 import scc.flashcards.model.User;
 import scc.flashcards.model.UserRole;
 import scc.flashcards.persistence.PersistenceHelper;
+import scc.flashcards.rest.NewUserRequest;
+import scc.flashcards.rest.UpdateUserRequest;
 
 /**
  * Webservice Resource for User model
@@ -38,7 +41,7 @@ import scc.flashcards.persistence.PersistenceHelper;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserResource {
-	
+
 	/**
 	 * Gets all users
 	 * @return a list of users
@@ -63,22 +66,20 @@ public class UserResource {
 	@POST
 	@ApiOperation(value="addUser",
 	notes="Create a new User and returns the id")
-	@Consumes("application/x-www-form-urlencoded")
-	public Response addUser(@ApiParam(value="firstname", required=true) @FormParam("firstname") String firstname,
-						   @ApiParam(value="lastname", required=true) @FormParam("lastname") String lastname,
-						   @ApiParam(value="email", required=true) @FormParam("email") String email,
-						   @ApiParam(value="password", required=true) @FormParam("password") String password){
-		boolean result = true;
-		User user = new User(firstname, lastname, email, password);
-		
-		
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addUser(@ApiParam(value="Request", required=true) NewUserRequest request){
 		try {
+			request.validateRequest();
+			User user = new User(request.getFirstName(), request.getLastName(),
+					request.getEmail(), request.getPassword());
 			user.persist();
+			return Response.ok(user.getId()).status(Response.Status.OK).build();
+		} catch (BadRequestException e){
+			return Response.status(Response.Status.BAD_REQUEST).entity(new Genson().serialize(e.getMessage())).build();
 		} catch (Exception e) {
-			throw new ServerErrorException(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage())).build();
 		}
-		
-		return Response.ok(user.getId()).status(Response.Status.OK).build();
 	}
 	
 	
@@ -123,8 +124,7 @@ public class UserResource {
 	/**
 	 * Updates a user
 	 * 
-	 * @param userid
-	 * @param updatedUser
+	 * @param request
 	 * @return
 	 */
 	@Path("/{userid}")
@@ -132,15 +132,25 @@ public class UserResource {
 	@ApiOperation(value="updateUser",
 		notes="Update the Users Name and Password")
 	public Response updateUser(
-			@ApiParam(value="The ID of the user", required=true) @PathParam("userid") int userid,
-			@ApiParam(name = "group", value = "The Group to be created") User updatedUser){
-		User user = PersistenceHelper.getById(userid, User.class);
-		
-		user.setFirstName(updatedUser.getFirstName());
-		user.setLastName(updatedUser.getLastName());
-		user.setPassword(updatedUser.getPassword());
-		
-		return Response.ok("Success").status(Response.Status.OK).build();
+			@ApiParam(value="The Request", required=true) UpdateUserRequest request){
+		try {
+			request.validateRequest();
+			
+			User user = PersistenceHelper.getById(request.getId(), User.class);
+			user.setFirstName((request.getFirstName().isEmpty()) ? user.getFirstName() : request.getFirstName());
+			user.setLastName((request.getLastName().isEmpty()) ? user.getLastName() : request.getLastName());
+			user.setLogin((request.getEmail().isEmpty()) ? user.getLogin() : request.getEmail());
+			user.setPassword((request.getPassword().isEmpty()) ? user.getPassword() : request.getPassword());
+			
+			user.persist();
+			
+			return Response.ok(new Genson().serialize("Success")).status(Response.Status.OK).build();
+			
+		} catch (BadRequestException e){
+			return Response.status(Response.Status.BAD_REQUEST).entity(new Genson().serialize(e.getMessage())).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage())).build();
+		}
 	}
 	
 	/**

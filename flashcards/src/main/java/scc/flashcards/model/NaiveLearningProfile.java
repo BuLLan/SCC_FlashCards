@@ -1,15 +1,6 @@
 package scc.flashcards.model;
 
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.HashMap;
-
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonWriter;
-
-import com.google.gson.Gson;
 
 /**
  * Most basic learning profile, 
@@ -58,14 +49,12 @@ public class NaiveLearningProfile extends AbstractLearningProfile {
 
 	@Override
 	public String getSerializedData() {
-		Gson gson = new Gson();
-		return gson.toJson(this.scoreMap);
+		return null;
 	}
 
 	@Override
 	public void setSerializedData(String serializedData) {
-		Gson gson = new Gson();
-		this.scoreMap = gson.fromJson(serializedData, this.scoreMap.getClass());
+		return;
 	}
 
 }
