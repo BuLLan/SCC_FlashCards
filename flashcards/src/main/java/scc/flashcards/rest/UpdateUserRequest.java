@@ -37,7 +37,7 @@ public class UpdateUserRequest extends JsonRequest {
 	 */
 	public boolean validateRequest() {
 		//Only validate mail, if new mail was set
-		if(this.email.isEmpty()){
+		if(this.email == null || this.email.isEmpty()){
 			return true;
 		}
 		

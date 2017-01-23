@@ -67,7 +67,8 @@ public class UserResource {
 			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (ClientErrorException e) {
-			return e.getResponse();
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (Exception e) {
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e)).build();
@@ -99,7 +100,8 @@ public class UserResource {
 			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (ClientErrorException e) {
-			return e.getResponse();
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (Exception e) {
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e)).build();
@@ -128,7 +130,8 @@ public class UserResource {
 			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (ClientErrorException e) {
-			return e.getResponse();
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (Exception e) {
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e)).build();
@@ -159,8 +162,9 @@ public class UserResource {
 			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (ClientErrorException e) {
-			return e.getResponse();
-		} catch (Exception e) {
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
+		}catch (Exception e) {
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e)).build();
 		} finally {
@@ -186,8 +190,9 @@ public class UserResource {
 			User user = PersistenceHelper.getById(request.getId(), User.class);
 			user.setFirstName((request.getFirstName().isEmpty()) ? user.getFirstName() : request.getFirstName());
 			user.setLastName((request.getLastName().isEmpty()) ? user.getLastName() : request.getLastName());
-			user.setLogin((request.getEmail().isEmpty()) ? user.getLogin() : request.getEmail());
-			user.setPassword((request.getPassword().isEmpty()) ? user.getPassword() : request.getPassword());
+			user.setLogin((request.getEmail() == null || request.getEmail().isEmpty()) ? user.getLogin() : request.getEmail());
+			user.setPassword((request.getPassword() == null || request.getPassword().isEmpty()) ? 
+					user.getPassword() : request.getPassword());
 			user.persist();
 			return Response.ok().build();
 		} catch (HibernateException e) {
@@ -195,7 +200,8 @@ public class UserResource {
 			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (ClientErrorException e) {
-			return e.getResponse();
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (Exception e) {
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e)).build();
@@ -236,6 +242,9 @@ public class UserResource {
 			Response response = Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e))
 					.build();
 			throw new ServiceUnavailableException(response);
+		} catch (ClientErrorException e) {
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (Exception e) {
 			// Something else went wrong
 			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e))
@@ -272,6 +281,9 @@ public class UserResource {
 			Response response = Response.status(Response.Status.SERVICE_UNAVAILABLE)
 					.entity(new Genson().serialize(e.getMessage())).build();
 			throw new ServiceUnavailableException(response);
+		} catch (ClientErrorException e) {
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (Exception e) {
 			// Something else went wrong
 			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR)

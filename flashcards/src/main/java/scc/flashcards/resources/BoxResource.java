@@ -72,7 +72,8 @@ public class BoxResource {
 					.entity(new Genson().serialize(e.getMessage())).build();
 			throw new ServiceUnavailableException(response);
 		} catch (ClientErrorException e) {
-			return e.getResponse();
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (Exception e) {
 			// Something else went wrong
 			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -109,7 +110,8 @@ public class BoxResource {
 			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (ClientErrorException e) {
-			return e.getResponse();
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (Exception e) {
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
@@ -140,7 +142,8 @@ public class BoxResource {
 			throw new ServiceUnavailableException(response);
 
 		} catch (ClientErrorException e) {
-			return e.getResponse();
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (Exception e) {
 			// Something else went wrong
 			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -171,7 +174,8 @@ public class BoxResource {
 			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (ClientErrorException e) {
-			return e.getResponse();
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (Exception e) {
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
@@ -204,7 +208,8 @@ public class BoxResource {
 					.entity(new Genson().serialize(e.getMessage())).build();
 			throw new ServiceUnavailableException(response);
 		} catch (ClientErrorException e) {
-			return e.getResponse();
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (Exception e) {
 			// Something else went wrong
 			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -241,7 +246,8 @@ public class BoxResource {
 			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (ClientErrorException e) {
-			return e.getResponse();
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (Exception e) {
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
@@ -271,7 +277,8 @@ public class BoxResource {
 			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (ClientErrorException e) {
-			return e.getResponse();
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (Exception e) {
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
@@ -312,7 +319,8 @@ public class BoxResource {
 			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (ClientErrorException e) {
-			return e.getResponse();
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (Exception e) {
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
@@ -336,7 +344,8 @@ public class BoxResource {
 			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (ClientErrorException e) {
-			return e.getResponse();
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (Exception e) {
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
@@ -362,7 +371,8 @@ public class BoxResource {
 			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (ClientErrorException e) {
-			return e.getResponse();
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (Exception e) {
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
@@ -389,7 +399,8 @@ public class BoxResource {
 					.entity(new Genson().serialize(e.getMessage())).build();
 			throw new ServiceUnavailableException(response);
 		} catch (ClientErrorException e) {
-			return e.getResponse();
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (Exception e) {
 			// Something else went wrong
 			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -402,7 +413,6 @@ public class BoxResource {
 
 	@POST
 	@Path("/{boxid}/{fc_id}/comments")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@ApiOperation(value = "addFlashcardComment", notes = "Add comment to flashcard")
 	public Response addComment(@ApiParam(value = "box_id", required = true) @PathParam("boxid") int box_id,
 			@ApiParam(value = "fc_id", required = true) @PathParam("fc_id") int fc_id,
@@ -419,7 +429,7 @@ public class BoxResource {
 			comment.setTitle(request.getSubject());
 			comment.setDescription(request.getContent());
 			comment.setFlashcard(fc);
-			comment.setCreated_at(Date.from(Instant.now()).getTime());
+			comment.setCreated_at(Date.from(Instant.now()));
 			fc.getComments().add(comment);
 
 			Transaction tx = session.beginTransaction();
@@ -433,7 +443,8 @@ public class BoxResource {
 					.entity(new Genson().serialize(e.getMessage())).build();
 			throw new ServiceUnavailableException(response);
 		} catch (ClientErrorException e) {
-			return e.getResponse();
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (Exception e) {
 			// Something else went wrong
 			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -462,7 +473,7 @@ public class BoxResource {
 			session.delete(comment);
 			session.saveOrUpdate(fc);
 			tx.commit();
-			
+
 			return Response.ok().status(Response.Status.OK).build();
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
@@ -470,7 +481,8 @@ public class BoxResource {
 					.entity(new Genson().serialize(e.getMessage())).build();
 			throw new ServiceUnavailableException(response);
 		} catch (ClientErrorException e) {
-			return e.getResponse();
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (Exception e) {
 			// Something else went wrong
 			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR)

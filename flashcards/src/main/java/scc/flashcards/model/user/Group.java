@@ -41,10 +41,11 @@ public class Group extends AbstractModel {
 	@MapKeyJoinColumn(name="user_id")
 	private Map<User, UserRole> users = new TreeMap<User, UserRole>();
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	
 	@JoinTable(name = "group_boxes", joinColumns = {
 			@JoinColumn(name = "group_id", referencedColumnName = "id", nullable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "box_id", referencedColumnName = "id", nullable = false) })
+	@ManyToMany(fetch = FetchType.EAGER)
 	private Set<Box> boxes;
 
 	public Group() {

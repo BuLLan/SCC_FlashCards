@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import com.owlike.genson.annotation.JsonIgnore;
 
@@ -26,7 +27,9 @@ import scc.flashcards.model.AbstractModel;
 public class FlashCard extends AbstractModel{
 
 	@ApiModelProperty(hidden = true)
-	@OneToMany(mappedBy="flashcard", fetch=FetchType.EAGER)
+	@XmlTransient
+	@JsonIgnore
+	@OneToMany(mappedBy="flashcard")
 	private List<Comment> comments = new ArrayList<Comment>();
 	
 	@Embedded
@@ -63,6 +66,7 @@ public class FlashCard extends AbstractModel{
 		this.backpage = backpage;
 	}
 	
+	@JsonIgnore
 	public List<Comment> getComments() {
 		return comments;
 	}

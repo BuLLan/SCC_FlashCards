@@ -33,8 +33,8 @@ public abstract class AbstractModel implements Comparable<AbstractModel> {
 	private SessionFactory sessionFactory;
 	
 	@Id
-	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
+	@GeneratedValue(generator = "increment")
 	protected long id;
 	
 	/**
