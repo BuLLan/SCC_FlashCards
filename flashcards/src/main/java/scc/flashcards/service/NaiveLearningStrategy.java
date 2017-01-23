@@ -1,8 +1,8 @@
 package scc.flashcards.service;
 
-import scc.flashcards.model.AbstractLearningProfile;
-import scc.flashcards.model.NaiveLearningProfile;
-import scc.flashcards.model.User;
+import scc.flashcards.model.learning.AbstractLearningProfile;
+import scc.flashcards.model.learning.NaiveLearningProfile;
+import scc.flashcards.model.user.User;
 
 public class NaiveLearningStrategy implements LearningStrategy{
 

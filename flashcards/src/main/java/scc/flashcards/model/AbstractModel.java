@@ -2,10 +2,20 @@ package scc.flashcards.model;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlTransient;
 
+import org.eclipse.persistence.annotations.Property;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.annotations.GenericGenerator;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.owlike.genson.annotation.JsonProperty;
 
 import scc.flashcards.persistence.PersistenceHelper;
 
@@ -15,41 +25,36 @@ import scc.flashcards.persistence.PersistenceHelper;
  * @author Timi
  *
  */
+@MappedSuperclass
 public abstract class AbstractModel implements Comparable<AbstractModel> {
 
+	@Transient
+	@JsonIgnore
 	private SessionFactory sessionFactory;
 	
-	protected int id;
+	@Id
+	@GeneratedValue(generator = "increment")
+	@GenericGenerator(name = "increment", strategy = "increment")
+	protected long id;
 	
 	/**
 	 * Adds or updates Entity in database
 	 */
 	public void persist() {
-		Session session = getSessionFactory().openSession();
-		session.beginTransaction();
-		session.saveOrUpdate(this);
-		session.getTransaction().commit();
-		session.close();
+		Transaction tx = PersistenceHelper.getSession().beginTransaction();
+		PersistenceHelper.getSession().saveOrUpdate(this);
+		tx.commit();
 	}
 	
 	/**
 	 * Removes Entity from Database
 	 */
 	public void delete() {
-		Session session = getSessionFactory().openSession();
-		session.beginTransaction();
-		session.delete(this);
-		session.getTransaction().commit();
-		session.close();
+		Transaction tx = PersistenceHelper.getSession().beginTransaction();
+		PersistenceHelper.getSession().delete(this);
+		tx.commit();
 	}
 	
-	protected SessionFactory getSessionFactory(){
-		if(this.sessionFactory == null) {
-			this.sessionFactory = PersistenceHelper.getInstance().getSessionFactory();
-		}
-		return this.sessionFactory;
-	}
-
 	@Override
 	/**
 	 * By implementing this method we don't have to check for duplicate occurences,
@@ -68,8 +73,12 @@ public abstract class AbstractModel implements Comparable<AbstractModel> {
 		return false;
 	}
 	
-	public abstract int getId();
+	public long getId(){
+		return this.id;
+	}
 	
-	public abstract void setId(int id);
+	public void setId(long id){
+		this.id = id;
+	}
 	
 }

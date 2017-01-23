@@ -1,4 +1,8 @@
-package scc.flashcards.model;
+package scc.flashcards.model.learning;
+
+import scc.flashcards.model.flashcards.Box;
+import scc.flashcards.model.flashcards.FlashCard;
+import scc.flashcards.model.user.User;
 
 /**
  * Represents a learning profile for a user.

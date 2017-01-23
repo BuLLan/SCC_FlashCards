@@ -1,4 +1,4 @@
-package scc.flashcards.model;
+package scc.flashcards.model.learning;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,48 +11,38 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import io.swagger.annotations.ApiModel;
+import scc.flashcards.model.AbstractModel;
 
 @XmlRootElement
 @ApiModel(value = "LearningProfile", description = "Model for Learning Profiles")
 @Entity(name = "LearningProfile")
 public abstract class AbstractLearningProfile extends AbstractModel implements LearningProfile {
 
-	private int id;
+	private long userId;
 
-	private int user_id;
-
-	private int box_id;
-
-	@Id
-	@GeneratedValue(generator = "increment")
-	@GenericGenerator(name = "increment", strategy = "increment")
-	public int getId() {
-		return this.id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
+	private long boxId;
 
 	@Column(name = "data", columnDefinition="TEXT NULL")
 	public abstract String getSerializedData();
 
 	public abstract void setSerializedData(String serializedData);
 
-	public int getUser_id() {
-		return user_id;
+	public long getUserId() {
+		return userId;
 	}
 
-	public void setUser_id(int user_id) {
-		this.user_id = user_id;
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 
-	public int getBox_id() {
-		return box_id;
+	public long getBoxId() {
+		return boxId;
 	}
 
-	public void setBox_id(int box_id) {
-		this.box_id = box_id;
+	public void setBoxId(long boxId) {
+		this.boxId = boxId;
 	}
+
+
 
 }

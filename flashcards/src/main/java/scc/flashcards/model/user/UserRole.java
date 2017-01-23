@@ -1,4 +1,4 @@
-package scc.flashcards.model;
+package scc.flashcards.model.user;
 
 import javax.persistence.Embeddable;
 import javax.xml.bind.annotation.XmlEnum;

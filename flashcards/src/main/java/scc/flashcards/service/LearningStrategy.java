@@ -1,7 +1,7 @@
 package scc.flashcards.service;
 
-import scc.flashcards.model.AbstractLearningProfile;
-import scc.flashcards.model.User;
+import scc.flashcards.model.learning.AbstractLearningProfile;
+import scc.flashcards.model.user.User;
 
 /**
  * Interface for all kinds of learning strategy.

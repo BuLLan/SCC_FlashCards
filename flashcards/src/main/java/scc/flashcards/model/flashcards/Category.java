@@ -1,4 +1,4 @@
-package scc.flashcards.model;
+package scc.flashcards.model.flashcards;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.hibernate.annotations.GenericGenerator;
 
 import io.swagger.annotations.ApiModel;
+import scc.flashcards.model.AbstractModel;
 
 @XmlRootElement
 @ApiModel(value = "Category", description = "Simple Flash Card Model for our WebService")
@@ -20,27 +21,17 @@ public class Category extends AbstractModel {
 
 	private String title;
 	
-	private Category parent_category;
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="parent_category_id", referencedColumnName="id")
+	private Category parentCategory;
 	
 	public Category(){}
 
-	public Category(int id, String title, Category parent_category) {
+	public Category(int id, String title, Category parentCategory) {
 		super();
 		this.id = id;
 		this.title = title;
-		this.parent_category = parent_category;
-	}
-
-	@Id
-	@XmlID
-	@GeneratedValue(generator = "increment")
-	@GenericGenerator(name = "increment", strategy = "increment")
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
+		this.parentCategory = parentCategory;
 	}
 
 	public String getTitle() {
@@ -51,14 +42,13 @@ public class Category extends AbstractModel {
 		this.title = title;
 	}
 
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="parent_category_id", referencedColumnName="id")
-	public Category getParent_category() {
-		return parent_category;
+	
+	public Category getParentCategory() {
+		return parentCategory;
 	}
 
-	public void setParent_category(Category parent_category) {
-		this.parent_category = parent_category;
+	public void setParentCategory(Category parentCategory) {
+		this.parentCategory = parentCategory;
 	};
 	
 	

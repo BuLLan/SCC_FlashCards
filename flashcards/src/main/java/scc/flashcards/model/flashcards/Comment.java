@@ -1,4 +1,4 @@
-package scc.flashcards.model;
+package scc.flashcards.model.flashcards;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,12 +17,16 @@ import com.owlike.genson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import scc.flashcards.model.AbstractModel;
+import scc.flashcards.model.user.User;
 
 @XmlRootElement
 @ApiModel(value = "Comment", description = "Comment to a flashcard")
 @Entity(name = "Comment")
 public class Comment extends AbstractModel{
 
+	@ManyToOne
+	@JoinColumn(name="author_id", referencedColumnName="id")
 	private User author;
 	
 	private String title;
@@ -31,6 +35,9 @@ public class Comment extends AbstractModel{
 	
 	private int created_at;
 	
+	@ApiModelProperty(hidden=true)
+	@ManyToOne
+	@JoinColumn(name="flashcard_id", referencedColumnName="id")
 	private FlashCard flashcard;
 	
 	public Comment(){}
@@ -44,21 +51,6 @@ public class Comment extends AbstractModel{
 		this.created_at = created_at;
 	}
 
-	@Id
-	@XmlID
-	@GeneratedValue(generator = "increment")
-	@GenericGenerator(name = "increment", strategy = "increment")
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	@ManyToOne
-	@JoinColumn(name="author_id", referencedColumnName="id")
-	@XmlIDREF
 	public User getAuthor() {
 		return author;
 	}
@@ -91,9 +83,6 @@ public class Comment extends AbstractModel{
 		this.created_at = created_at;
 	}
 
-	@ApiModelProperty(hidden=true)
-	@ManyToOne
-	@JoinColumn(name="flashcard_id", referencedColumnName="id")
 	@JsonIgnore
 	public FlashCard getFlashcard() {
 		return flashcard;

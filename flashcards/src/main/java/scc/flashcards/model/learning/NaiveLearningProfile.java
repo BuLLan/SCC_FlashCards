@@ -1,6 +1,10 @@
-package scc.flashcards.model;
+package scc.flashcards.model.learning;
 
 import java.util.HashMap;
+
+import scc.flashcards.model.flashcards.Box;
+import scc.flashcards.model.flashcards.FlashCard;
+import scc.flashcards.model.user.User;
 
 /**
  * Most basic learning profile, 

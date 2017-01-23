@@ -20,10 +20,10 @@ import com.owlike.genson.Genson;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import scc.flashcards.model.Box;
-import scc.flashcards.model.Group;
-import scc.flashcards.model.User;
-import scc.flashcards.model.UserRole;
+import scc.flashcards.model.flashcards.Box;
+import scc.flashcards.model.user.Group;
+import scc.flashcards.model.user.User;
+import scc.flashcards.model.user.UserRole;
 import scc.flashcards.persistence.PersistenceHelper;
 
 @Path("/group")
