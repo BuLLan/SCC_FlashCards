@@ -1,17 +1,9 @@
 package scc.flashcards.model.flashcards;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
-import org.hibernate.annotations.GenericGenerator;
 
 import com.owlike.genson.annotation.JsonIgnore;
 
@@ -33,7 +25,7 @@ public class Comment extends AbstractModel{
 	
 	private String description;
 	
-	private int created_at;
+	private long created_at;
 	
 	@ApiModelProperty(hidden=true)
 	@ManyToOne
@@ -42,7 +34,7 @@ public class Comment extends AbstractModel{
 	
 	public Comment(){}
 
-	public Comment(int id, User author, String title, String description, int created_at) {
+	public Comment(int id, User author, String title, String description, long created_at) {
 		super();
 		this.id = id;
 		this.author = author;
@@ -75,11 +67,11 @@ public class Comment extends AbstractModel{
 		this.description = description;
 	}
 
-	public int getCreated_at() {
+	public long getCreated_at() {
 		return created_at;
 	}
 
-	public void setCreated_at(int created_at) {
+	public void setCreated_at(long created_at) {
 		this.created_at = created_at;
 	}
 
