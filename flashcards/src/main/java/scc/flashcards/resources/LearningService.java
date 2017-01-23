@@ -1,15 +1,18 @@
 package scc.flashcards.resources;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
+import java.util.List;
 
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.SetJoin;
 import javax.ws.rs.ClientErrorException;
-import javax.ws.rs.GET;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -26,10 +29,12 @@ import com.owlike.genson.Genson;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import scc.flashcards.model.flashcards.Box;
 import scc.flashcards.model.flashcards.FlashCard;
 import scc.flashcards.model.learning.CardScore;
 import scc.flashcards.model.user.User;
 import scc.flashcards.persistence.PersistenceHelper;
+import scc.flashcards.rest.NextCardsRequest;
 import scc.flashcards.rest.ScoreCardRequest;
 import scc.flashcards.service.LearningStrategy;
 import scc.flashcards.service.LearningStrategyFactory;
@@ -40,16 +45,29 @@ import scc.flashcards.service.LearningStrategyFactory;
 @Api(value = "Learning Service", tags = { "Learning Service" })
 @Path("/users/{user_id}/boxes/{box_id}/service")
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class LearningService {
 
-	@GET
+	@POST
 	@ApiOperation(value = "Returns the next cards of a learning session", response = FlashCard.class, responseContainer = "Map")
 	@Path("/nextCard")
 	public Response getNextCards(@ApiParam(value = "box_id", required = true) @PathParam("box_id") int box_id,
-			@ApiParam(value = "user_id", required = true) @PathParam("user_id") int user_id) {
-		System.out.println("TeST!");
+			@ApiParam(value = "user_id", required = true) @PathParam("user_id") int user_id,
+			@ApiParam(value = "request", required = true) NextCardsRequest request) {
 		try{			
-			Map<Integer, FlashCard> response = null;
+			List<FlashCard> response = new ArrayList<FlashCard>();
+			int limit = (request.getNumber() > 0) ? request.getNumber() : 20;
+			int halfLimit = limit / 2;
+			List<FlashCard> oldCards = getNextDueCards(user_id, box_id, halfLimit);
+			
+			if(oldCards.size() < halfLimit){
+				halfLimit += oldCards.size()-halfLimit;
+			}
+			List<FlashCard> newCards = getNewCards(user_id, box_id, halfLimit);
+			
+			response.addAll(oldCards);
+			response.addAll(newCards);
+			
 			return Response.ok(new Genson().serialize(response)).build();
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
@@ -115,5 +133,62 @@ public class LearningService {
 			newScore.setCreated(Date.from(Instant.now()));
 			return newScore;
 		}
+	}
+	
+	private List<FlashCard> getNextDueCards(long userId, long boxId, int limit) {
+		Session session = PersistenceHelper.getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<FlashCard> critQuery = builder.createQuery(FlashCard.class);
+		
+		Root<CardScore> scoreRoot = critQuery.from(CardScore.class);
+		Join<CardScore, User> userJoin = scoreRoot.join("user");
+		Join<CardScore, FlashCard> cardJoin = scoreRoot.join("flashcard");
+		Join<FlashCard, Box> boxJoin = cardJoin.join("box");
+		
+		critQuery.select(cardJoin).where(builder.and(
+					builder.equal(userJoin, userId),
+					builder.equal(boxJoin, boxId)
+				));
+		
+		return session.createQuery(critQuery).setMaxResults(limit).getResultList();
+	}
+	
+	private List<FlashCard> getNewCards(long userId, long boxId, int limit) {
+		Session session = PersistenceHelper.getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		
+		CriteriaQuery<FlashCard> critQuery = builder.createQuery(FlashCard.class);
+		
+		Root<Box> boxRoot = critQuery.from(Box.class);
+		Root<CardScore> scoreRoot = critQuery.from(CardScore.class);
+		SetJoin<Box, FlashCard> boxCardsJoin = boxRoot.joinSet("flashcards");
+		Join<CardScore, FlashCard> scoreCardJoin = scoreRoot.join("flashcard");
+		Join<CardScore, User> scoreUserJoin = scoreRoot.join("user");
+		
+		//Get All Cards which have a score
+		critQuery.select(boxCardsJoin).where(builder.and(
+				builder.equal(boxRoot, boxId),
+				builder.equal(boxCardsJoin, scoreCardJoin),
+				builder.equal(scoreUserJoin, userId)
+			)).distinct(true);
+		
+		List<FlashCard> scoredCards = session.createQuery(critQuery).getResultList();
+		
+		//Get all cards which belong to the box
+		critQuery.select(boxCardsJoin).where(builder.and(
+				builder.equal(boxRoot, boxId)
+			)).distinct(true);
+		
+		List<FlashCard> allCards = session.createQuery(critQuery).getResultList();
+		
+		//Remove the scored cards from the list
+		allCards.removeAll(scoredCards);
+		
+		//If there are more cards then the limit, only take the first entries
+		if(allCards.size() > limit){
+			allCards = allCards.subList(0, limit-1);
+		}
+		
+		return allCards;
 	}
 }
