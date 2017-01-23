@@ -243,16 +243,14 @@ public class GroupResource {
 			}
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
-			Response response = Response.status(Response.Status.SERVICE_UNAVAILABLE)
+			return Response.status(Response.Status.SERVICE_UNAVAILABLE)
 					.entity(new Genson().serialize(e.getMessage())).build();
-			throw new ServiceUnavailableException(response);
 		} catch (ClientErrorException e) {
 			return e.getResponse();
 		} catch (Exception e) {
 			// Something else went wrong
-			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e))
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e))
 					.build();
-			throw new InternalServerErrorException(response);
 		} finally {
 			PersistenceHelper.closeSession();
 		}
