@@ -7,7 +7,9 @@ import java.util.TreeSet;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.MapJoin;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.SetJoin;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -224,33 +226,33 @@ public class UserResource {
 	@Path("/{userid}/groups")
 	@GET
 	@ApiOperation(value = "getUserGroups", notes = "Return all groups of a user")
-	public Set<Group> getUserGroups(
+	public List<Group> getUserGroups(
 			@ApiParam(value = "The ID of the user", required = true) @PathParam("userid") int userid) {
 		Session session = PersistenceHelper.getSession();
 
 		try {
-			User user = PersistenceHelper.getById(userid, User.class);
-			Set<Group> foundGroups = new TreeSet<Group>();
-			List<Group> allGroups = session.createQuery(session.getCriteriaBuilder().createQuery(Group.class))
-					.getResultList();
+			/*
+			 * Damn, this really works!
+			 */
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaQuery<Group> critQuery = builder.createQuery(Group.class);
+			
+			Root<Group> groupRoot = critQuery.from(Group.class);
+			MapJoin<Group, User, UserRole> groups = groupRoot.joinMap("users");
+			
+			critQuery.select(groupRoot);
+			critQuery.where(builder.equal(groups.key(),userid));
 
-			for (Group group : allGroups) {
-				TreeSet<User> userSet = new TreeSet<User>(group.getUsers().keySet());
-				if (userSet.contains(user)) {
-					foundGroups.add(group);
-				}
-			}
-
-			return foundGroups;
+			return session.createQuery(critQuery).getResultList();
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
 			Response response = Response.status(Response.Status.SERVICE_UNAVAILABLE)
-					.entity(new Genson().serialize(e.getMessage())).build();
+					.entity(new Genson().serialize(e)).build();
 			throw new ServiceUnavailableException(response);
 		} catch (Exception e) {
 			// Something else went wrong
 			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-					.entity(new Genson().serialize(e.getMessage())).build();
+					.entity(new Genson().serialize(e)).build();
 			throw new InternalServerErrorException(response);
 		} finally {
 			PersistenceHelper.closeSession();
