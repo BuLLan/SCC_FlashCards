@@ -7,13 +7,17 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.ServerErrorException;
+import javax.ws.rs.ServiceUnavailableException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.hibernate.HibernateException;
 
 import com.owlike.genson.Genson;
 
@@ -33,11 +37,27 @@ import scc.flashcards.persistence.PersistenceHelper;
 public class GroupResource {
 
 	@GET
-	@ApiOperation(value = "getGroupById")
+	@ApiOperation(value = "getGroupById", response=Group.class)
 	@Path("/{group_id}")
-	public Group getGroupById(
+	public Response getGroupById(
 			@ApiParam(name = "group_id", value = "The id of the group") @PathParam("group_id") int group_id) {
-		return PersistenceHelper.getById(group_id, Group.class);
+		PersistenceHelper.openSession();
+		try{
+			Group group = PersistenceHelper.getById(group_id, Group.class);
+			return Response.ok(new Genson().serialize(group)).build();
+		} catch (HibernateException e) {
+			// Something went wrong with the Database
+			Response response = Response.status(Response.Status.SERVICE_UNAVAILABLE)
+					.entity(new Genson().serialize(e.getMessage())).build();
+			throw new ServiceUnavailableException(response);
+		} catch (Exception e) {
+			// Something else went wrong
+			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(new Genson().serialize(e)).build();
+			throw new InternalServerErrorException(response);
+		} finally {
+			PersistenceHelper.closeSession();
+		}
 	}
 
 	@POST
