@@ -1,36 +1,58 @@
 package scc.flashcards.model;
 
-import java.util.Collection;
+import java.util.Set;
 
-public class Box {
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.hibernate.annotations.GenericGenerator;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@XmlRootElement
+@ApiModel(value = "Box", description = "Simple Box Model for our WebService")
+@Entity(name = "Box")
+public class Box extends AbstractModel {
 	
 	private int id;
 	
-	/**
-	 * Title of the Box
-	 */
 	private String title;
 	
-	private int category_id;
+	private Category category;
 	
-	private int subcategory_id;
+	private Category subcategory;
 	
-	private Collection<String> tags;
+	private String tags;
 	
-	private User owner;
+	private int owner_id;
 	
-	private Collection<FlashCard> flashcards;
+	private Set<FlashCard> flashcards;
 	
+	private boolean isPublic;
 	
-	public Box(String title, int category_id, int subcategory_id, Collection<String> tags, User owner) {
+	public Box(){}
+	
+	public Box(String title, Category category, Category subcategory, String tags, int owner_id) {
 		super();
 		this.title = title;
-		this.category_id = category_id;
-		this.subcategory_id = subcategory_id;
+		this.category = category;
+		this.subcategory = subcategory;
 		this.tags = tags;
-		this.owner = owner;
+		this.owner_id = owner_id;
 	}
 
+	@Id
+	@GeneratedValue(generator = "increment")
+	@GenericGenerator(name = "increment", strategy = "increment")
 	public int getId() {
 		return id;
 	}
@@ -38,7 +60,9 @@ public class Box {
 	public void setId(int id) {
 		this.id = id;
 	}
-
+	
+	@ApiModelProperty(required=true)
+	@XmlAttribute(required=true)
 	public String getTitle() {
 		return title;
 	}
@@ -47,45 +71,68 @@ public class Box {
 		this.title = title;
 	}
 
-	public int getCategory_id() {
-		return category_id;
+	@ApiModelProperty(required=true)
+	@XmlAttribute(required=true)
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="category_id", referencedColumnName="id")
+	public Category getCategory() {
+		return category;
 	}
 
-	public void setCategory_id(int category_id) {
-		this.category_id = category_id;
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 
-	public int getSubcategory_id() {
-		return subcategory_id;
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="subcategory_id", referencedColumnName="id")
+	public Category getSubcategory() {
+		return subcategory;
 	}
 
-	public void setSubcategory_id(int subcategory_id) {
-		this.subcategory_id = subcategory_id;
+	public void setSubcategory(Category subcategory) {
+		this.subcategory = subcategory;
 	}
 
-	public Collection<String> getTags() {
+	public String getTags() {
 		return tags;
 	}
 
-	public void setTags(Collection<String> tags) {
+	public void setTags(String tags) {
 		this.tags = tags;
 	}
 
-	public User getOwner() {
-		return owner;
+	@ApiModelProperty(required=true)
+	@XmlAttribute(required=true)
+	public int getOwner() {
+		return owner_id;
 	}
 
-	public void setOwner(User owner) {
-		this.owner = owner;
+	public void setOwner(int owner) {
+		this.owner_id = owner;
 	}
 
-	public Collection<FlashCard> getFlashcards() {
+	@ElementCollection
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="box_id", referencedColumnName="id")
+	public Set<FlashCard> getFlashcards() {
 		return flashcards;
 	}
 
-	public void setFlashcards(Collection<FlashCard> flashcards) {
+	public void setFlashcards(Set<FlashCard> flashcards) {
 		this.flashcards = flashcards;
 	}
+	
+	@ApiModelProperty(required=true)
+	@XmlAttribute(required=true)
+	public boolean isPublic() {
+		return isPublic;
+	}
+
+	public void setPublic(boolean isPublic) {
+		this.isPublic = isPublic;
+	}
+
+	
 	
 	
 }

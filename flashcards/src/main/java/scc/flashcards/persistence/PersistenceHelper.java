@@ -1,11 +1,15 @@
 package scc.flashcards.persistence;
 
 import javax.inject.Singleton;
+import javax.ws.rs.NotFoundException;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+
+import scc.flashcards.model.Group;
 
 @Singleton
 public class PersistenceHelper {
@@ -38,6 +42,18 @@ public class PersistenceHelper {
 	
 	public SessionFactory getSessionFactory() {
 		return this.sessionFactory;
+	}
+	
+	public static <C> C getById(int id, Class<C> c){
+		org.hibernate.SessionFactory sessionFactory = PersistenceHelper.getInstance().getSessionFactory();
+		Session ses = sessionFactory.openSession();
+		C element = null;
+		element = ses.find(c, id);
+		ses.close();
+		if(element == null){
+			throw new NotFoundException(c.getName()+" with id "+id+" not found");
+		}
+		return element;
 	}
 	
 }

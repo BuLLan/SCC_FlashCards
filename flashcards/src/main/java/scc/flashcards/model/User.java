@@ -1,23 +1,20 @@
 package scc.flashcards.model;
 
-import javax.xml.bind.annotation.XmlElement;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 
 @XmlRootElement
 @ApiModel(value = "User", description = "Simple User Model for our WebService")
 @Entity(name = "User")
 public class User extends AbstractModel {
 
-	private Integer id;
+	private int id;
 
 	private String firstName;
 
@@ -26,6 +23,11 @@ public class User extends AbstractModel {
 	private String login;
 
 	private String password;
+	
+	private String salt;
+
+
+	
 
 	/**
 	 * Empty Constructor for JAXB, don't use!
@@ -33,9 +35,8 @@ public class User extends AbstractModel {
 	public User() {
 	}
 
-	public User(Integer id, String firstName, String lastName, String login, String password) {
+	public User(String firstName, String lastName, String login, String password) {
 		super();
-		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.login = login;
@@ -45,11 +46,11 @@ public class User extends AbstractModel {
 	@Id
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
-	public Integer getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -83,6 +84,14 @@ public class User extends AbstractModel {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
 	}
 
 }

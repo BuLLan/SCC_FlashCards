@@ -8,5 +8,17 @@
   <property name="hibernate.connection.username">root</property>
   <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
   <mapping class="scc.flashcards.model.User"/>
+  <mapping class="scc.flashcards.model.Box"/>
+  <mapping class="scc.flashcards.model.FlashCard"/>
+  <mapping class="scc.flashcards.model.Page"/>
+  <mapping class="scc.flashcards.model.Category"/>
+  <mapping class="scc.flashcards.model.Comment"/>
+  <mapping class="scc.flashcards.model.Group"/>
+  <mapping class="scc.flashcards.model.NaiveLearningProfile"/>
+  <mapping class="scc.flashcards.model.AbstractLearningProfile"/>
+  
+  <mapping class="scc.flashcards.model.UserRole"/>
+  <mapping class="scc.flashcards.model.RolesPermission"/>
+
  </session-factory>
 </hibernate-configuration>

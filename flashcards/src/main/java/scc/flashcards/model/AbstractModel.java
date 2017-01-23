@@ -1,7 +1,5 @@
 package scc.flashcards.model;
 
-import java.io.Serializable;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -13,21 +11,21 @@ import scc.flashcards.persistence.PersistenceHelper;
  * @author Timi
  *
  */
-public abstract class AbstractModel {
+public abstract class AbstractModel implements Comparable<AbstractModel> {
 
 	private SessionFactory sessionFactory;
+	
+	private int id;
 	
 	/**
 	 * Adds or updates Entity in database
 	 */
-	public Serializable persist() {
+	public void persist() {
 		Session session = getSessionFactory().openSession();
 		session.beginTransaction();
-		Serializable id = session.save(this);
+		session.saveOrUpdate(this);
 		session.getTransaction().commit();
 		session.close();
-		
-		return id;
 	}
 	
 	/**
@@ -35,7 +33,9 @@ public abstract class AbstractModel {
 	 */
 	public void delete() {
 		Session session = getSessionFactory().openSession();
+		session.beginTransaction();
 		session.delete(this);
+		session.getTransaction().commit();
 		session.close();
 	}
 	
@@ -45,5 +45,21 @@ public abstract class AbstractModel {
 		}
 		return this.sessionFactory;
 	}
+
+	@Override
+	/**
+	 * By implementing this method we don't have to check for duplicate occurences,
+	 * if we add a Entity to another entities collection.
+	 */
+	public int compareTo(AbstractModel o) {
+		if(this.getId() == o.getId()){
+			return 0;
+		}
+		return -1;
+	}
+	
+	public abstract int getId();
+	
+	public abstract void setId(int id);
 	
 }

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>FlashCards</title>
+
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
+<style type="text/css">
+.active {
+    background-color: orange;
+}
+</style>
+
+</head>
+<body> 
+
+<div ng-app="myApp" ng-controller="flashCardsCtrl" id="ctrl" style="padding: 20px 10%"> 
+<!— Modal —>
+  <div class="row">
+    <div class="col-sm-6">
+      <h1>Registrierte Benutzer</h1>
+      <div class="row">
+        <div class="col-sm-1 tableheader">ID</div>
+        <div class="col-sm-2 tableheader">Vorname</div>
+        <div class="col-sm-2 tableheader">Nachname</div>
+        <div class="col-sm-3 tableheader">Email</div>
+        <div class="col-sm-3 tableheader">Passwort</div>  
+        <div class="col-sm-1 tableheader"></div>
+      </div>
+      
+      <div class="row" ng-repeat="user in users">
+        <div class="col-sm-1 tablebody">{{user.id}}</div>
+        <div class="col-sm-2 tablebody">{{user.firstName}}</div>
+        <div class="col-sm-2 tablebody">{{user.lastName}}</div>
+        <div class="col-sm-3 tablebody">{{user.login}}</div>
+        <div class="col-sm-3 tablebody">{{user.password}}</div>
+        <div class="col-sm-1 tablebody"><span ng-click="deleteUser(user.id)" class="glyphicon glyphicon-remove" aria-hidden="true"></span></div>  
+      </div>
+      <button ng-click="getAllUsers()" id="btn-newvideo" class="btn btn-default"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refresh</button>
+    </div>
+    <div class="col-sm-6">
+      <h1>Benutzer hinzuf&uuml;gen</h1>
+      <div class"row">
+        <form novalidate name="userForm" id='newUserForm'  ng-submit="login()">
+          <div class="form-group">
+              <label>email</label>
+              <input type="text" id="email" name="email" class="form-control" ng-model="firstname">
+          </div>
+          <div class="form-group">
+              <label>Passwort</label>
+              <input type="text" id="password" name="password" class="form-control" ng-model="password">
+          </div>
+          <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Submit</button>
+          </form>
+      </div>
+    </div>
+    
+  </div>
+
+</div>
+<script src="js/app.js"></script>
+
+
+</body>
+</html>
