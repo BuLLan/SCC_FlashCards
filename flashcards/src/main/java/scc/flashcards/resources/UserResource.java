@@ -309,7 +309,7 @@ public class UserResource {
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "login", notes = "Login the User with Name and Password")
-	public boolean tryLogin(@ApiParam(value = "Request", required = true) LoginRequest request) {
+	public Response tryLogin(@ApiParam(value = "Request", required = true) LoginRequest request) {
 		
 		org.apache.shiro.mgt.SecurityManager securityManager = new IniSecurityManagerFactory().getInstance();
 		SecurityUtils.setSecurityManager(securityManager);
@@ -329,20 +329,19 @@ public class UserResource {
 				// save current username in the session, so we have access to
 				// our User model
 				currentUser.getSession().setAttribute("username", request.getEmail());
-				return true;
+				return Response.ok(new Genson().serialize("Login Successful!")).build();
 			} catch (UnknownAccountException uae) {
-				System.out.println("There is no user with username of " + token.getPrincipal());
+				return Response.status(Response.Status.BAD_REQUEST).entity(new Genson().serialize("Email or password incorrect")).build();
 			} catch (IncorrectCredentialsException ice) {
-				System.out.println("Password for account " + token.getPrincipal() + " was incorrect!");
+				return Response.status(Response.Status.BAD_REQUEST).entity(new Genson().serialize("Email or password incorrect")).build();
 			} catch (LockedAccountException lae) {
-				System.out.println("The account for username " + token.getPrincipal() + " is locked.  "
-						+ "Please contact your administrator to unlock it.");
+				String message = "The account for username " + token.getPrincipal() + " is locked.  "
+						+ "Please contact your administrator to unlock it.";
+				return Response.status(Response.Status.BAD_REQUEST).entity(new Genson().serialize(message)).build();
 			}
 		} else {
-			return true; // already logged in
+			return Response.ok(new Genson().serialize("Already logged in")).build(); // already logged in
 		}
-
-		return false;
 	}
 
 	private void generatePassword(User user, String plainTextPassword) {
