@@ -6,20 +6,9 @@ import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
-import javax.xml.bind.annotation.XmlRootElement;
-
-import org.hibernate.annotations.GenericGenerator;
-
-import io.swagger.annotations.ApiModel;
-
 import javax.persistence.ManyToMany;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-
-import org.hibernate.annotations.GenericGenerator;
 
 import com.owlike.genson.annotation.JsonIgnore;
 

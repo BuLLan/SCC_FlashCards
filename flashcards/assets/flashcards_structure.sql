@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 23. Jan 2017 um 14:42
+-- Erstellungszeit: 23. Jan 2017 um 23:48
 -- Server-Version: 10.1.19-MariaDB
 -- PHP-Version: 7.0.13
 
@@ -44,6 +44,22 @@ CREATE TABLE `box` (
 CREATE TABLE `box_tags` (
   `box_id` int(11) NOT NULL,
   `tags` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `cardscore`
+--
+
+CREATE TABLE `cardscore` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `flashcard_id` int(11) NOT NULL,
+  `score` int(11) NOT NULL DEFAULT '0',
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `lastUpdate` date NOT NULL,
+  `due` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -126,19 +142,6 @@ CREATE TABLE `group_users` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `learningprofile`
---
-
-CREATE TABLE `learningprofile` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `box_id` int(11) NOT NULL,
-  `data` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
 -- Tabellenstruktur für Tabelle `user`
 --
 
@@ -147,7 +150,8 @@ CREATE TABLE `user` (
   `firstName` text NOT NULL,
   `lastName` varchar(255) NOT NULL,
   `login` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL
+  `password` varchar(255) NOT NULL,
+  `salt` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -158,6 +162,12 @@ CREATE TABLE `user` (
 -- Indizes für die Tabelle `box`
 --
 ALTER TABLE `box`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `cardscore`
+--
+ALTER TABLE `cardscore`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -185,17 +195,20 @@ ALTER TABLE `groups`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `learningprofile`
---
-ALTER TABLE `learningprofile`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indizes für die Tabelle `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`);
 
+--
+-- AUTO_INCREMENT für exportierte Tabellen
+--
+
+--
+-- AUTO_INCREMENT für Tabelle `cardscore`
+--
+ALTER TABLE `cardscore`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
