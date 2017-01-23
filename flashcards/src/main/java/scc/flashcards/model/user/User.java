@@ -1,6 +1,7 @@
 package scc.flashcards.model.user;
 
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -30,8 +31,8 @@ import scc.flashcards.model.AbstractModel;
 @XmlRootElement
 @ApiModel(value = "User", description = "Simple User Model for our WebService")
 @Entity(name = "User")
-public class User extends AbstractModel {
-
+public class User extends AbstractModel implements Serializable {
+	private static final long serialVersionUID = -4656759219348212715L;
 	private String firstName;
 
 	private String lastName;

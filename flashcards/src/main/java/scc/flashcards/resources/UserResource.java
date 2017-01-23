@@ -20,6 +20,16 @@ import javax.ws.rs.ServiceUnavailableException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.LockedAccountException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.config.IniSecurityManagerFactory;
+import org.apache.shiro.crypto.RandomNumberGenerator;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.Sha256Hash;
+import org.apache.shiro.util.Factory;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
@@ -32,6 +42,7 @@ import scc.flashcards.model.user.Group;
 import scc.flashcards.model.user.User;
 import scc.flashcards.model.user.UserRole;
 import scc.flashcards.persistence.PersistenceHelper;
+import scc.flashcards.rest.LoginRequest;
 import scc.flashcards.rest.NewGroupRequest;
 import scc.flashcards.rest.NewUserRequest;
 import scc.flashcards.rest.UpdateUserRequest;
@@ -53,7 +64,6 @@ public class UserResource {
 	 * @return a list of users
 	 */
 	@GET
-
 	@ApiOperation(value = "getAllUsers", notes = "Returns a list of all users", response = User.class, responseContainer = "List")
 	public Response getAllUsers() {
 		Session session = PersistenceHelper.getSession();
@@ -86,7 +96,7 @@ public class UserResource {
 	 * @return
 	 */
 	@POST
-
+	@Path("/register")
 	@ApiOperation(value = "addUser", notes = "Create a new User and returns the id")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -97,6 +107,8 @@ public class UserResource {
 			request.validateRequest();
 			User user = new User(request.getFirstName(), request.getLastName(), request.getEmail(),
 					request.getPassword());
+			generatePassword(user, request.getPassword());
+			
 			user.persist();
 			return Response.ok(user.getId()).status(Response.Status.OK).build();
 		} catch (HibernateException e) {
@@ -113,6 +125,18 @@ public class UserResource {
 			PersistenceHelper.closeSession();
 		}
 	}
+	
+	private void generatePassword(User user, String plainTextPassword) {
+		  RandomNumberGenerator rng = new SecureRandomNumberGenerator();
+		  Object salt = rng.nextBytes();
+
+		  // Now hash the plain-text password with the random salt and multiple
+		  // iterations and then Base64-encode the value (requires less space than Hex):
+		  String hashedPasswordBase64 = new Sha256Hash(plainTextPassword, salt,1024).toBase64();
+
+		  user.setPassword(hashedPasswordBase64);
+		  user.setSalt(salt.toString());
+		}
 
 	/**
 	 * Gets a user by id
@@ -297,5 +321,51 @@ public class UserResource {
 			PersistenceHelper.closeSession();
 		}
 	}
+	
+	
+	@POST
+	@Path("/login")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "login", notes = "Login the User with Name and Password")
+	public boolean tryLogin(@ApiParam(value = "Request", required = true) LoginRequest request){
+		  
+		Factory<org.apache.shiro.mgt.SecurityManager> factory = new IniSecurityManagerFactory();
+		org.apache.shiro.mgt.SecurityManager securityManager = factory.getInstance();
+		SecurityUtils.setSecurityManager(securityManager);
+			// get the currently executing user:
+		  org.apache.shiro.subject.Subject currentUser = SecurityUtils.getSubject();
+
+		  if (!currentUser.isAuthenticated()) {
+		    //collect user principals and credentials in a gui specific manner
+		    //such as username/password html form, X509 certificate, OpenID, etc.
+		    //We'll use the username/password example here since it is the most common.
+		    UsernamePasswordToken token = new UsernamePasswordToken(request.getEmail(),request.getPassword());
+		     //this is all you have to do to support 'remember me' (no config - built in!):
+		    token.setRememberMe(true);
+
+		    try {
+		        currentUser.login(token);
+		        System.out.println("User [" + currentUser.getPrincipal().toString() + "] logged in successfully.");
+		        
+		        // save current username in the session, so we have access to our User model
+		        currentUser.getSession().setAttribute("username", request.getEmail());
+		        return true;
+		    } catch (UnknownAccountException uae) {
+		      System.out.println("There is no user with username of "
+		                + token.getPrincipal());
+		    } catch (IncorrectCredentialsException ice) {
+		      System.out.println("Password for account " + token.getPrincipal()
+		                + " was incorrect!");
+		    } catch (LockedAccountException lae) {
+		      System.out.println("The account for username " + token.getPrincipal()
+		                + " is locked.  "
+		                + "Please contact your administrator to unlock it.");
+		    }
+		  } else {
+		    return true; // already logged in
+		  }
+
+		  return false;
+		}
 
 }
