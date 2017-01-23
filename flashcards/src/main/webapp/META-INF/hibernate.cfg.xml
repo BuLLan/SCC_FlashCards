@@ -14,8 +14,7 @@
   <mapping class="scc.flashcards.model.flashcards.Page"/>
   <mapping class="scc.flashcards.model.flashcards.Category"/>
   <mapping class="scc.flashcards.model.flashcards.Comment"/>
-  <mapping class="scc.flashcards.model.learning.NaiveLearningProfile"/>
-  <mapping class="scc.flashcards.model.learning.AbstractLearningProfile"/>
   <mapping class="scc.flashcards.model.AbstractModel"/>
+  <mapping class="scc.flashcards.model.learning.CardScore"/>
  </session-factory>
 </hibernate-configuration>

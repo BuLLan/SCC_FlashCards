@@ -1,7 +1,6 @@
 package scc.flashcards.service;
 
-import scc.flashcards.model.learning.AbstractLearningProfile;
-import scc.flashcards.model.user.User;
+import scc.flashcards.model.learning.CardScore;
 
 /**
  * Interface for all kinds of learning strategy.
@@ -11,11 +10,6 @@ import scc.flashcards.model.user.User;
  */
 public interface LearningStrategy {
 
-	/**
-	 * Factory Method for creating a specific learning profile
-	 * @param user
-	 * @return
-	 */
-	public AbstractLearningProfile createLearningProfile(User user);
+	public CardScore scoreCard(CardScore score, boolean isCorrect);
 	
 }

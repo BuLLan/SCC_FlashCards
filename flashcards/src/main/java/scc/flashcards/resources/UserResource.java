@@ -7,17 +7,14 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.MapJoin;
 import javax.persistence.criteria.Root;
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.ServiceUnavailableException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -164,7 +161,7 @@ public class UserResource {
 		} catch (ClientErrorException e) {
 			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
 					.build();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e)).build();
 		} finally {
@@ -190,9 +187,10 @@ public class UserResource {
 			User user = PersistenceHelper.getById(request.getId(), User.class);
 			user.setFirstName((request.getFirstName().isEmpty()) ? user.getFirstName() : request.getFirstName());
 			user.setLastName((request.getLastName().isEmpty()) ? user.getLastName() : request.getLastName());
-			user.setLogin((request.getEmail() == null || request.getEmail().isEmpty()) ? user.getLogin() : request.getEmail());
-			user.setPassword((request.getPassword() == null || request.getPassword().isEmpty()) ? 
-					user.getPassword() : request.getPassword());
+			user.setLogin((request.getEmail() == null || request.getEmail().isEmpty()) ? user.getLogin()
+					: request.getEmail());
+			user.setPassword((request.getPassword() == null || request.getPassword().isEmpty()) ? user.getPassword()
+					: request.getPassword());
 			user.persist();
 			return Response.ok().build();
 		} catch (HibernateException e) {
@@ -239,17 +237,15 @@ public class UserResource {
 			return Response.ok(new Genson().serialize(groupList)).build();
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
-			Response response = Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e))
+			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
 					.build();
-			throw new ServiceUnavailableException(response);
 		} catch (ClientErrorException e) {
 			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (Exception e) {
 			// Something else went wrong
-			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e))
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
 					.build();
-			throw new InternalServerErrorException(response);
 		} finally {
 			PersistenceHelper.closeSession();
 		}
@@ -259,8 +255,9 @@ public class UserResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Create a Group with the user as owner", response=Group.class)
-	public Response createGroup(@ApiParam(value = "The ID of the owner", required = true) @PathParam("userid") int userid,
+	@ApiOperation(value = "Create a Group with the user as owner", response = Group.class)
+	public Response createGroup(
+			@ApiParam(value = "The ID of the owner", required = true) @PathParam("userid") int userid,
 			@ApiParam(value = "The Group to be created") NewGroupRequest request) {
 		try {
 			PersistenceHelper.openSession();
@@ -278,17 +275,15 @@ public class UserResource {
 			return Response.ok(new Genson().serialize(newGroup)).build();
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
-			Response response = Response.status(Response.Status.SERVICE_UNAVAILABLE)
-					.entity(new Genson().serialize(e.getMessage())).build();
-			throw new ServiceUnavailableException(response);
+			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (ClientErrorException e) {
 			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (Exception e) {
 			// Something else went wrong
-			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-					.entity(new Genson().serialize(e.getMessage())).build();
-			throw new InternalServerErrorException(response);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} finally {
 			PersistenceHelper.closeSession();
 		}

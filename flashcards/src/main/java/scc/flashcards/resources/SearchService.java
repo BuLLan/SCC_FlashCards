@@ -19,7 +19,7 @@ import scc.flashcards.model.user.User;
 
 @Path("/search")
 @Api(value = "/search", tags={"Searching Resources"})
-public class SearchServiceProvider {
+public class SearchService {
 
 	@GET
 	@ApiOperation(value="Returns list of users with given nickname")
