@@ -2,13 +2,18 @@ package scc.flashcards.model.learning;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.xml.bind.annotation.XmlRootElement;
 
+import io.swagger.annotations.ApiModel;
 import scc.flashcards.model.AbstractModel;
 import scc.flashcards.model.flashcards.FlashCard;
 import scc.flashcards.model.user.User;
 
+@XmlRootElement
+@Entity
+@ApiModel
 public class CardScore extends AbstractModel{
 
 	@ManyToOne

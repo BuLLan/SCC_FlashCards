@@ -55,17 +55,15 @@ public class GroupResource {
 			return Response.ok(new Genson().serialize(group)).build();
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
-			Response response = Response.status(Response.Status.SERVICE_UNAVAILABLE)
-					.entity(new Genson().serialize(e.getMessage())).build();
-			throw new ServiceUnavailableException(response);
-		}  catch (ClientErrorException e) {
+			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
+					.build();
+		} catch (ClientErrorException e) {
 			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (Exception e) {
 			// Something else went wrong
-			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e))
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
 					.build();
-			throw new InternalServerErrorException(response);
 		} finally {
 			PersistenceHelper.closeSession();
 		}
@@ -88,17 +86,15 @@ public class GroupResource {
 			return Response.ok().build();
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
-			Response response = Response.status(Response.Status.SERVICE_UNAVAILABLE)
-					.entity(new Genson().serialize(e.getMessage())).build();
-			throw new ServiceUnavailableException(response);
+			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (ClientErrorException e) {
 			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (Exception e) {
 			// Something else went wrong
-			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e))
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
 					.build();
-			throw new InternalServerErrorException(response);
 		} finally {
 			PersistenceHelper.closeSession();
 		}
@@ -116,24 +112,22 @@ public class GroupResource {
 			return Response.ok().build();
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
-			Response response = Response.status(Response.Status.SERVICE_UNAVAILABLE)
-					.entity(new Genson().serialize(e.getMessage())).build();
-			throw new ServiceUnavailableException(response);
+			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (ClientErrorException e) {
 			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (Exception e) {
 			// Something else went wrong
-			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e))
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
 					.build();
-			throw new InternalServerErrorException(response);
 		} finally {
 			PersistenceHelper.closeSession();
 		}
 	}
 
 	@GET
-	@ApiOperation(value = "Get Boxes of a group", response=Group.class, responseContainer="List")
+	@ApiOperation(value = "Get Boxes of a group", response = Group.class, responseContainer = "List")
 	@Path("/{group_id}/boxes")
 	public Response getBoxesOfGroup(
 			@ApiParam(name = "group_id", value = "The id of the group") @PathParam("group_id") int group_id) {
@@ -149,22 +143,20 @@ public class GroupResource {
 			return Response.ok(new Genson().serialize(resultList)).build();
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
-			Response response = Response.status(Response.Status.SERVICE_UNAVAILABLE)
-					.entity(new Genson().serialize(e.getMessage())).build();
-			throw new ServiceUnavailableException(response);
+			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (ClientErrorException e) {
 			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (Exception e) {
 			// Something else went wrong
-			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e))
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
 					.build();
-			throw new InternalServerErrorException(response);
 		} finally {
 			PersistenceHelper.closeSession();
 		}
 	}
-	
+
 	@POST
 	@ApiOperation(value = "Add Box to Group")
 	@Path("/{group_id}/boxes")
@@ -183,17 +175,15 @@ public class GroupResource {
 			return Response.ok().build();
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
-			Response response = Response.status(Response.Status.SERVICE_UNAVAILABLE)
-					.entity(new Genson().serialize(e.getMessage())).build();
-			throw new ServiceUnavailableException(response);
+			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (ClientErrorException e) {
 			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (Exception e) {
 			// Something else went wrong
-			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e))
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
 					.build();
-			throw new InternalServerErrorException(response);
 		} finally {
 			PersistenceHelper.closeSession();
 		}
@@ -218,17 +208,15 @@ public class GroupResource {
 			return Response.ok().build();
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
-			Response response = Response.status(Response.Status.SERVICE_UNAVAILABLE)
-					.entity(new Genson().serialize(e.getMessage())).build();
-			throw new ServiceUnavailableException(response);
+			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (ClientErrorException e) {
 			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (Exception e) {
 			// Something else went wrong
-			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e))
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
 					.build();
-			throw new InternalServerErrorException(response);
 		} finally {
 			PersistenceHelper.closeSession();
 		}
@@ -251,17 +239,15 @@ public class GroupResource {
 			return Response.ok().build();
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
-			Response response = Response.status(Response.Status.SERVICE_UNAVAILABLE)
-					.entity(new Genson().serialize(e.getMessage())).build();
-			throw new ServiceUnavailableException(response);
+			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (ClientErrorException e) {
 			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
 					.build();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			// Something else went wrong
-			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e))
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
 					.build();
-			throw new InternalServerErrorException(response);
 		} finally {
 			PersistenceHelper.closeSession();
 		}
@@ -286,14 +272,14 @@ public class GroupResource {
 			}
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
-			return Response.status(Response.Status.SERVICE_UNAVAILABLE)
-					.entity(new Genson().serialize(e.getMessage())).build();
+			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		} catch (ClientErrorException e) {
 			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
 					.build();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			// Something else went wrong
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e))
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} finally {
 			PersistenceHelper.closeSession();
