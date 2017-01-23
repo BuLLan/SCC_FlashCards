@@ -14,8 +14,6 @@ import io.swagger.annotations.ApiModel;
 @Entity(name = "User")
 public class RolesPermission extends AbstractModel {
 
-	private int id;
-
 	private String roleName;
 
 	private String permission;
@@ -32,17 +30,6 @@ public class RolesPermission extends AbstractModel {
 //		this.login = login;
 //		this.password = password;
 //	}
-
-	@Id
-	@GeneratedValue(generator = "increment")
-	@GenericGenerator(name = "increment", strategy = "increment")
-	public int getId() {
-		return this.id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public String getRoleName() {
 		return roleName;

@@ -7,6 +7,7 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import scc.flashcards.model.user.UserRole;
 import scc.flashcards.persistence.PersistenceHelper;
 
 
@@ -14,28 +15,13 @@ public class UserRoleDAO {
 	
 	public static List<UserRole> getUserRolesByEmail(String email) {
   
-	    org.hibernate.SessionFactory sessionFactory = PersistenceHelper.getInstance().getSessionFactory();
-		Session ses = sessionFactory.openSession();
+		Session ses = PersistenceHelper.getSession();
 		final List<UserRole> list = new LinkedList<>();
 		for(final Object o : ses.createQuery("from UserRole where email=?").setString(0, email).list()) {
 		    list.add((UserRole)o);
 		}
+		ses.close();
 		return list;
 	  }
-	
-	  public static void insert(UserRole r) {
-		    
-			boolean result = true;
-			UserRole userRole = r;
-			
-			
-			try {
-				userRole.persist();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				result = false;
-			}
 
-	  }
 	}

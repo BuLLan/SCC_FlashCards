@@ -7,12 +7,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.MapJoin;
 import javax.persistence.criteria.Root;
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ClientErrorException;
->>>>>>> DevBranch
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.POST;
@@ -21,7 +18,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.ServiceUnavailableException;
 import javax.ws.rs.core.MediaType;
-
 import javax.ws.rs.core.Response;
 
 import org.hibernate.HibernateException;
@@ -39,7 +35,6 @@ import scc.flashcards.persistence.PersistenceHelper;
 import scc.flashcards.rest.NewGroupRequest;
 import scc.flashcards.rest.NewUserRequest;
 import scc.flashcards.rest.UpdateUserRequest;
->>>>>>> DevBranch
 
 /**
  * Webservice Resource for User model

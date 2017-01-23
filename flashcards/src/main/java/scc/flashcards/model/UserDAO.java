@@ -1,16 +1,15 @@
 package scc.flashcards.model;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 
+import scc.flashcards.model.user.User;
 import scc.flashcards.persistence.PersistenceHelper;
 
 
 public class UserDAO {
 
 	  public static User getUserByEmail(String email) {
-		org.hibernate.SessionFactory sessionFactory = PersistenceHelper.getInstance().getSessionFactory();
-		Session ses = sessionFactory.openSession();
+		Session ses = PersistenceHelper.getSession();
 		return ses.get(User.class, email);
 	  }
 	}

@@ -1,5 +1,18 @@
 package scc.flashcards.model;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.annotations.GenericGenerator;
+
+import com.owlike.genson.annotation.JsonIgnore;
+
+import scc.flashcards.persistence.PersistenceHelper;
+
 @MappedSuperclass
 public abstract class AbstractModel implements Comparable<AbstractModel> {
 
@@ -56,20 +69,5 @@ public abstract class AbstractModel implements Comparable<AbstractModel> {
 		this.id = id;
 	}
 
-	@Override
-	/**
-	 * By implementing this method we don't have to check for duplicate occurences,
-	 * if we add a Entity to another entities collection.
-	 */
-	public int compareTo(AbstractModel o) {
-		if(this.getId() == o.getId()){
-			return 0;
-		}
-		return -1;
-	}
-	
-	public abstract int getId();
-	
-	public abstract void setId(int id);
 	
 }

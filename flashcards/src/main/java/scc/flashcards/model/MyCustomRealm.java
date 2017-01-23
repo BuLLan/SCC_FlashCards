@@ -7,6 +7,8 @@ import org.apache.shiro.authc.SaltedAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.realm.jdbc.JdbcRealm;
 
+import scc.flashcards.model.user.User;
+
 public class MyCustomRealm extends JdbcRealm {
 	  @Override
 	  protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
