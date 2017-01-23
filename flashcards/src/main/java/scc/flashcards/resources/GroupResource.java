@@ -3,6 +3,7 @@ package scc.flashcards.resources;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -16,6 +17,7 @@ import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.ServiceUnavailableException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.hibernate.HibernateException;
 
@@ -29,6 +31,8 @@ import scc.flashcards.model.user.Group;
 import scc.flashcards.model.user.User;
 import scc.flashcards.model.user.UserRole;
 import scc.flashcards.persistence.PersistenceHelper;
+import scc.flashcards.rest.AddBoxToGroupRequest;
+import scc.flashcards.rest.NewGroupRequest;
 
 @Path("/group")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -37,12 +41,12 @@ import scc.flashcards.persistence.PersistenceHelper;
 public class GroupResource {
 
 	@GET
-	@ApiOperation(value = "getGroupById", response=Group.class)
+	@ApiOperation(value = "getGroupById", response = Group.class)
 	@Path("/{group_id}")
 	public Response getGroupById(
 			@ApiParam(name = "group_id", value = "The id of the group") @PathParam("group_id") int group_id) {
-		PersistenceHelper.openSession();
-		try{
+		try {
+			PersistenceHelper.openSession();
 			Group group = PersistenceHelper.getById(group_id, Group.class);
 			return Response.ok(new Genson().serialize(group)).build();
 		} catch (HibernateException e) {
@@ -50,10 +54,12 @@ public class GroupResource {
 			Response response = Response.status(Response.Status.SERVICE_UNAVAILABLE)
 					.entity(new Genson().serialize(e.getMessage())).build();
 			throw new ServiceUnavailableException(response);
+		} catch (ClientErrorException e) {
+			return e.getResponse();
 		} catch (Exception e) {
 			// Something else went wrong
-			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-					.entity(new Genson().serialize(e)).build();
+			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e))
+					.build();
 			throw new InternalServerErrorException(response);
 		} finally {
 			PersistenceHelper.closeSession();
@@ -65,17 +71,31 @@ public class GroupResource {
 	@Path("/{group_id}")
 	public Response updateGroup(
 			@ApiParam(name = "group_id", value = "The ID of the group") @PathParam(value = "group_id") int group_id,
-			@ApiParam(name = "group", value = "The Group to be created") Group newGroup) {
-		Group group = PersistenceHelper.getById(group_id, Group.class);
-		group.setId(group_id);
-		group.setTitle(newGroup.getTitle());
-		group.setDescription(newGroup.getDescription());
+			@ApiParam(name = "request", value = "The Group to be created_") NewGroupRequest request) {
 		try {
+			request.validateRequest();
+			PersistenceHelper.openSession();
+			Group group = PersistenceHelper.getById(group_id, Group.class);
+			group.setId(group_id);
+			group.setTitle(request.getTitle());
+			group.setDescription(request.getDescription());
 			group.persist();
+			return Response.ok().build();
+		} catch (HibernateException e) {
+			// Something went wrong with the Database
+			Response response = Response.status(Response.Status.SERVICE_UNAVAILABLE)
+					.entity(new Genson().serialize(e.getMessage())).build();
+			throw new ServiceUnavailableException(response);
+		} catch (ClientErrorException e) {
+			return e.getResponse();
 		} catch (Exception e) {
-			throw new ServerErrorException(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
+			// Something else went wrong
+			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e))
+					.build();
+			throw new InternalServerErrorException(response);
+		} finally {
+			PersistenceHelper.closeSession();
 		}
-		return Response.ok("Success").status(Response.Status.OK).build();
 	}
 
 	@DELETE
@@ -83,33 +103,59 @@ public class GroupResource {
 	@Path("/{group_id}")
 	public Response deleteGroup(
 			@ApiParam(name = "group_id", value = "The id of the group") @PathParam("group_id") int group_id) {
-		Group group = PersistenceHelper.getById(group_id, Group.class);
 		try {
+			PersistenceHelper.openSession();
+			Group group = PersistenceHelper.getById(group_id, Group.class);
 			group.delete();
+			return Response.ok().build();
+		} catch (HibernateException e) {
+			// Something went wrong with the Database
+			Response response = Response.status(Response.Status.SERVICE_UNAVAILABLE)
+					.entity(new Genson().serialize(e.getMessage())).build();
+			throw new ServiceUnavailableException(response);
+		} catch (ClientErrorException e) {
+			return e.getResponse();
 		} catch (Exception e) {
-			throw new ServerErrorException(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
+			// Something else went wrong
+			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e))
+					.build();
+			throw new InternalServerErrorException(response);
+		} finally {
+			PersistenceHelper.closeSession();
 		}
-		return Response.ok("Success").status(Response.Status.OK).build();
 	}
 
 	@POST
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@ApiOperation(value = "Add Box to Group")
 	@Path("/{group_id}/boxes")
 	public Response addBoxToGroup(
 			@ApiParam(name = "group_id", value = "The id of the group") @PathParam("group_id") int group_id,
-			@ApiParam(name = "box_id", value = "The id of the box") @FormParam("box_id") int box_id) {
-		Group group = PersistenceHelper.getById(group_id, Group.class);
-		Box box = PersistenceHelper.getById(box_id, Box.class);
+			@ApiParam(name = "box_id", value = "The id of the box") AddBoxToGroupRequest request) {
 		try {
+			request.validateRequest();
+			PersistenceHelper.openSession();
+			Group group = PersistenceHelper.getById(group_id, Group.class);
+			Box box = PersistenceHelper.getById(request.getBoxId(), Box.class);
 			TreeSet<Box> boxes = new TreeSet<Box>(group.getBoxes());
 			boxes.add(box);
 			group.setBoxes(boxes);
 			group.persist();
+			return Response.ok().build();
+		} catch (HibernateException e) {
+			// Something went wrong with the Database
+			Response response = Response.status(Response.Status.SERVICE_UNAVAILABLE)
+					.entity(new Genson().serialize(e.getMessage())).build();
+			throw new ServiceUnavailableException(response);
+		} catch (ClientErrorException e) {
+			return e.getResponse();
 		} catch (Exception e) {
-			return Response.serverError().entity(e).status(Response.Status.INTERNAL_SERVER_ERROR).build();
+			// Something else went wrong
+			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e))
+					.build();
+			throw new InternalServerErrorException(response);
+		} finally {
+			PersistenceHelper.closeSession();
 		}
-		return Response.ok("Success").status(Response.Status.OK).build();
 	}
 
 	@DELETE
@@ -118,18 +164,32 @@ public class GroupResource {
 	@Path("/{group_id}/boxes")
 	public Response removeBoxFromGroup(
 			@ApiParam(name = "group_id", value = "The id of the group") @PathParam("group_id") int group_id,
-			@ApiParam(name = "box_id", value = "The id of the box") @FormParam("box_id") int box_id) {
-		Group group = PersistenceHelper.getById(group_id, Group.class);
-		Box box = PersistenceHelper.getById(box_id, Box.class);
+			@ApiParam(name = "box_id", value = "The id of the box") AddBoxToGroupRequest request) {
 		try {
+			request.validateRequest();
+			PersistenceHelper.openSession();
+			Group group = PersistenceHelper.getById(group_id, Group.class);
+			Box box = PersistenceHelper.getById(request.getBoxId(), Box.class);
 			TreeSet<Box> boxes = new TreeSet<Box>(group.getBoxes());
 			boxes.remove(box);
 			group.setBoxes(boxes);
 			group.persist();
+			return Response.ok().build();
+		} catch (HibernateException e) {
+			// Something went wrong with the Database
+			Response response = Response.status(Response.Status.SERVICE_UNAVAILABLE)
+					.entity(new Genson().serialize(e.getMessage())).build();
+			throw new ServiceUnavailableException(response);
+		} catch (ClientErrorException e) {
+			return e.getResponse();
 		} catch (Exception e) {
-			return Response.serverError().entity(e).status(Response.Status.INTERNAL_SERVER_ERROR).build();
+			// Something else went wrong
+			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e))
+					.build();
+			throw new InternalServerErrorException(response);
+		} finally {
+			PersistenceHelper.closeSession();
 		}
-		return Response.ok("Success").status(Response.Status.OK).build();
 	}
 
 	@POST
@@ -138,18 +198,30 @@ public class GroupResource {
 	public Response inviteUserToGroup(
 			@ApiParam(name = "group_id", value = "The id of the group") @PathParam("group_id") int group_id,
 			@ApiParam(name = "user_id", value = "The id of the new member") @PathParam("user_id") int user_id) {
-		Group group = PersistenceHelper.getById(group_id, Group.class);
-		User user = PersistenceHelper.getById(user_id, User.class);
 		try {
+			PersistenceHelper.openSession();
+			Group group = PersistenceHelper.getById(group_id, Group.class);
+			User user = PersistenceHelper.getById(user_id, User.class);
 			TreeMap<User, UserRole> users = new TreeMap<User, UserRole>(group.getUsers());
 			users.put(user, UserRole.Member);
 			group.setUsers(users);
 			group.persist();
+			return Response.ok().build();
+		} catch (HibernateException e) {
+			// Something went wrong with the Database
+			Response response = Response.status(Response.Status.SERVICE_UNAVAILABLE)
+					.entity(new Genson().serialize(e.getMessage())).build();
+			throw new ServiceUnavailableException(response);
+		} catch (ClientErrorException e) {
+			return e.getResponse();
 		} catch (Exception e) {
-			return Response.serverError().entity(e).status(Response.Status.INTERNAL_SERVER_ERROR).build();
+			// Something else went wrong
+			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e))
+					.build();
+			throw new InternalServerErrorException(response);
+		} finally {
+			PersistenceHelper.closeSession();
 		}
-		
-		return Response.ok("User successfully added to group").status(Response.Status.OK).build();
 	}
 
 	@DELETE
@@ -158,16 +230,32 @@ public class GroupResource {
 	public Response removeUserFromGroup(
 			@ApiParam(name = "group_id", value = "The id of the group") @PathParam("group_id") int group_id,
 			@ApiParam(name = "user_id", value = "The id of the new member") @PathParam("user_id") int user_id) {
-		Group group = PersistenceHelper.getById(group_id, Group.class);
-		User user = PersistenceHelper.getById(user_id, User.class);
-		if (group.getUsers().remove(user) != null) {
-			try {
+		try {
+			PersistenceHelper.openSession();
+			Group group = PersistenceHelper.getById(group_id, Group.class);
+			User user = PersistenceHelper.getById(user_id, User.class);
+			if (group.getUsers().remove(user) != null) {
 				group.persist();
-			} catch (Exception e) {
-				return Response.serverError().entity(e).status(Response.Status.INTERNAL_SERVER_ERROR).build();
+				return Response.ok().build();
+			} else {
+				return Response.status(Status.CONFLICT)
+						.entity(new Genson().serialize("Requested user is not a member of requested group.")).build();
 			}
+		} catch (HibernateException e) {
+			// Something went wrong with the Database
+			Response response = Response.status(Response.Status.SERVICE_UNAVAILABLE)
+					.entity(new Genson().serialize(e.getMessage())).build();
+			throw new ServiceUnavailableException(response);
+		} catch (ClientErrorException e) {
+			return e.getResponse();
+		} catch (Exception e) {
+			// Something else went wrong
+			Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e))
+					.build();
+			throw new InternalServerErrorException(response);
+		} finally {
+			PersistenceHelper.closeSession();
 		}
-		return Response.ok("Deleted User from Group").status(Response.Status.OK).build();
 	}
 
 }

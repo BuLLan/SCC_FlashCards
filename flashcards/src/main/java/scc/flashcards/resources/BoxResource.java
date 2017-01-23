@@ -92,6 +92,7 @@ public class BoxResource {
 	@ApiOperation(value = "addBox", notes = "Create a new Box")
 	public Response addBox(@ApiParam(value = "Request", required = true) NewBoxRequest request) {
 		try {
+			request.validateRequest();
 			PersistenceHelper.openSession();
 			// Build new Box Object
 			Box box = new Box();
@@ -224,6 +225,7 @@ public class BoxResource {
 	@ApiOperation(value = "addCategory", notes = "Create a new Category", responseReference = "Category")
 	public Response addCategory(@ApiParam(value = "Request", required = true) NewCategoryRequest request) {
 		try {
+			request.validateRequest();
 			PersistenceHelper.openSession();
 			// Build new Box Object
 			Category category = new Category();
@@ -289,8 +291,9 @@ public class BoxResource {
 	@ApiOperation(value = "addFlashCard", notes = "create a new FlashCard")
 	public Response addFlashCard(@ApiParam(value = "request", required = true) NewFlashcardRequest request,
 			@ApiParam(value = "boxid", required = true) @PathParam("boxid") int boxid) {
-		Session session = PersistenceHelper.getSession();
 		try {
+			request.validateRequest();
+			Session session = PersistenceHelper.getSession();
 			FlashCard fc = new FlashCard();
 			fc.setFrontpage(request.getFrontpage());
 			fc.setBackpage(request.getBackpage());
@@ -404,8 +407,9 @@ public class BoxResource {
 	public Response addComment(@ApiParam(value = "box_id", required = true) @PathParam("boxid") int box_id,
 			@ApiParam(value = "fc_id", required = true) @PathParam("fc_id") int fc_id,
 			@ApiParam(value = "request", required = true) NewCommentRequest request) {
-
 		try {
+			request.validateRequest();
+			PersistenceHelper.openSession();
 			Session session = PersistenceHelper.getSession();
 			FlashCard fc = PersistenceHelper.getById(fc_id, FlashCard.class);
 			Comment comment = new Comment();
