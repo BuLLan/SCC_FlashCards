@@ -1,37 +1,54 @@
-package scc.flashcards.model;
+package scc.flashcards.model.user;
+
+
+import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.GenericGenerator;
 
 import io.swagger.annotations.ApiModel;
 
+import javax.persistence.ManyToMany;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+import org.hibernate.annotations.GenericGenerator;
+
+import com.owlike.genson.annotation.JsonIgnore;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import scc.flashcards.model.AbstractModel;
+
+
 @XmlRootElement
 @ApiModel(value = "User", description = "Simple User Model for our WebService")
 @Entity(name = "User")
 public class User extends AbstractModel {
 
-	private int id;
-
 	private String firstName;
 
 	private String lastName;
 
+	@ApiModelProperty(hidden=true)
 	private String login;
 
+	@ApiModelProperty(hidden=true)
 	private String password;
 	
+	@ApiModelProperty(hidden=true)
 	private String salt;
 
+	@ManyToMany(fetch=FetchType.LAZY)
+	private Set<Group> groups;
 
-	
 
-	/**
-	 * Empty Constructor for JAXB, don't use!
-	 */
 	public User() {
 	}
 
@@ -41,17 +58,6 @@ public class User extends AbstractModel {
 		this.lastName = lastName;
 		this.login = login;
 		this.password = password;
-	}
-
-	@Id
-	@GeneratedValue(generator = "increment")
-	@GenericGenerator(name = "increment", strategy = "increment")
-	public int getId() {
-		return this.id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getFirstName() {
@@ -70,6 +76,8 @@ public class User extends AbstractModel {
 		this.lastName = lastName;
 	}
 
+	@JsonIgnore
+	@XmlTransient
 	public String getLogin() {
 		return login;
 	}
@@ -78,6 +86,8 @@ public class User extends AbstractModel {
 		this.login = login;
 	}
 
+	@JsonIgnore
+	@XmlTransient
 	public String getPassword() {
 		return password;
 	}
@@ -86,6 +96,8 @@ public class User extends AbstractModel {
 		this.password = password;
 	}
 	
+	@JsonIgnore
+	@XmlTransient
 	public String getSalt() {
 		return salt;
 	}

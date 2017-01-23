@@ -4,6 +4,7 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 		$http({
 			  method: 'GET',
 			  url: 'http://localhost:8080/flashcards/api/v1/users'
+
 		}).then(function successCallback(response) {
 			$scope.users = response.data;
 			console.log(response.data);
@@ -23,6 +24,7 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 	     fd.append('password', $scope.password);
 	     console.log(fd);
 	     
+
 	     var dat = $.param({
 	         firstname: $scope.firstname,
 	         lastname: $scope.lastname,
@@ -48,9 +50,9 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 	     });
 
 	     $.post('http://localhost:8080/flashcards/api/v1/users'  ,dat);
+
 		
 	}
-	
 	
 	$scope.deleteUser = function(delid){
     	var delurl = 'http://localhost:8080/flashcards/api/v1/users/' + delid;

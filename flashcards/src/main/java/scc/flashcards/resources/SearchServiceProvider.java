@@ -1,3 +1,4 @@
+
 package scc.flashcards.resources;
 
 import java.util.List;
@@ -13,9 +14,9 @@ import javax.ws.rs.core.MediaType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import scc.flashcards.model.Box;
-import scc.flashcards.model.Category;
-import scc.flashcards.model.User;
+import scc.flashcards.model.flashcards.Box;
+import scc.flashcards.model.flashcards.Category;
+import scc.flashcards.model.user.User;
 
 @Path("/search")
 @Api(value = "/search", tags={"Searching Resources"})
@@ -54,3 +55,4 @@ public class SearchServiceProvider {
 		return null;
 	}
 }
+
