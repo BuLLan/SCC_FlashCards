@@ -5,7 +5,7 @@ hr{
 }
 
 .loginbox{
-	margin-top: 50px;
+	margin-top: 20px;
 	padding: 20px;
 	box-shadow: 0px 0px 5px #000;
 	background-color: rgba(82,82,82,1.00);
@@ -27,7 +27,8 @@ hr{
 	padding-right: 0px;
 }
 
-.login input{
+.login input,
+.login textarea{
 	width: 100%;
 	margin-bottom: 20px;
 	background: rgba(82,82,82,1.00);
@@ -86,4 +87,24 @@ hr{
 
 .kachel .checkbox{
 	color: #fff;
+}
+
+.karte{
+	padding: 4.16666% !important;
+}
+
+.karteninfo{
+	width: 100%;
+	background-color: #525252;
+}
+
+.box-config a{
+  font-size: 12px;
+  color: #FFF;
+  text-decoration: none;
+}
+
+.box-config a:hover{
+  color: #FFA600;
+  cursor: pointer;
 }
