@@ -269,6 +269,51 @@ public class UserResource {
 			PersistenceHelper.closeSession();
 		}
 	}
+	
+	/**
+	 * Returns all groups of a user
+	 * 
+	 * @param userid
+	 * @return
+	 */
+	@Path("/me/groups")
+	@GET
+	@ApiOperation(value = "getMyGroups", notes = "Return all groups of current User", response = Group.class, responseContainer = "List")
+	public Response getUserGroups() {
+		try {
+			Session session = PersistenceHelper.getSession();
+			//Get current user
+			User currentUser = ResourceUtil.getCurrentUser();
+			if(currentUser == null){
+				return Response.status(Response.Status.FORBIDDEN).build();
+			}
+			
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaQuery<Group> critQuery = builder.createQuery(Group.class);
+
+			Root<Group> groupRoot = critQuery.from(Group.class);
+			MapJoin<Group, User, UserRole> groups = groupRoot.joinMap("users");
+
+			critQuery.select(groupRoot);
+			critQuery.where(builder.equal(groups.key(), currentUser.getId()));
+
+			List<Group> groupList = session.createQuery(critQuery).getResultList();
+			return Response.ok(new Genson().serialize(groupList)).build();
+		} catch (HibernateException e) {
+			// Something went wrong with the Database
+			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
+					.build();
+		} catch (ClientErrorException e) {
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
+		} catch (Exception e) {
+			// Something else went wrong
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
+					.build();
+		} finally {
+			PersistenceHelper.closeSession();
+		}
+	}
 
 	@Path("me/groups")
 	@POST
