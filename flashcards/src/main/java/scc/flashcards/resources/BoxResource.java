@@ -18,7 +18,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -34,7 +33,7 @@ import scc.flashcards.model.flashcards.Comment;
 import scc.flashcards.model.flashcards.FlashCard;
 import scc.flashcards.model.user.User;
 import scc.flashcards.persistence.PersistenceHelper;
-import scc.flashcards.rest.NewBoxRequest;
+import scc.flashcards.rest.GetAllBoxesRequest;
 import scc.flashcards.rest.NewCategoryRequest;
 import scc.flashcards.rest.NewCommentRequest;
 import scc.flashcards.rest.NewFlashcardRequest;
@@ -55,14 +54,24 @@ public class BoxResource {
 	 */
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@ApiOperation(value = "getAllPublicBoxes", notes = "Returns a list of all public boxes", response = Box.class, responseContainer = "List")
-	public Response getAllBoxes() {
+	@ApiOperation(value = "List all public boxes", 
+		response = Box.class, responseContainer = "List")
+	public Response getAllBoxes(
+			@ApiParam(value = "Request Object", required = false) GetAllBoxesRequest request
+			) {
 		Session session = PersistenceHelper.getSession();
 		try {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaQuery<Box> query = builder.createQuery(Box.class);
 			Root<Box> root = query.from(Box.class);
-			query.select(root).where(builder.equal(root.get("isPublic"), true));
+			if(request != null && request.getCategoryId() != null){
+				query.select(root).where(builder.and(
+						builder.equal(root.get("isPublic"), true),
+						builder.equal(root.get("category"), request.getCategoryId())
+						));
+			} else {
+				query.select(root).where(builder.equal(root.get("isPublic"), true));
+			}
 			List<Box> resultList = session.createQuery(query).getResultList();
 			return Response.ok(new Genson().serialize(resultList)).build();
 		} catch (HibernateException e) {
@@ -87,10 +96,10 @@ public class BoxResource {
 	 * @param boxid
 	 * @return
 	 */
-	@Path("/{boxid}")
+	@Path("/{box_id}")
 	@GET
-	@ApiOperation(value = "getBoxByID", notes = "Returns the box object which has the given ID", response = Box.class)
-	public Response getBoxById(@ApiParam(value = "The ID of the box", required = true) @PathParam("boxid") int boxid) {
+	@ApiOperation(value = "Get Box by ID", notes = "Returns the box object which has the given ID", response = Box.class)
+	public Response getBoxById(@ApiParam(value = "The ID of the box", required = true) @PathParam("box_id") int boxid) {
 		PersistenceHelper.openSession();
 		try {
 			Box box = PersistenceHelper.getById(boxid, Box.class);
@@ -117,10 +126,10 @@ public class BoxResource {
 	 * @param userid
 	 * @return
 	 */
-	@Path("/{boxid}")
+	@Path("/{box_id}")
 	@DELETE
 	@ApiOperation(value = "deleteBox", notes = "Returns true if box was deleted")
-	public Response deleteBox(@ApiParam(value = "The ID of the box", required = true) @PathParam("boxid") int boxid) {
+	public Response deleteBox(@ApiParam(value = "The ID of the box", required = true) @PathParam("box_id") int boxid) {
 		PersistenceHelper.openSession();		
 		try {
 			Box box = PersistenceHelper.getById(boxid, Box.class);
@@ -152,8 +161,8 @@ public class BoxResource {
 	 */
 	@Path("/categories")
 	@GET
-	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@ApiOperation(value = "getAllCategories", notes = "Returns a list of all categories", response = Category.class, responseContainer = "List")
+	@ApiOperation(value = "getAllCategories", notes = "Returns a list of all categories", 
+			response = Category.class, responseContainer = "List")
 	public Response getAllCategories() {
 		Session session = PersistenceHelper.getSession();
 		try {
@@ -252,10 +261,10 @@ public class BoxResource {
 	 * @return
 	 */
 	@POST
-	@Path("/{boxid}")
+	@Path("/{box_id}")
 	@ApiOperation(value = "addFlashCard", notes = "create a new FlashCard")
 	public Response addFlashCard(@ApiParam(value = "request", required = true) NewFlashcardRequest request,
-			@ApiParam(value = "boxid", required = true) @PathParam("boxid") int boxid) {
+			@ApiParam(value = "boxid", required = true) @PathParam("box_id") int boxid) {
 		try {
 			//Get current user
 			User currentUser = ResourceUtil.getCurrentUser();
@@ -295,9 +304,9 @@ public class BoxResource {
 	}
 
 	@GET
-	@Path("/{boxid}/{fc_id}")
+	@Path("/{box_id}/{fc_id}")
 	@ApiOperation(value = "getFlashCard", notes = "Fetches a FlashCard", response = FlashCard.class)
-	public Response getFlashCard(@ApiParam(value = "box_id", required = true) @PathParam("boxid") int box_id,
+	public Response getFlashCard(@ApiParam(value = "box_id", required = true) @PathParam("box_id") int box_id,
 			@ApiParam(value = "fc_id", required = true) @PathParam("fc_id") int fc_id) {
 		PersistenceHelper.openSession();
 		try {
@@ -320,9 +329,9 @@ public class BoxResource {
 	}
 
 	@DELETE
-	@Path("/{boxid}/{fc_id}")
+	@Path("/{box_id}/{fc_id}")
 	@ApiOperation(value = "removeFlashCard", notes = "Removes a FlashCard")
-	public Response deleteFlashCard(@ApiParam(value = "box_id", required = true) @PathParam("boxid") int box_id,
+	public Response deleteFlashCard(@ApiParam(value = "box_id", required = true) @PathParam("box_id") int box_id,
 			@ApiParam(value = "fc_id", required = true) @PathParam("fc_id") int fc_id) {
 		try {
 			PersistenceHelper.openSession();
@@ -353,9 +362,9 @@ public class BoxResource {
 	}
 
 	@GET
-	@Path("/{boxid}/{fc_id}/comments")
+	@Path("/{box_id}/{fc_id}/comments")
 	@ApiOperation(value = "getFlashcardComments", notes = "Get comments of a FlashCard", response = Comment.class, responseContainer = "List")
-	public Response getComments(@ApiParam(value = "box_id", required = true) @PathParam("boxid") int box_id,
+	public Response getComments(@ApiParam(value = "box_id", required = true) @PathParam("box_id") int box_id,
 			@ApiParam(value = "fc_id", required = true) @PathParam("fc_id") int fc_id) {
 		try {
 			PersistenceHelper.openSession();
@@ -378,9 +387,9 @@ public class BoxResource {
 	}
 
 	@POST
-	@Path("/{boxid}/{fc_id}/comments")
+	@Path("/{box_id}/{fc_id}/comments")
 	@ApiOperation(value = "addFlashcardComment", notes = "Add comment to flashcard")
-	public Response addComment(@ApiParam(value = "box_id", required = true) @PathParam("boxid") int box_id,
+	public Response addComment(@ApiParam(value = "box_id", required = true) @PathParam("box_id") int box_id,
 			@ApiParam(value = "fc_id", required = true) @PathParam("fc_id") int fc_id,
 			@ApiParam(value = "request", required = true) NewCommentRequest request) {
 		try {
@@ -420,7 +429,7 @@ public class BoxResource {
 	}
 
 	@DELETE
-	@Path("/{boxid}/{fc_id}/comments")
+	@Path("/{box_id}/{fc_id}/comments/{comment_id}")
 	@ApiOperation(value = "removeFlashcardComment", notes = "Remove comment from flashcard")
 	public Response removeComment(@ApiParam(value = "box_id", required = true) @PathParam("box_id") int box_id,
 			@ApiParam(value = "fc_id", required = true) @PathParam("fc_id") int fc_id,

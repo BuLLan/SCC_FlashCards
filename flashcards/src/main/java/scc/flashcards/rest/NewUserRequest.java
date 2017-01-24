@@ -14,12 +14,16 @@ import io.swagger.annotations.ApiModelProperty;
 @XmlRootElement
 public class NewUserRequest extends JsonRequest {
 
+	@ApiModelProperty(required=true)
 	private String firstName;
 
+	@ApiModelProperty(required=true)
 	private String lastName;
 
+	@ApiModelProperty(required=true)
 	private String email;
 
+	@ApiModelProperty(required=true)
 	private String password;
 	
 	@JsonIgnore

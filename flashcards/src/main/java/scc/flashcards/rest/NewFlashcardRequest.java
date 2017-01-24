@@ -4,12 +4,15 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import io.swagger.annotations.ApiModelProperty;
 import scc.flashcards.model.flashcards.Page;
 
 public class NewFlashcardRequest extends JsonRequest {
 
+	@ApiModelProperty(required=true)
 	private Page frontpage;
 	
+	@ApiModelProperty(required=true)
 	private Page backpage;
 	
 	public NewFlashcardRequest() {

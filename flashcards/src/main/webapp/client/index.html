@@ -1,77 +1,90 @@
 <!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=100%" />
-    <title>FlashCrads Dashboard</title>
+<html ng-app="flashcardApp">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=100%" />
+<title>FlashCrads Dashboard</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/style2.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="css/style2.css">
+<link rel="stylesheet" type="text/css" href="css/style.css">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-  </head>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script
+	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+<script src="js/app.js"></script>
+</head>
 
-  <body>
-  <nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <img src="Logo.png" height="50px"/>
-        <a class="navbar-brand" href="#">FlashCards</a>
-      </div>
-      <ul class="nav navbar-nav navbar-right">
-        <li class="active"><a href="#">Home</a></li>
-        <li><a href="#">Boxen</a></li>
-        <li><a href="#">Gruppen</a></li>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><icon class='glyphicon glyphicon-user'></icon> Vorname Nachname
-          <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Details</a></li>
-            <li><a href="#">Log-Out</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-  </nav>
-  <div id="wrapper">
+<body ng-controller="flashCardsCtrl as appController">
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<img src="Logo.png" height="50px" /> <a class="navbar-brand"
+					href="#">FlashCards</a>
+			</div>
+			<ul class="nav navbar-nav navbar-right" ng-show="currentUser">
+				<li class="active"><a href="#">Home</a></li>
+				<li><a href="myboxes.html">Boxen</a></li>
+				<li><a href="#">Gruppen</a></li>
+				<li class="dropdown"><a class="dropdown-toggle"
+					data-toggle="dropdown" href="#">
+					{{currentUser.firstName}} {{currentUser.lastName}}
+					<icon class='glyphicon glyphicon-user'></icon>
+							<span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="#">Details</a></li>
+						<li><a href="#" ng-click="logout()">Log-Out</a></li>
+					</ul></li>
+			</ul>
+		</div>
+	</nav>
+	<div id="wrapper">
 
-        <!-- Sidebar -->
-        <div id="sidebar-wrapper">
-            <ul class="sidebar-nav nav">
-                <li class="active"><a href="#">Dashboard</a></li>
-                <li><a href="#">Shortcuts</a></li>
-                <li><a href="#">Overview</a> </li>
-                <li><a href="#">Events</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Services</a></li>
-            </ul>
-        </div>
-        <!-- /#sidebar-wrapper -->
-           <button id='menu-toggle' type="button" class="btn btn-circle"><i id='side' class="glyphicon glyphicon-chevron-left"></i></button>
+		<!-- Sidebar -->
+		<div id="sidebar-wrapper" ng-show="currentUser">
+			<ul class="sidebar-nav nav">
+				<li class="active"><a href="#">Dashboard</a></li>
+				<li><a href="#">Shortcuts</a></li>
+				<li><a href="#">Overview</a></li>
+				<li><a href="#">Events</a></li>
+				<li><a href="#">About</a></li>
+				<li><a href="#">Services</a></li>
+			</ul>
+			<button id='menu-toggle' type="button" class="btn btn-circle">
+			<i id='side' class="glyphicon glyphicon-chevron-left"></i>
+		</button>
+		</div>
+		<!-- /#sidebar-wrapper -->
+		
 
-        <!-- Page Content -->
-        <div id="page-content-wrapper">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="loginbox col-lg-4 col-lg-offset-4">
-                        <h1>Bitte logge dich ein</h1>
-                        <hr/>
-                        <form class="login">
-                            <input type="email" required placeholder="Email"/>
-                            <input type="password" required placeholder="Passwort"/>
-                            <button type="submit">login</button>
-                        </form>  
-                        <p>Noch keinen Account? Jetzt <a href="./register.html">registrieren!</a></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- /#page-content-wrapper -->
+		<!-- Page Content -->
+		<div id="page-content-wrapper">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="loginbox col-lg-4 col-lg-offset-4" ng-hide="currentUser">
+						<h1>Bitte logge dich ein</h1>
+						<hr />
+						<form class="login" ng-submit="login()">
+							<input type="email" ng-model="request.email" required placeholder="Email" />
+							<input type="password" ng-model="request.password" required
+								placeholder="Passwort" />
+							<button type="submit">login</button>
+						</form>
+						<p>
+							Noch keinen Account? Jetzt <a href="./register.html">registrieren!</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /#page-content-wrapper -->
 
-    </div>
-     <script>
+	</div>
+	<script>
     $("#menu-toggle").click(function(e) {
         e.preventDefault();
         $("#wrapper").toggleClass("toggled");
@@ -87,5 +100,5 @@
         };
     });
     </script>
-  </body>
+</body>
 </html>

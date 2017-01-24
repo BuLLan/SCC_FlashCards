@@ -10,9 +10,10 @@ import scc.flashcards.model.flashcards.Category;
 
 public class NewCategoryRequest extends JsonRequest{
 
+	@ApiModelProperty(required=true)
 	private String title;
 	
-	@ApiModelProperty(value="Falls keine Parent Category vorhanden, auf null setzen, da 0 als id erlaubt ist.")
+	@ApiModelProperty(required=true)
 	private Long parentCategoryId;
 
 	public NewCategoryRequest() {

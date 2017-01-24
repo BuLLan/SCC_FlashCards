@@ -179,7 +179,7 @@
       interactive:true,
       defaultText:'add a tag',
       minChars:0,
-      width:'300px',
+      width:'600px',
       height:'100px',
       autocomplete: {selectFirst: false },
       hide:true,
@@ -189,7 +189,6 @@
       placeholderColor:'#666666',
       autosize: true,
       comfortZone: 20,
-      inputPadding: 6*2
     },options);
 
     	var uniqueIdCounter = 0;

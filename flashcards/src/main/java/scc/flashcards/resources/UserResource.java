@@ -89,6 +89,37 @@ public class UserResource {
 		}
 
 	}
+	
+	/**
+	 * 
+	 */
+	@GET
+	@Path("/me")
+	@ApiOperation(value = "getCurrentUser")
+	public Response getCurrentUser() {
+		try {
+			PersistenceHelper.openSession();
+
+			User currentUser = ResourceUtil.getCurrentUser();
+			if(currentUser == null){
+				return Response.ok(new Genson().serialize("Not logged in")).build();
+			}
+			
+			return Response.ok(new Genson().serialize(currentUser)).status(Response.Status.OK).build();
+		} catch (HibernateException e) {
+			// Something went wrong with the Database
+			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
+					.build();
+		} catch (ClientErrorException e) {
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
+		} catch (Exception e) {
+			// Something else went wrong
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e)).build();
+		} finally {
+			PersistenceHelper.closeSession();
+		}
+	}
 
 	/**
 	 * Register a new user
@@ -194,16 +225,20 @@ public class UserResource {
 	 * @param request
 	 * @return
 	 */
-	@Path("/{userid}")
+	@Path("/me")
 	@POST
 	@ApiOperation(value = "updateUser", notes = "Update the Users Name and Password")
 	public Response updateUser(@ApiParam(value = "The Request", required = true) UpdateUserRequest request) {
 		PersistenceHelper.openSession();
 
 		try {
+			//Get current user
+			User user = ResourceUtil.getCurrentUser();
+			if(user == null){
+				return Response.status(Response.Status.FORBIDDEN).build();
+			}
 			request.validateRequest();
 			PersistenceHelper.openSession();
-			User user = PersistenceHelper.getById(request.getId(), User.class);
 			user.setFirstName((request.getFirstName().isEmpty()) ? user.getFirstName() : request.getFirstName());
 			user.setLastName((request.getLastName().isEmpty()) ? user.getLastName() : request.getLastName());
 			user.setLogin((request.getEmail() == null || request.getEmail().isEmpty()) ? user.getLogin()
@@ -227,48 +262,48 @@ public class UserResource {
 		}
 	}
 
-	/**
-	 * Returns all groups of a user
-	 * 
-	 * @param userid
-	 * @return
-	 */
-	@Path("/{userid}/groups")
-	@GET
-	@ApiOperation(value = "getUserGroups", notes = "Return all groups of a user", response = Group.class, responseContainer = "List")
-	public Response getUserGroups(
-			@ApiParam(value = "The ID of the user", required = true) @PathParam("userid") int userid) {
-		try {
-			Session session = PersistenceHelper.getSession();
-			/*
-			 * Damn, this really works!
-			 */
-			CriteriaBuilder builder = session.getCriteriaBuilder();
-			CriteriaQuery<Group> critQuery = builder.createQuery(Group.class);
-
-			Root<Group> groupRoot = critQuery.from(Group.class);
-			MapJoin<Group, User, UserRole> groups = groupRoot.joinMap("users");
-
-			critQuery.select(groupRoot);
-			critQuery.where(builder.equal(groups.key(), userid));
-
-			List<Group> groupList = session.createQuery(critQuery).getResultList();
-			return Response.ok(new Genson().serialize(groupList)).build();
-		} catch (HibernateException e) {
-			// Something went wrong with the Database
-			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
-					.build();
-		} catch (ClientErrorException e) {
-			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
-					.build();
-		} catch (Exception e) {
-			// Something else went wrong
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
-					.build();
-		} finally {
-			PersistenceHelper.closeSession();
-		}
-	}
+//	/**
+//	 * Returns all groups of a user
+//	 * 
+//	 * @param userid
+//	 * @return
+//	 */
+//	@Path("/{userid}/groups")
+//	@GET
+//	@ApiOperation(value = "getUserGroups", notes = "Return all groups of a user", response = Group.class, responseContainer = "List")
+//	public Response getUserGroups(
+//			@ApiParam(value = "The ID of the user", required = true) @PathParam("userid") int userid) {
+//		try {
+//			Session session = PersistenceHelper.getSession();
+//			/*
+//			 * Damn, this really works!
+//			 */
+//			CriteriaBuilder builder = session.getCriteriaBuilder();
+//			CriteriaQuery<Group> critQuery = builder.createQuery(Group.class);
+//
+//			Root<Group> groupRoot = critQuery.from(Group.class);
+//			MapJoin<Group, User, UserRole> groups = groupRoot.joinMap("users");
+//
+//			critQuery.select(groupRoot);
+//			critQuery.where(builder.equal(groups.key(), userid));
+//
+//			List<Group> groupList = session.createQuery(critQuery).getResultList();
+//			return Response.ok(new Genson().serialize(groupList)).build();
+//		} catch (HibernateException e) {
+//			// Something went wrong with the Database
+//			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
+//					.build();
+//		} catch (ClientErrorException e) {
+//			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+//					.build();
+//		} catch (Exception e) {
+//			// Something else went wrong
+//			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
+//					.build();
+//		} finally {
+//			PersistenceHelper.closeSession();
+//		}
+//	}
 	
 	/**
 	 * Returns all groups of a user

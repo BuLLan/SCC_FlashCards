@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -47,7 +46,7 @@ import scc.flashcards.service.LearningStrategyFactory;
  * Webservice Resource for Learning Service
  */
 @Api(value = "Learning Service", tags = { "Learning Service" })
-@Path("/users/{user_id}/boxes/{box_id}/service")
+@Path("/users/me/boxes/{box_id}/service")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class LearningService {
@@ -80,18 +79,22 @@ public class LearningService {
 	@ApiOperation(value = "Returns the next cards of a learning session", response = ScoredFlashCard.class, responseContainer = "List")
 	@Path("/nextCard")
 	public Response getNextCards(@ApiParam(value = "box_id", required = true) @PathParam("box_id") int box_id,
-			@ApiParam(value = "user_id", required = true) @PathParam("user_id") int user_id,
 			@ApiParam(value = "request", required = true) NextCardsRequest request) {
-		try{			
+		try{
+			User currentUser = ResourceUtil.getCurrentUser();
+			if(currentUser == null){
+				return Response.status(Response.Status.FORBIDDEN).build();
+			}
+			
 			int limit = (request.getNumber() > 0) ? request.getNumber() : 20;
 			int halfLimit = limit / 2;
-			Map<FlashCard, Integer> dueCards = getNextDueCards(user_id, box_id, halfLimit);
+			Map<FlashCard, Integer> dueCards = getNextDueCards(currentUser.getId(), box_id, halfLimit);
 			
 			if(dueCards.size() < halfLimit){
 				halfLimit += dueCards.size()-halfLimit;
 			}
 			
-			List<FlashCard> newCards = getNewCards(user_id, box_id, halfLimit);
+			List<FlashCard> newCards = getNewCards(currentUser.getId(), box_id, halfLimit);
 			
 			List<ScoredFlashCard> response = new ArrayList<ScoredFlashCard>();
 			for (FlashCard flashCard : dueCards.keySet()) {
@@ -121,16 +124,20 @@ public class LearningService {
 
 	@POST
 	@Path("/scorecard/{card_id}")
-	public Response scoreCard(@ApiParam(value = "Flashcard ID", required = true) @PathParam("card_id") int cardId,
-			@ApiParam(value = "user_id", required = true) @QueryParam("user_id") int userId,
+	public Response scoreCard(@ApiParam(value = "box_id", required = true) @PathParam("box_id") int box_id,
+			@ApiParam(value = "Flashcard ID", required = true) @PathParam("card_id") int cardId,
 			@ApiParam(value = "request", required = true) ScoreCardRequest request) {
 		try {
 			Session session = PersistenceHelper.getSession();
+			User currentUser = ResourceUtil.getCurrentUser();
+			if(currentUser == null){
+				return Response.status(Response.Status.FORBIDDEN).build();
+			}
 			if(request.getMode() == null) {
 				request.setMode("linear");
 			}
 			LearningStrategy strategy = LearningStrategyFactory.create(request.getMode());
-			CardScore score = getCardScore(userId, cardId);
+			CardScore score = getCardScore(currentUser.getId(), cardId);
 			CardScore newScore = strategy.scoreCard(score, request.getIsCorrect());
 			newScore.persist();
 			return Response.ok().build();

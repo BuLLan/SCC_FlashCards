@@ -2,8 +2,11 @@ package scc.flashcards.rest;
 
 import javax.ws.rs.BadRequestException;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class AddBoxToGroupRequest extends JsonRequest{
 
+	@ApiModelProperty(required=true)
 	private Long boxId;
 	
 	public AddBoxToGroupRequest() {

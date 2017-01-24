@@ -1,9 +1,13 @@
 package scc.flashcards.rest;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class NewGroupRequest extends JsonRequest{
 
+	@ApiModelProperty(required=true)
 	private String title;
 	
+	@ApiModelProperty(required=false)
 	private String description;
 
 	public NewGroupRequest() {

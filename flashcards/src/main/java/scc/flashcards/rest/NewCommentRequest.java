@@ -2,12 +2,17 @@ package scc.flashcards.rest;
 
 import javax.ws.rs.BadRequestException;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class NewCommentRequest extends JsonRequest{
 	
+	@ApiModelProperty(required=true)
 	private String subject;
 	
+	@ApiModelProperty(required=true)
 	private String content;
 	
+	@ApiModelProperty(required=true)
 	private Long authorId;
 	
 	public NewCommentRequest() {

@@ -1,9 +1,11 @@
 package scc.flashcards.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.BadRequestException;
 
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
 
 public class NewBoxRequest extends JsonRequest{
@@ -11,12 +13,16 @@ public class NewBoxRequest extends JsonRequest{
 	@ApiParam(value="If set, adds the box with the given id to the users boxes",required=false)
 	private Long boxId;
 	
+	@ApiModelProperty(required=true)
 	private String title;
 		
+	@ApiModelProperty(required=true)
 	private Long categoryId;
 	
-	private  List<String> tags;
+	@ApiModelProperty(required=false)
+	private  List<String> tags = new ArrayList<String>();
 	
+	@ApiModelProperty(required=true)
 	private boolean isPublic;
 	
 	public NewBoxRequest() {

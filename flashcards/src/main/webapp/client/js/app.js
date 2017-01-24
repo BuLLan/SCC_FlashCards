@@ -1,57 +1,61 @@
-var app = angular.module('myApp', []);
+var baseUrl = "http://localhost:8080/flashcards/api/v1/";
+
+var app = angular.module('flashcardApp', []);
+
 app.controller('flashCardsCtrl', function($scope, $http, $sce) {
-	$scope.getAllUsers = function(){
-		$http({
-			  method: 'GET',
-			  url: 'http://localhost:8080/flashcards/api/v1/users'
-
-		}).then(function successCallback(response) {
-			$scope.users = response.data;
-			console.log(response.data);
-
-		}, function errorCallback(response) {
-		});
-	};
+	$scope.currentUser;
+	$scope.showLogin = false;
 	
-	$scope.addNewUser = function(){
-		console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-   	 	console.log($scope.firstname + ',' + $scope.lastname); 
-		
-	   	 var fd = new FormData();
-	     fd.append('firstname', $scope.firstname);
-	     fd.append('lastname', $scope.lastname);
-	     fd.append('email', $scope.email);
-	     fd.append('password', $scope.password);
-	     console.log(fd);
-	     
-
-	     var dat = $.param({
-	         firstname: $scope.firstname,
-	         lastname: $scope.lastname,
-	         email: $scope.email,
-	         password: $scope.password
-	     });
-
-	     
-	     $.post('http://localhost:8080/flashcards/api/v1/users'  ,dat).then(function () {
-	        $scope.getAllUsers();
-	        $('#newUserForm input').val('');
-	      }, function errorCallback(response) {
-	    	console.log(response.data);
-		});
+	$scope.getUser = function () {
+		$http.get(baseUrl + 'users/me').then($scope.getUserCallback);
+	}
+	
+	$scope.getUserCallback = function (response) {
+		if(response.status!=200 || !response.data.id){
+			$scope.showLogin = true;
+			return;
+		}
+		$scope.currentUser = response.data;
 		
 	}
 	
+	$scope.register = function(){	     
+	     var data = angular.toJson($scope.request);
+
+	     $http.post(baseUrl + 'users/register', data).then($scope.registerCallback);
+	}
+	
+	$scope.registerCallback = function(response) {
+		if(response.status==200){
+			var data = angular.toJson(
+				$scope.request
+			);
+			$http.post(baseUrl + 'users/login', data).then($scope.loginCallback);
+		}
+	}
+	
 	$scope.login = function(){
+	     var data = angular.toJson($scope.request);
 	     
-	     var dat = $.param({
-	         email: $scope.email,
-	         password: $scope.password
-	     });
-
-	     $.post('http://localhost:8080/flashcards/api/v1/users'  ,dat);
-
-		
+	     $http.post(baseUrl + 'users/login', data).then($scope.loginCallback);
+	}
+	
+	$scope.loginCallback = function(response) {
+		if(response.status==200){
+			$scope.getUser();
+		}
+	}
+	
+	$scope.logout = function(){
+	     var data = angular.toJson($scope.request);
+	     
+	     $http.get(baseUrl + 'users/logout', data).then($scope.logoutCallback);
+	}
+	
+	$scope.logoutCallback = function(response) {
+		if(response.status==200){
+			$scope.currentUser = null;
+		}
 	}
 	
 	$scope.deleteUser = function(delid){
@@ -67,6 +71,6 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
     	    
      } 
 	
-	
-	angular.element(document.getElementById('ctrl')).scope().getAllUsers();
+	//Try to get user on init
+	$scope.getUser();
 });

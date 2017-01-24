@@ -1,0 +1,215 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Flip the div</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var f = true;
+            // set up hover panels
+            // although this can be done without JavaScript, we've attached these events
+            // because it causes the hover to be triggered when the element is tapped on a touch device
+            $('.front').click(function(){
+                if(f==true){
+                    $('.hover').addClass('flip');
+                    $( "#button" ).fadeIn( "slow", function() {});
+                    f=false;
+                }
+                else{
+                    $('.hover').removeClass('flip');
+                    f=true; 
+                }
+            });
+            $('.btn').click(function(){
+                    $( "#flash" ).fadeOut( "slow", function() {});
+                    $('.hover').removeClass('flip');
+                    f=true;
+                    $( "#button" ).fadeOut( "slow", function() {});
+                    $( "#flash" ).fadeIn( "slow", function() {});
+                });
+        });
+    </script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <link href="css/style3.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <style>
+    .panel {
+            margin: 0 auto; 
+            height:334px; 
+            position: relative;
+            font-size: .8em;
+            -webkit-perspective: 600px;
+            -moz-perspective: 600px;
+
+        }
+        /* -- make sure to declare a default for every property that you want animated -- */
+        /* -- general styles, including Y axis rotation -- */
+        .panel .front {
+            position: absolute;
+            top: 0;
+            z-index: 900;
+            width: inherit;
+            height: inherit;
+            -webkit-transform: rotateX(0deg) rotateY(0deg);
+            -webkit-transform-style: preserve-3d;
+            -webkit-backface-visibility: hidden;
+            -moz-transform: rotateX(0deg) rotateY(0deg);
+            -moz-transform-style: preserve-3d;
+            -moz-backface-visibility: hidden;
+            /* -- transition is the magic sauce for animation -- */
+            -o-transition: all .4s ease-in-out;
+            -ms-transition: all .4s ease-in-out;
+            -moz-transition: all .4s ease-in-out;
+            -webkit-transition: all .4s ease-in-out;
+            transition: all .4s ease-in-out;
+        }
+        .panel.flip .front {
+            z-index: 900;
+            -webkit-transform: rotateY(180deg);
+            -moz-transform: rotateY(180deg);
+        }
+        .panel .back {
+            position: absolute;
+            top: 0;
+            z-index: 800;
+            width: inherit;
+            height: inherit;
+            -webkit-transform: rotateY(-180deg);
+            -webkit-transform-style: preserve-3d;
+            -webkit-backface-visibility: hidden;
+ 
+            -moz-transform: rotateY(-180deg);
+            -moz-transform-style: preserve-3d;
+            -moz-backface-visibility: hidden;
+            /* -- transition is the magic sauce for animation -- */
+            -o-transition: all .4s ease-in-out;
+            -ms-transition: all .4s ease-in-out;
+            -moz-transition: all .4s ease-in-out;
+            -webkit-transition: all .4s ease-in-out;
+            transition: all .4s ease-in-out;
+        }
+        .panel.flip .back {
+            z-index: 1000;
+            -webkit-transform: rotateX(0deg) rotateY(0deg);
+            -moz-transform: rotateX(0deg) rotateY(0deg);
+        }
+        .pad{
+              margin: 10px ;
+              height: 300px;
+              width: 100%;
+              background-color: #fffde2;
+              border: 2px solid black;
+              font-family: bradley hand;
+              font-size: 1.5em;
+              color: darkblue;
+              webkit-box-shadow: 10px 11px 39px -12px rgba(0,0,0,0.75);
+              moz-box-shadow: 10px 11px 39px -12px rgba(0,0,0,0.75);
+              box-shadow: 10px 11px 39px -12px rgba(0,0,0,0.75);
+        }
+
+        .pad .flashhead {
+            padding: 10px 5px 0px 5px;
+            height:12%;
+            border-bottom: 2px solid red;
+            text-align: center;
+        }
+
+        .pad .flashbody{
+          background-image: repeating-linear-gradient(180deg, #fffde2 , #fffde2 8%, rgb(100,100,100) 9%);
+          height:80%;
+          color: black;
+          font-size: 0.9em;
+        }
+
+        .pad .flashbody .text{
+            margin:0px 10px 5px 10px;
+        }
+
+        .btn-circle.btn-xl {
+          width: 70px;
+          height: 70px;
+          padding: 10px 16px;
+          margin: 0 10% 0 10%;
+          font-size: 24px;
+          line-height: 1.33;
+          border-radius: 35px;
+        }
+
+        .buttons {
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+      <div class="modal-dialog">
+        <div class="loginmodal-container">
+          <h1>Einloggen</h1><br>
+          <form>
+            <input type="text" name="user" placeholder="E-Mail">
+            <input type="password" name="pass" placeholder="Passwort">
+            <input type="submit" name="login" class="login loginmodal-submit" value="Login">
+          </form>
+          
+          <div class="login-help">
+          <span data-toggle="modal" data-target="#login-modal"><a href="#" data-toggle="modal" data-target="#register-modal">Registrieren</a></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="register-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+      <div class="modal-dialog">
+        <div class="loginmodal-container">
+          <h1>Registrieren</h1><br>
+          <form>
+            <input type="text" name="v_name" placeholder="Vorname">
+            <input type="text" name="n_name" placeholder="Nachname">
+            <input type="text" name="email" placeholder="E-Mail">
+            <input type="password" name="pass" placeholder="Passwort">
+            <input type="submit" name="registieren" class="login loginmodal-submit" value="Registrieren">
+          </form>
+
+          <div class="login-help">
+            <span data-toggle="modal" data-target="#register-modal"><a href="#" data-toggle="modal" data-target="#login-modal">Einloggen</a></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id='flash' class='row'>
+        <div class='col-sm-6 col-sm-offset-3 text-right'><a href="#" data-toggle="modal" data-target="#login-modal">Login</a></div>
+        <div class='col-sm-6 col-sm-offset-3'>
+            <div class="hover panel">
+                <div id="frontcard" class="front">
+                    <div class="pad">
+                        <div class="flashhead">Frage:</div>
+                        <div class="flashbody">
+                            <div class="text">blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="back">
+                    <div class="pad">
+                        <div class="flashhead">Antwort:</div>
+                        <div class="flashbody">
+                            <div class="text">blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa blaa </div>
+                        </div>
+                
+                    </div>
+                </div>
+            </div>
+            <div id="button" class="buttons">
+                <h3>Haben Sie die Antwort gewusst?</h3>
+                <button type="button" class="btn btn-success btn-circle btn-xl"><i class="glyphicon glyphicon-ok"></i></button>
+                <button type="button" class="btn btn-danger btn-circle btn-xl"><i class="glyphicon glyphicon-remove"></i></button>
+            </div>
+ 
+        </div>
+    </div>
+</body>
+</html>
