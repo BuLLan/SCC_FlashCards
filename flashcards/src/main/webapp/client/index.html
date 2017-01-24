@@ -45,18 +45,20 @@
 	<div id="wrapper">
 
 		<!-- Sidebar -->
-		<div id="sidebar-wrapper" ng-show="currentUser">
-			<ul class="sidebar-nav nav">
-				<li class="active"><a href="#">Dashboard</a></li>
-				<li><a href="#">Shortcuts</a></li>
-				<li><a href="#">Overview</a></li>
-				<li><a href="#">Events</a></li>
-				<li><a href="#">About</a></li>
-				<li><a href="#">Services</a></li>
-			</ul>
+		<div ng-show="currentUser">
+			<div id="sidebar-wrapper">
+				<ul class="sidebar-nav nav">
+					<li class="active"><a href="#">Dashboard</a></li>
+					<li><a href="#">Shortcuts</a></li>
+					<li><a href="#">Overview</a></li>
+					<li><a href="#">Events</a></li>
+					<li><a href="#">About</a></li>
+					<li><a href="#">Services</a></li>
+				</ul>
+			</div>
 			<button id='menu-toggle' type="button" class="btn btn-circle">
-			<i id='side' class="glyphicon glyphicon-chevron-left"></i>
-		</button>
+				<i id='side' class="glyphicon glyphicon-chevron-left"></i>
+			</button>
 		</div>
 		<!-- /#sidebar-wrapper -->
 		
@@ -65,7 +67,7 @@
 		<div id="page-content-wrapper">
 			<div class="container-fluid">
 				<div class="row">
-					<div class="loginbox col-lg-4 col-lg-offset-4" ng-hide="currentUser">
+					<div class="loginbox col-lg-4 col-lg-offset-3" ng-hide="currentUser">
 						<h1>Bitte logge dich ein</h1>
 						<hr />
 						<form class="login" ng-submit="login()">
