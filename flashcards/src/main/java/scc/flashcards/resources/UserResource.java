@@ -36,6 +36,7 @@ import com.owlike.genson.Genson;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import scc.flashcards.model.UserDAO;
 import scc.flashcards.model.user.Group;
 import scc.flashcards.model.user.User;
 import scc.flashcards.model.user.UserRole;
@@ -267,24 +268,26 @@ public class UserResource {
 		}
 	}
 
-	@Path("/{userid}/groups")
+	@Path("/groups")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Create a Group with the user as owner", response = Group.class)
 	public Response createGroup(
-			@ApiParam(value = "The ID of the owner", required = true) @PathParam("userid") int userid,
 			@ApiParam(value = "The Group to be created") NewGroupRequest request) {
 		try {
+			//Get current user
+			User currentUser = ResourceUtil.getCurrentUser();
+			if(currentUser == null){
+				return Response.status(Response.Status.FORBIDDEN).build();
+			}
+			
 			PersistenceHelper.openSession();
 			Group newGroup = new Group();
 			newGroup.setTitle(request.getTitle());
 			newGroup.setDescription(request.getDescription());
-
-			User owner = PersistenceHelper.getById(userid, User.class);
-
 			TreeMap<User, UserRole> users = new TreeMap<User, UserRole>();
-			users.put(owner, UserRole.Admin);
+			users.put(currentUser, UserRole.Admin);
 			newGroup.setUsers(users);
 			newGroup.persist();
 
@@ -341,6 +344,26 @@ public class UserResource {
 			}
 		} else {
 			return Response.ok(new Genson().serialize("Already logged in")).build(); // already logged in
+		}
+	}
+	
+	@GET
+	@Path("/logout")
+	@ApiOperation(value = "logout", notes = "Closes the current user session")
+	public Response logout() {
+		try{
+			
+		org.apache.shiro.mgt.SecurityManager securityManager = new IniSecurityManagerFactory().getInstance();
+		SecurityUtils.setSecurityManager(securityManager);
+		org.apache.shiro.subject.Subject currentUser = SecurityUtils.getSubject();
+
+		if (!currentUser.isAuthenticated()) {
+			return Response.ok(new Genson().serialize("Not Logged In!")).build();
+		}
+		currentUser.logout();
+		return Response.ok(new Genson().serialize("Logged out successfully!")).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage())).build();
 		}
 	}
 

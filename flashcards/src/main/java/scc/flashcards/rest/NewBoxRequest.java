@@ -2,17 +2,18 @@ package scc.flashcards.rest;
 
 import java.util.List;
 
-import javax.ws.rs.FormParam;
+import javax.ws.rs.BadRequestException;
 
 import io.swagger.annotations.ApiParam;
 
 public class NewBoxRequest extends JsonRequest{
 
+	@ApiParam(value="If set, adds the box with the given id to the users boxes",required=false)
+	private Long boxId;
+	
 	private String title;
-	
-	private long ownerId;
-	
-	private long categoryId;
+		
+	private Long categoryId;
 	
 	private  List<String> tags;
 	
@@ -23,7 +24,22 @@ public class NewBoxRequest extends JsonRequest{
 	}
 
 	public boolean validateRequest() {
+		if(boxId!=null){
+			return true;
+		} else {
+			if(title.isEmpty() || categoryId == null) {
+				throw new BadRequestException("Title and category are mandatory");
+			}
+		}
 		return true;
+	}
+	
+	public Long getBoxId() {
+		return boxId;
+	}
+
+	public void setBoxId(Long boxId) {
+		this.boxId = boxId;
 	}
 
 	public String getTitle() {
@@ -32,14 +48,6 @@ public class NewBoxRequest extends JsonRequest{
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public long getOwnerId() {
-		return ownerId;
-	}
-
-	public void setOwnerId(long ownerId) {
-		this.ownerId = ownerId;
 	}
 
 	public long getCategoryId() {

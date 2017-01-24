@@ -8,10 +8,12 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import com.owlike.genson.annotation.JsonIgnore;
 
@@ -39,6 +41,10 @@ public class Box extends AbstractModel {
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	private User owner;
+	
+	@ManyToMany(mappedBy="boxes")
+	@XmlTransient
+	private List<User> users;
 	
 	@ApiModelProperty(hidden = true)
 	@ElementCollection
@@ -89,6 +95,15 @@ public class Box extends AbstractModel {
 
 	public void setOwner(User owner) {
 		this.owner = owner;
+	}
+	
+	@JsonIgnore
+	public List<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<User> users) {
+		this.users = users;
 	}
 
 	@JsonIgnore

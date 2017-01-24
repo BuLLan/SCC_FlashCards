@@ -18,6 +18,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -81,7 +82,7 @@ public class BoxResource {
 	}
 
 	/**
-	 * Adds a new box
+	 * Adds a new box for the current user
 	 * 
 	 * @return
 	 */
@@ -91,11 +92,24 @@ public class BoxResource {
 		try {
 			request.validateRequest();
 			PersistenceHelper.openSession();
-			// Build new Box Object
+			//Get current user
+			User currentUser = ResourceUtil.getCurrentUser();
+			if(currentUser == null){
+				return Response.status(Response.Status.FORBIDDEN).build();
+			}
+			
 			Box box = new Box();
+			//Check if box exists
+			if(request.getBoxId() != null){
+				box = PersistenceHelper.getById(request.getBoxId(), Box.class);
+				currentUser.getBoxes().add(box);
+				currentUser.persist();
+				return Response.ok().build();
+			}
+			// Build new Box Object
 			box.setTitle(request.getTitle());
 			box.setCategory(PersistenceHelper.getById(request.getCategoryId(), Category.class));
-			box.setOwner(PersistenceHelper.getById(request.getOwnerId(), User.class));
+			box.setOwner(currentUser);
 			box.setTags(request.getTags());
 			box.setPublic(request.isPublic());
 			// Try to Save Box Object
@@ -157,10 +171,13 @@ public class BoxResource {
 	@DELETE
 	@ApiOperation(value = "deleteBox", notes = "Returns true if box was deleted")
 	public Response deleteBox(@ApiParam(value = "The ID of the box", required = true) @PathParam("boxid") int boxid) {
-		PersistenceHelper.openSession();
+		PersistenceHelper.openSession();		
 		try {
-			PersistenceHelper.getById(boxid, Box.class).delete();
-
+			Box box = PersistenceHelper.getById(boxid, Box.class);
+			if(!ResourceUtil.isOwner(box.getOwner().getId())){
+				return Response.status(Response.Status.FORBIDDEN).build();
+			}
+			box.delete();
 			return Response.ok().build();
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
@@ -290,12 +307,18 @@ public class BoxResource {
 	public Response addFlashCard(@ApiParam(value = "request", required = true) NewFlashcardRequest request,
 			@ApiParam(value = "boxid", required = true) @PathParam("boxid") int boxid) {
 		try {
+			//Get current user
+			User currentUser = ResourceUtil.getCurrentUser();
+			Box box = PersistenceHelper.getById(boxid, Box.class);
+			if(currentUser == null || currentUser.getId() != box.getOwner().getId()){
+				return Response.status(Response.Status.FORBIDDEN).build();
+			}
+			
 			request.validateRequest();
 			Session session = PersistenceHelper.getSession();
 			FlashCard fc = new FlashCard();
 			fc.setFrontpage(request.getFrontpage());
 			fc.setBackpage(request.getBackpage());
-			Box box = PersistenceHelper.getById(boxid, Box.class);
 			box.getFlashcards().add(fc);
 			fc.setBox(box);
 
@@ -355,6 +378,10 @@ public class BoxResource {
 			PersistenceHelper.openSession();
 			FlashCard fc = PersistenceHelper.getById(fc_id, FlashCard.class);
 			Box box = PersistenceHelper.getById(box_id, Box.class);
+			User currentUser = ResourceUtil.getCurrentUser();
+			if(currentUser == null || currentUser.getId() != box.getOwner().getId()){
+				return Response.status(Response.Status.FORBIDDEN).build();
+			}
 			box.getFlashcards().remove(fc);
 			box.persist();
 		} catch (HibernateException e) {
@@ -452,6 +479,9 @@ public class BoxResource {
 			Session session = PersistenceHelper.getSession();
 			FlashCard fc = PersistenceHelper.getById(fc_id, FlashCard.class);
 			Comment comment = PersistenceHelper.getById(comment_id, Comment.class);
+			if(!ResourceUtil.isOwner(comment.getAuthor().getId())){
+				return Response.status(Response.Status.FORBIDDEN).build();
+			}
 			List<Comment> comments = fc.getComments();
 			comments.remove(comment);
 			fc.setComments(comments);

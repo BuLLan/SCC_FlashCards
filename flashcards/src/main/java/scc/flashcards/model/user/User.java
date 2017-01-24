@@ -15,6 +15,7 @@ import com.owlike.genson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import scc.flashcards.model.AbstractModel;
+import scc.flashcards.model.flashcards.Box;
 
 
 @XmlRootElement
@@ -38,6 +39,10 @@ public class User extends AbstractModel implements Serializable {
 	@ManyToMany(fetch=FetchType.LAZY)
 	private Set<Group> groups;
 
+	@ManyToMany(fetch=FetchType.LAZY)
+	@ApiModelProperty(hidden=true)
+	@XmlTransient
+	private Set<Box> boxes;
 
 	public User() {
 	}
@@ -94,6 +99,24 @@ public class User extends AbstractModel implements Serializable {
 
 	public void setSalt(String salt) {
 		this.salt = salt;
+	}
+
+	@JsonIgnore
+	public Set<Group> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(Set<Group> groups) {
+		this.groups = groups;
+	}
+
+	@JsonIgnore
+	public Set<Box> getBoxes() {
+		return boxes;
+	}
+
+	public void setBoxes(Set<Box> boxes) {
+		this.boxes = boxes;
 	}
 
 }
