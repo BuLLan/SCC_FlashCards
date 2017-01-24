@@ -420,7 +420,7 @@ public class BoxResource {
 	}
 
 	@DELETE
-	@Path("/{boxid}/{fc_id}/comments")
+	@Path("/{box_id}/{fc_id}/comments/{comment_id}")
 	@ApiOperation(value = "removeFlashcardComment", notes = "Remove comment from flashcard")
 	public Response removeComment(@ApiParam(value = "box_id", required = true) @PathParam("box_id") int box_id,
 			@ApiParam(value = "fc_id", required = true) @PathParam("fc_id") int fc_id,
