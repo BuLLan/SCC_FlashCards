@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=100%" />
+    <title>FlashCrads Dashboard</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style2.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/jquery.tagsinput.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+	<script src="js/jquery.tagsinput.js"></script>
+  </head>
+
+  <body>
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <img src="Logo.png" height="50px"/>
+        <a class="navbar-brand" href="#">FlashCards</a>
+      </div>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="active"><a href="#">Home</a></li>
+        <li><a href="#">Boxen</a></li>
+        <li><a href="#">Gruppen</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><icon class='glyphicon glyphicon-user'></icon> Vorname Nachname
+          <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Details</a></li>
+            <li><a href="#">Log-Out</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav nav">
+                <li class="active"><a href="#">Dashboard</a></li>
+                <li><a href="#">Shortcuts</a></li>
+                <li><a href="#">Overview</a> </li>
+                <li><a href="#">Events</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Services</a></li>
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+           <button id='menu-toggle' type="button" class="btn btn-circle"><i id='side' class="glyphicon glyphicon-chevron-left"></i></button>
+		<script type="text/javascript">
+			$(function() {
+				$('#tags').tagsInput({
+					width: 'auto',
+					//autocomplete_url:'test/fake_plaintext_endpoint.html' //jquery.autocomplete (not jquery ui)
+					autocomplete_url:'test/fake_json_endpoint.html' // jquery ui autocomplete requires a json endpoint
+				});
+			});
+		</script>
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="loginbox col-lg-10 kachel">
+                        <h1>Box erstellen</h1>
+                        <hr/>
+                        <form class="login">
+                        <div class="col-lg-6 karte">
+                            <div class="karteninfo">
+                                <h3>Name</h3>
+                                <input type="text" placeholder="Name"/>
+                                <h3>Beschreibung</h3>
+                                <textarea placeholder="Beschreibung"></textarea>
+                                <button type="submit">erstellen</button>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 karte">
+                            <div class="karteninfo">
+                                <h3>Tags</h3>
+                                <input id="tags" type="text" class="tags" value="Tag" />
+                            </div>
+                        </div>
+                        </form> 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+     <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+        
+        if($('#side').hasClass('glyphicon-chevron-left')){
+          $('#side').removeClass('glyphicon-chevron-left');
+          $('#side').addClass('glyphicon-chevron-right');
+
+        }
+        else{
+          $('#side').removeClass('glyphicon-chevron-right');
+          $('#side').addClass('glyphicon-chevron-left');
+        };
+    });
+	
+	$(document).ready(function() {
+        $('#tagbtn').click(function(){
+			$.each(selectValues, function(key, value) {   
+			   $('#tagSelect')
+				   .append($("<div class='checkbox'><label><input type='checkbox' value=''>Informatik</label></div>")
+							  .html($("tagfeld").val())); 
+		  });
+		});
+    });
+	
+    </script>
+  </body>
+</html>
