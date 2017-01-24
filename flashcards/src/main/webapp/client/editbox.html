@@ -8,9 +8,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/style2.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/jquery.tagsinput.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+	<script src="js/jquery.tagsinput.js"></script>
   </head>
 
   <body>
@@ -50,7 +52,13 @@
         </div>
         <!-- /#sidebar-wrapper -->
            <button id='menu-toggle' type="button" class="btn btn-circle"><i id='side' class="glyphicon glyphicon-chevron-left"></i></button>
-
+		<script type="text/javascript">
+			$(function() {
+				$('#tags').tagsInput({
+					width: '100%',
+				});
+			});
+		</script>
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <div class="container-fluid">
@@ -63,23 +71,12 @@
                             <input type="text" required placeholder="Neuer Name"/>
                             <button type="submit">login</button>
                         </form>  
-                        <div class="col-lg-6">
                         <h3>Tags:</h3>
-                            <form class="login check">
-                                <div class="checkbox"><label><input type="checkbox" value="">Informatik</label></div>
-                                <div class="checkbox"><label><input type="checkbox" value="">Informatik</label></div>
-                                <div class="checkbox"><label><input type="checkbox" value="">Informatik</label></div>
-                                <div class="checkbox"><label><input type="checkbox" value="">Informatik</label></div>
-                                <button type="submit">l&ouml;schen</button>
-                            </form> 
-                        </div>
-                        <div class="col-lg-6">
-                            <form class="login">
-                                <input type="text" required placeholder="Tag"/>
-                                <button type="submit">hinzuf&uuml;gen</button>
-                            </form> 
-                        </div>
-                        <p>Die Inhalte der Vorlesung Softwaretechnologie mit ausgewählten Fragen.</p>
+                        <form class="login">
+                            <input style="width: 100%; margin-bottom: 20px;" id="tags" type="text" class="tags" value="Tag" />
+                            <button type="submit">&uuml;bernehmen</button>
+                        </form> 
+                        <h3>Beschreibung:</h3>
                         <form class="login">
                             <textarea placeholder="Neue Beschreibung eingeben"></textarea>
                             <button type="submit">&uuml;bernehmen</button>

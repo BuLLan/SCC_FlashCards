@@ -108,3 +108,7 @@ hr{
   color: #FFA600;
   cursor: pointer;
 }
+
+#tags_tagsinput{
+	margin-bottom: 20px;
+}
