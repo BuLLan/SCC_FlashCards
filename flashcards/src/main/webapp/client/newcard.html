@@ -56,28 +56,25 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="loginbox col-lg-10 kachel">
-                        <h1>Karte bearbeiten</h1>
+                        <h1>Karte hinzufügen</h1>
                         <hr/>
+                        <form class="login">
                         <div class="col-lg-6 karte">
                             <div class="karteninfo">
                                 <h3>Vorderseite</h3>
-                                <p>Was ist ein UML Diagramm?</p>
-                                <form class="login">
-                                    <textarea placeholder="Frage bearbeiten"></textarea>
-                                    <button type="submit">&uuml;bernehmen</button>
-                                </form> 
+                                <textarea placeholder="Frage eingeben"></textarea>
+                                <input type="file" accept=".jpg, .png, .jpeg"/>
+                                <button type="submit">erstellen</button>
                             </div>
                         </div>
                         <div class="col-lg-6 karte">
                             <div class="karteninfo">
                                 <h3>Rückseite</h3>
-                                <p>Ein Diagramm, dass Beziehungen und Attribute von Klassen darlegt.</p>
-                                <form class="login">
-                                    <textarea placeholder="Antwort bearbeiten"></textarea>
-                                    <button type="submit">&uuml;bernehmen</button>
-                                </form> 
+                                   <textarea placeholder="Antwort bearbeiten"></textarea>
+                                   <input type="file" accept="image/*"/>
                             </div>
                         </div>
+                        </form> 
                     </div>
                 </div>
             </div>
