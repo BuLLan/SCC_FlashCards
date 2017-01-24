@@ -82,56 +82,6 @@ public class BoxResource {
 	}
 
 	/**
-	 * Adds a new box for the current user
-	 * 
-	 * @return
-	 */
-	@POST
-	@ApiOperation(value = "addBox", notes = "Create a new Box")
-	public Response addBox(@ApiParam(value = "Request", required = true) NewBoxRequest request) {
-		try {
-			request.validateRequest();
-			PersistenceHelper.openSession();
-			//Get current user
-			User currentUser = ResourceUtil.getCurrentUser();
-			if(currentUser == null){
-				return Response.status(Response.Status.FORBIDDEN).build();
-			}
-			
-			Box box = new Box();
-			//Check if box exists
-			if(request.getBoxId() != null){
-				box = PersistenceHelper.getById(request.getBoxId(), Box.class);
-				currentUser.getBoxes().add(box);
-				currentUser.persist();
-				return Response.ok().build();
-			}
-			// Build new Box Object
-			box.setTitle(request.getTitle());
-			box.setCategory(PersistenceHelper.getById(request.getCategoryId(), Category.class));
-			box.setOwner(currentUser);
-			box.setTags(request.getTags());
-			box.setPublic(request.isPublic());
-			// Try to Save Box Object
-			box.persist();
-			return Response.ok(box).build();
-		} catch (HibernateException e) {
-			// Something went wrong with the Database
-			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
-					.build();
-		} catch (ClientErrorException e) {
-			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
-					.build();
-		} catch (Exception e) {
-			// Something else went wrong
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
-					.build();
-		} finally {
-			PersistenceHelper.closeSession();
-		}
-	}
-
-	/**
 	 * Gets a box by id
 	 * 
 	 * @param boxid

@@ -21,11 +21,8 @@ public class UserDAO {
 			Root<User> userRoot = critQuery.from(User.class);
 			critQuery.select(userRoot).where(builder.equal(userRoot.get("login"), email));
 			return session.createQuery(critQuery).getSingleResult();
-			
 		} catch (NoResultException e) {
 			throw new UnknownAccountException();
-		} finally {
-			PersistenceHelper.closeSession();
 		}
 	}
 }

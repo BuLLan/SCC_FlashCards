@@ -1,6 +1,7 @@
 package scc.flashcards.resources;
 
 import java.util.List;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -27,7 +28,6 @@ import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Sha256Hash;
-import org.apache.shiro.util.Factory;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
@@ -36,12 +36,14 @@ import com.owlike.genson.Genson;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import scc.flashcards.model.UserDAO;
+import scc.flashcards.model.flashcards.Box;
+import scc.flashcards.model.flashcards.Category;
 import scc.flashcards.model.user.Group;
 import scc.flashcards.model.user.User;
 import scc.flashcards.model.user.UserRole;
 import scc.flashcards.persistence.PersistenceHelper;
 import scc.flashcards.rest.LoginRequest;
+import scc.flashcards.rest.NewBoxRequest;
 import scc.flashcards.rest.NewGroupRequest;
 import scc.flashcards.rest.NewUserRequest;
 import scc.flashcards.rest.UpdateUserRequest;
@@ -89,7 +91,7 @@ public class UserResource {
 	}
 
 	/**
-	 * Adds a new user
+	 * Register a new user
 	 * 
 	 * @return
 	 */
@@ -268,7 +270,7 @@ public class UserResource {
 		}
 	}
 
-	@Path("/groups")
+	@Path("me/groups")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -292,6 +294,130 @@ public class UserResource {
 			newGroup.persist();
 
 			return Response.ok(new Genson().serialize(newGroup)).build();
+		} catch (HibernateException e) {
+			// Something went wrong with the Database
+			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
+					.build();
+		} catch (ClientErrorException e) {
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
+		} catch (Exception e) {
+			// Something else went wrong
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
+					.build();
+		} finally {
+			PersistenceHelper.closeSession();
+		}
+	}
+	
+	@Path("me/boxes")
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Returns all boxes a user has started", response = Group.class, responseContainer="Set")
+	public Response getMyBoxes() {
+		try {
+			PersistenceHelper.openSession();
+			//Get current user
+			User currentUser = ResourceUtil.getCurrentUser();
+			if(currentUser == null){
+				return Response.status(Response.Status.FORBIDDEN).build();
+			}
+			Set<Box> groups = currentUser.getBoxes();
+			return Response.ok(new Genson().serialize(groups)).build();
+		} catch (HibernateException e) {
+			// Something went wrong with the Database
+			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
+					.build();
+		} catch (ClientErrorException e) {
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
+		} catch (Exception e) {
+			// Something else went wrong
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
+					.build();
+		} finally {
+			PersistenceHelper.closeSession();
+		}
+	}
+	
+	/**
+	 * Adds a new box for the current user
+	 * 
+	 * @return
+	 */
+	@Path("/me/boxes")
+	@POST
+	@ApiOperation(value = "addBox", notes = "Adds Box with BoxId to users collection, or create new box, if BoxId == null.")
+	public Response addBox(@ApiParam(value = "Request", required = true) NewBoxRequest request) {
+		try {
+			request.validateRequest();
+			PersistenceHelper.openSession();
+			//Get current user
+			User currentUser = ResourceUtil.getCurrentUser();
+			if(currentUser == null){
+				return Response.status(Response.Status.FORBIDDEN).build();
+			}
+			
+			Box box = new Box();
+			//Check if box exists
+			if(request.getBoxId() != null){
+				box = PersistenceHelper.getById(request.getBoxId(), Box.class);
+				if(!box.isPublic()){
+					return Response.status(Response.Status.FORBIDDEN).build();
+				}
+				currentUser.getBoxes().add(box);
+				currentUser.persist();
+				return Response.ok().build();
+			}
+			// Build new Box Object
+			box.setTitle(request.getTitle());
+			box.setCategory(PersistenceHelper.getById(request.getCategoryId(), Category.class));
+			box.setOwner(currentUser);
+			box.setTags(request.getTags());
+			box.setPublic(request.isPublic());
+			// Try to Save Box Object
+			box.persist();
+			return Response.ok(new Genson().serialize(box)).build();
+		} catch (HibernateException e) {
+			// Something went wrong with the Database
+			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
+					.build();
+		} catch (ClientErrorException e) {
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
+		} catch (Exception e) {
+			// Something else went wrong
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
+					.build();
+		} finally {
+			PersistenceHelper.closeSession();
+		}
+	}
+	
+	/**
+	 * Adds a new box for the current user
+	 * 
+	 * @return
+	 */
+	@Path("/me/boxes/{box_id}")
+	@DELETE
+	@ApiOperation(value = "removeBox", notes = "Removes a box from a users collection. If the user is the owner of the box, it's deleted.")
+	public Response removeBoxFromUser(@ApiParam(value = "The ID of the box", required = true) @PathParam("box_id") long boxId) {
+		try {
+			PersistenceHelper.openSession();
+			//Get current user
+			User currentUser = ResourceUtil.getCurrentUser();
+			if(currentUser == null){
+				return Response.status(Response.Status.FORBIDDEN).build();
+			}
+			Box box = PersistenceHelper.getById(boxId, Box.class);
+			currentUser.getBoxes().remove(box);
+			if(box.getOwner().getId() == currentUser.getId()){
+				box.delete();
+			}
+			currentUser.persist();
+			return Response.ok().build();
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
 			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))

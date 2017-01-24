@@ -44,7 +44,7 @@ public class Box extends AbstractModel {
 	
 	@ManyToMany(mappedBy="boxes")
 	@XmlTransient
-	private List<User> users;
+	private List<User> user;
 	
 	@ApiModelProperty(hidden = true)
 	@ElementCollection
@@ -98,12 +98,12 @@ public class Box extends AbstractModel {
 	}
 	
 	@JsonIgnore
-	public List<User> getUsers() {
-		return users;
+	public List<User> getUser() {
+		return user;
 	}
 
-	public void setUsers(List<User> users) {
-		this.users = users;
+	public void setUser(List<User> users) {
+		this.user = users;
 	}
 
 	@JsonIgnore
