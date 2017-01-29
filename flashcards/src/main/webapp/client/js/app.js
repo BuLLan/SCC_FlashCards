@@ -43,6 +43,10 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 	$scope.loginCallback = function(response) {
 		if(response.status==200){
 			$scope.getUser();
+			setTimeout(() => {
+				window.location.href = "./myboxes.html";
+				$scope.getUser();
+			}, 100);
 		}
 	}
 	
