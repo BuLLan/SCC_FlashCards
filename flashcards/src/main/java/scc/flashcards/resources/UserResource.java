@@ -89,7 +89,7 @@ public class UserResource {
 		}
 
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -101,11 +101,12 @@ public class UserResource {
 			PersistenceHelper.openSession();
 
 			User currentUser = ResourceUtil.getCurrentUser();
-			if(currentUser == null){
+			if (currentUser == null) {
 				return Response.ok(new Genson().serialize("Not logged in")).build();
 			}
-			
-			return Response.ok(new Genson().serialize(currentUser)).status(Response.Status.OK).build();
+
+			return Response.ok(new Genson().serialize(currentUser)).status(Response.Status.OK)
+					.build();
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
 			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
@@ -232,9 +233,9 @@ public class UserResource {
 		PersistenceHelper.openSession();
 
 		try {
-			//Get current user
+			// Get current user
 			User user = ResourceUtil.getCurrentUser();
-			if(user == null){
+			if (user == null) {
 				return Response.status(Response.Status.FORBIDDEN).build();
 			}
 			request.validateRequest();
@@ -262,49 +263,54 @@ public class UserResource {
 		}
 	}
 
-//	/**
-//	 * Returns all groups of a user
-//	 * 
-//	 * @param userid
-//	 * @return
-//	 */
-//	@Path("/{userid}/groups")
-//	@GET
-//	@ApiOperation(value = "getUserGroups", notes = "Return all groups of a user", response = Group.class, responseContainer = "List")
-//	public Response getUserGroups(
-//			@ApiParam(value = "The ID of the user", required = true) @PathParam("userid") int userid) {
-//		try {
-//			Session session = PersistenceHelper.getSession();
-//			/*
-//			 * Damn, this really works!
-//			 */
-//			CriteriaBuilder builder = session.getCriteriaBuilder();
-//			CriteriaQuery<Group> critQuery = builder.createQuery(Group.class);
-//
-//			Root<Group> groupRoot = critQuery.from(Group.class);
-//			MapJoin<Group, User, UserRole> groups = groupRoot.joinMap("users");
-//
-//			critQuery.select(groupRoot);
-//			critQuery.where(builder.equal(groups.key(), userid));
-//
-//			List<Group> groupList = session.createQuery(critQuery).getResultList();
-//			return Response.ok(new Genson().serialize(groupList)).build();
-//		} catch (HibernateException e) {
-//			// Something went wrong with the Database
-//			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
-//					.build();
-//		} catch (ClientErrorException e) {
-//			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
-//					.build();
-//		} catch (Exception e) {
-//			// Something else went wrong
-//			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
-//					.build();
-//		} finally {
-//			PersistenceHelper.closeSession();
-//		}
-//	}
-	
+	// /**
+	// * Returns all groups of a user
+	// *
+	// * @param userid
+	// * @return
+	// */
+	// @Path("/{userid}/groups")
+	// @GET
+	// @ApiOperation(value = "getUserGroups", notes = "Return all groups of a
+	// user", response = Group.class, responseContainer = "List")
+	// public Response getUserGroups(
+	// @ApiParam(value = "The ID of the user", required = true)
+	// @PathParam("userid") int userid) {
+	// try {
+	// Session session = PersistenceHelper.getSession();
+	// /*
+	// * Damn, this really works!
+	// */
+	// CriteriaBuilder builder = session.getCriteriaBuilder();
+	// CriteriaQuery<Group> critQuery = builder.createQuery(Group.class);
+	//
+	// Root<Group> groupRoot = critQuery.from(Group.class);
+	// MapJoin<Group, User, UserRole> groups = groupRoot.joinMap("users");
+	//
+	// critQuery.select(groupRoot);
+	// critQuery.where(builder.equal(groups.key(), userid));
+	//
+	// List<Group> groupList = session.createQuery(critQuery).getResultList();
+	// return Response.ok(new Genson().serialize(groupList)).build();
+	// } catch (HibernateException e) {
+	// // Something went wrong with the Database
+	// return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new
+	// Genson().serialize(e.getMessage()))
+	// .build();
+	// } catch (ClientErrorException e) {
+	// return Response.status(e.getResponse().getStatusInfo()).entity(new
+	// Genson().serialize(e.getMessage()))
+	// .build();
+	// } catch (Exception e) {
+	// // Something else went wrong
+	// return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new
+	// Genson().serialize(e.getMessage()))
+	// .build();
+	// } finally {
+	// PersistenceHelper.closeSession();
+	// }
+	// }
+
 	/**
 	 * Returns all groups of a user
 	 * 
@@ -317,12 +323,12 @@ public class UserResource {
 	public Response getUserGroups() {
 		try {
 			Session session = PersistenceHelper.getSession();
-			//Get current user
+			// Get current user
 			User currentUser = ResourceUtil.getCurrentUser();
-			if(currentUser == null){
+			if (currentUser == null) {
 				return Response.status(Response.Status.FORBIDDEN).build();
 			}
-			
+
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaQuery<Group> critQuery = builder.createQuery(Group.class);
 
@@ -355,15 +361,14 @@ public class UserResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Create a Group with the user as owner", response = Group.class)
-	public Response createGroup(
-			@ApiParam(value = "The Group to be created") NewGroupRequest request) {
+	public Response createGroup(@ApiParam(value = "The Group to be created") NewGroupRequest request) {
 		try {
-			//Get current user
+			// Get current user
 			User currentUser = ResourceUtil.getCurrentUser();
-			if(currentUser == null){
+			if (currentUser == null) {
 				return Response.status(Response.Status.FORBIDDEN).build();
 			}
-			
+
 			PersistenceHelper.openSession();
 			Group newGroup = new Group();
 			newGroup.setTitle(request.getTitle());
@@ -389,18 +394,18 @@ public class UserResource {
 			PersistenceHelper.closeSession();
 		}
 	}
-	
+
 	@Path("me/boxes")
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Returns all boxes a user has started", response = Group.class, responseContainer="Set")
+	@ApiOperation(value = "Returns all boxes a user has started", response = Group.class, responseContainer = "Set")
 	public Response getMyBoxes() {
 		try {
 			PersistenceHelper.openSession();
-			//Get current user
+			// Get current user
 			User currentUser = ResourceUtil.getCurrentUser();
-			if(currentUser == null){
+			if (currentUser == null) {
 				return Response.status(Response.Status.FORBIDDEN).build();
 			}
 			Set<Box> groups = currentUser.getBoxes();
@@ -420,7 +425,7 @@ public class UserResource {
 			PersistenceHelper.closeSession();
 		}
 	}
-	
+
 	/**
 	 * Adds a new box for the current user
 	 * 
@@ -433,17 +438,17 @@ public class UserResource {
 		try {
 			request.validateRequest();
 			PersistenceHelper.openSession();
-			//Get current user
+			// Get current user
 			User currentUser = ResourceUtil.getCurrentUser();
-			if(currentUser == null){
+			if (currentUser == null) {
 				return Response.status(Response.Status.FORBIDDEN).build();
 			}
-			
+
 			Box box = new Box();
-			//Check if box exists
-			if(request.getBoxId() != null){
+			// Check if box exists
+			if (request.getBoxId() != null) {
 				box = PersistenceHelper.getById(request.getBoxId(), Box.class);
-				if(!box.isPublic()){
+				if (!box.isPublic()) {
 					return Response.status(Response.Status.FORBIDDEN).build();
 				}
 				currentUser.getBoxes().add(box);
@@ -474,7 +479,7 @@ public class UserResource {
 			PersistenceHelper.closeSession();
 		}
 	}
-	
+
 	/**
 	 * Adds a new box for the current user
 	 * 
@@ -483,17 +488,18 @@ public class UserResource {
 	@Path("/me/boxes/{box_id}")
 	@DELETE
 	@ApiOperation(value = "removeBox", notes = "Removes a box from a users collection. If the user is the owner of the box, it's deleted.")
-	public Response removeBoxFromUser(@ApiParam(value = "The ID of the box", required = true) @PathParam("box_id") long boxId) {
+	public Response removeBoxFromUser(
+			@ApiParam(value = "The ID of the box", required = true) @PathParam("box_id") long boxId) {
 		try {
 			PersistenceHelper.openSession();
-			//Get current user
+			// Get current user
 			User currentUser = ResourceUtil.getCurrentUser();
-			if(currentUser == null){
+			if (currentUser == null) {
 				return Response.status(Response.Status.FORBIDDEN).build();
 			}
 			Box box = PersistenceHelper.getById(boxId, Box.class);
 			currentUser.getBoxes().remove(box);
-			if(box.getOwner().getId() == currentUser.getId()){
+			if (box.getOwner().getId() == currentUser.getId()) {
 				box.delete();
 			}
 			currentUser.persist();
@@ -519,7 +525,7 @@ public class UserResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "login", notes = "Login the User with Name and Password")
 	public Response tryLogin(@ApiParam(value = "Request", required = true) LoginRequest request) {
-		
+
 		org.apache.shiro.mgt.SecurityManager securityManager = new IniSecurityManagerFactory().getInstance();
 		SecurityUtils.setSecurityManager(securityManager);
 
@@ -540,36 +546,41 @@ public class UserResource {
 				currentUser.getSession().setAttribute("username", request.getEmail());
 				return Response.ok(new Genson().serialize("Login Successful!")).build();
 			} catch (UnknownAccountException uae) {
-				return Response.status(Response.Status.BAD_REQUEST).entity(new Genson().serialize("Email or password incorrect")).build();
+				return Response.status(Response.Status.BAD_REQUEST)
+						.entity(new Genson().serialize("Email or password incorrect")).build();
 			} catch (IncorrectCredentialsException ice) {
-				return Response.status(Response.Status.BAD_REQUEST).entity(new Genson().serialize("Email or password incorrect")).build();
+				return Response.status(Response.Status.BAD_REQUEST)
+						.entity(new Genson().serialize("Email or password incorrect")).build();
 			} catch (LockedAccountException lae) {
 				String message = "The account for username " + token.getPrincipal() + " is locked.  "
 						+ "Please contact your administrator to unlock it.";
 				return Response.status(Response.Status.BAD_REQUEST).entity(new Genson().serialize(message)).build();
 			}
 		} else {
-			return Response.ok(new Genson().serialize("Already logged in")).build(); // already logged in
+			return Response.ok(new Genson().serialize("Already logged in")).build(); // already
+																						// logged
+																						// in
 		}
 	}
-	
+
 	@GET
 	@Path("/logout")
 	@ApiOperation(value = "logout", notes = "Closes the current user session")
 	public Response logout() {
-		try{
-			
-		org.apache.shiro.mgt.SecurityManager securityManager = new IniSecurityManagerFactory().getInstance();
-		SecurityUtils.setSecurityManager(securityManager);
-		org.apache.shiro.subject.Subject currentUser = SecurityUtils.getSubject();
+		try {
 
-		if (!currentUser.isAuthenticated()) {
-			return Response.ok(new Genson().serialize("Not Logged In!")).build();
-		}
-		currentUser.logout();
-		return Response.ok(new Genson().serialize("Logged out successfully!")).build();
+			org.apache.shiro.mgt.SecurityManager securityManager = new IniSecurityManagerFactory().getInstance();
+			SecurityUtils.setSecurityManager(securityManager);
+			org.apache.shiro.subject.Subject currentUser = SecurityUtils.getSubject();
+
+			if (!currentUser.isAuthenticated()) {
+				return Response.ok(new Genson().serialize("Not Logged In!")).build();
+			}
+			currentUser.logout();
+			return Response.ok(new Genson().serialize("Logged out successfully!")).build();
 		} catch (Exception e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage())).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
+					.build();
 		}
 	}
 

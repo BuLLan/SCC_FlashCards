@@ -1,8 +1,14 @@
 package scc.flashcards.resources;
 
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.Response.StatusType;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.subject.Subject;
+
+import com.owlike.genson.Genson;
 
 import scc.flashcards.model.UserDAO;
 import scc.flashcards.model.user.User;
@@ -39,6 +45,29 @@ public class ResourceUtil {
 			return user;
 		}
 		return null;
+	}
+	
+	public static Response getResponse(Status status) {
+		return Response.status(status)
+				
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+				.allow("OPTIONS").build();
+	}
+	
+	public static Response getResponse(Status status, Object entity) {
+		return Response.ok(new Genson().serialize(entity))
+				.status(status)
+				
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+				.allow("OPTIONS").build();
+	}
+	
+	public static Response getResponse(StatusType status, Object entity) {
+		return Response.ok(new Genson().serialize(entity))
+				.status(status)
+				
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+				.allow("OPTIONS").build();
 	}
 	
 }
