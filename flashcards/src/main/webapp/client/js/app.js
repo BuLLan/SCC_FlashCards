@@ -7,8 +7,9 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 	$scope.showLogin = false;
 	$scope.categories;
 	$scope.myboxes;
-	$scope.flashcards;
 	$scope.currentboxid;
+	$scope.boxcontent;
+	$scope.flashcards;
 	
 	
 	$scope.getUser = function () {
@@ -110,18 +111,26 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 		console.log('XXXXXXXXXX');
 	}
 	
-	$scope.getCards = function(){
-		$http.get(baseUrl + '/{box_id}/cards').then(function successCallback(response) {
-			$scope.categories = response.data;
-		}, function errorCallback(response) {
-		});
-	}
-	
-	$scope.setCurrentBoxID = function(id){
-		$scope.currentboxid = id;
+	$scope.setCurrentBoxID = function(nummer){
+		console.log(nummer);
+		$scope.currentboxid = nummer;
 		setTimeout(() => {
 			window.location.href = "./editbox.html";
 		}, 100);
+	}
+	
+	$scope.getBoxContent = function(){
+		console.log('XXXXXXXXXX' + $scope.currentboxid)
+		$http.get(baseUrl + '/boxes/' + $scope.currentboxid + '/flashcards').then(function successCallback(response) {
+			$scope.flashcards = response.data;
+		}, function errorCallback(response) {
+		});
+
+		$http.get(baseUrl + '/boxes/' + $scope.currentboxid).then(function successCallback(response) {
+			$scope.boxcontent = response.data;
+		}, function errorCallback(response) {
+		});
+
 	}
 	
 	//Try to get user on init

@@ -17,7 +17,7 @@
 	<script src="js/app.js"></script>
   </head>
 
-  <body  ng-controller="flashCardsCtrl as appController">
+  <body  ng-controller="flashCardsCtrl as appController" ng-init="getBoxContent()">
 	 <nav class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container-fluid">
 			<div class="navbar-header">
@@ -65,88 +65,24 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="loginbox col-lg-5 kachel">
-                        <h1>Box bearbeiten</h1>
+                        <h1>{{boxcontent.title}}</h1>
                         <hr/>
-                        <h3>Softwaretechnologie</h3>
-						<form class="login">
-                            <input type="text" required placeholder="Neuer Name"/>
-                            <button type="submit">login</button>
-                        </form>  
-                        <h3>Tags:</h3>
-                        <form class="login">
-                            <input style="width: 100%; margin-bottom: 20px;" id="tags" type="text" class="tags" value="Tag" />
-                            <button type="submit">&uuml;bernehmen</button>
-                        </form> 
                         <h3>Beschreibung:</h3>
-                        <form class="login">
-                            <textarea placeholder="Neue Beschreibung eingeben"></textarea>
-                            <button type="submit">&uuml;bernehmen</button>
-                        </form> 
+                        <p>{{boxcontent.description}}</p>
+                        <h3>Tags:</h3>
+						<p>{{boxcontent.tags}}</p>
+                        
                         <icon class='glyphicon glyphicon-user'></icon><icon class='glyphicon glyphicon-user'></icon><icon class='glyphicon glyphicon-user'></icon>
                     </div>
                     <div class="loginbox col-lg-5 kachel">
                         <div class="col-lg-6 karte">
-                           	<div class="karteninfo">
-                                <h3>#001</h3>
+                           	<div class="karteninfo" ng-repeat="card in flashcards">
+                                <h3>{{$index + 1}}</h3>
                                 <hr/>
-                                <p>Die Inhalte der Vorlesung Softwaretechnologie mit ausgewählten Fragen.</p>
+                                <p>{{card.frontpage.content}}</p>
                                 <div class='row box-config'>
                                   <div class='col-xs-6'><a href="editcard.html"><icon class='glyphicon glyphicon-user'></icon> bearbeiten</a></div>
                                   <div class='col-xs-6'><a><icon class='glyphicon glyphicon-user'></icon> löschen</a></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 karte">
-                           	<div class="karteninfo">
-                                <h3>#002</h3>
-                                <hr/>
-                                <p>Die Inhalte der Vorlesung Softwaretechnologie mit ausgewählten Fragen.</p>
-                                <div class='row box-config'>
-                                  <div class='col-xs-6'><a href="editcard.html"><icon class='glyphicon glyphicon-user'></icon> bearbeiten</a></div>
-                                  <div class='col-xs-6'><a><icon class='glyphicon glyphicon-user'></icon> löschen</a></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 karte">
-                           	<div class="karteninfo">
-                                <h3>#003</h3>
-                                <hr/>
-                                <p>Die Inhalte der Vorlesung Softwaretechnologie mit ausgewählten Fragen.</p>
-                                <div class='row box-config'>
-                                  <div class='col-xs-6'><a href="editcard.html"><icon class='glyphicon glyphicon-user'></icon> bearbeiten</a></div>
-                                  <div class='col-xs-6'><a><icon class='glyphicon glyphicon-user'></icon> löschen</a></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 karte">
-                           	<div class="karteninfo">
-                                <h3>#004</h3>
-                                <hr/>
-                                <p>Die Inhalte der Vorlesung Softwaretechnologie mit ausgewählten Fragen.</p>
-                                <div class='row box-config'>
-                                  <div class='col-xs-6'><a href="editcard.html"><icon class='glyphicon glyphicon-user'></icon> bearbeiten</a></div>
-                                  <div class='col-xs-6'><a><icon class='glyphicon glyphicon-user'></icon> löschen</a></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 karte">
-                           	<div class="karteninfo">
-                                <h3>#005</h3>
-                                <hr/>
-                                <p>Die Inhalte der Vorlesung Softwaretechnologie mit ausgewählten Fragen.</p>
-                                <div class='row box-config'>
-                                  <div class='col-xs-6'><a href="editcard.html"><icon class='glyphicon glyphicon-user'></icon> bearbeiten</a></div>
-                                  <div class='col-xs-6'><a><icon class='glyphicon glyphicon-user'></icon> löschen</a></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 karte">
-                           	<div class="karteninfo">
-                                <h3>Karte hinzufügen</h3>
-                                <hr/>
-                                <p>Fügen Sie der Box eine neue Frage hinzu.</p>
-                                <div class='row box-config'>
-                                  <div class='col-xs-6'><a><icon class='glyphicon glyphicon-user'></icon> bearbeiten</a></div>
                                 </div>
                             </div>
                         </div>
