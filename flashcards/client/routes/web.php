@@ -27,6 +27,4 @@ Route::get ( '/newbox', function () {
 	return view ( 'boxes.newbox' );
 } );
 
-Route::get ( '/editbox', function () {
-	return view ( 'boxes.editbox' );
-} );
+Route::get ( '/editbox/{boxid}', ['uses' =>'Controller@editBox']);

@@ -5,6 +5,9 @@
 @endsection
 
 @section('content')
+<script>
+	var boxId = {{ $boxId }};
+</script>
 @verbatim
 	<div class="container-fluid">
                 <div class="row">
