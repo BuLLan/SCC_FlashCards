@@ -18,6 +18,9 @@
 					<li><a href="#" ng-click="logout()">Log-Out</a></li>
 				</ul></li>
 		</ul>
+		<ul class="nav navbar-nav navbar-right" ng-hide="currentUser">
+			<li><a href="/">Login</a></li>
+		</ul>
 	</div>
 </nav>
 @endverbatim
