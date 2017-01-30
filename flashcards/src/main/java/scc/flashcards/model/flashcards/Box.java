@@ -32,6 +32,10 @@ public class Box extends AbstractModel {
 	private String title;
 	
 	@ApiModelProperty(required=true)
+	@XmlAttribute(required=true)
+	private String description;
+	
+	@ApiModelProperty(required=true)
 	@ManyToOne
 	@JoinColumn(name="category_id", referencedColumnName="id")
 	private Category category;
@@ -57,12 +61,13 @@ public class Box extends AbstractModel {
 	
 	public Box(){}
 	
-	public Box(String title, Category category, List<String> tags, User owner) {
+	public Box(String title, Category category, String description, List<String> tags, User owner) {
 		super();
 		this.title = title;
 		this.category = category;
 		this.tags = tags;
 		this.owner = owner;
+		this.description = description;
 	}
 	
 	public String getTitle() {
@@ -79,6 +84,14 @@ public class Box extends AbstractModel {
 
 	public void setCategory(Category category) {
 		this.category = category;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public List<String> getTags() {

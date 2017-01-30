@@ -6,6 +6,10 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 	$scope.currentUser;
 	$scope.showLogin = false;
 	$scope.categories;
+	$scope.myBoxes;
+	$scope.flashcards;
+	
+	
 	$scope.getUser = function () {
 		$http.get(baseUrl + 'users/me').then($scope.getUserCallback);
 	}
@@ -79,7 +83,6 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 	$scope.getCategories = function(){
 		$http.get(baseUrl + 'boxes/categories').then(function successCallback(response) {
 			$scope.categories = response.data;
-			console.log(response.data);
 		}, function errorCallback(response) {
 		});
 	}
@@ -93,6 +96,20 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 			}, 100);
 		}, function errorCallback(response) {
 			alert()
+		});
+	}
+	
+	$scope.getMyBoxes = function(){
+		$http.get(baseUrl + 'users/me/boxes').then(function successCallback(response) {
+			$scope.myBoxes = response.data;
+		}, function errorCallback(response) {
+		});
+	}
+	
+	$scope.getCards = function(){
+		$http.get(baseUrl + '/{box_id}/cards').then(function successCallback(response) {
+			$scope.categories = response.data;
+		}, function errorCallback(response) {
 		});
 	}
 	
