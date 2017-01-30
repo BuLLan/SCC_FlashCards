@@ -8,13 +8,14 @@ app.config(['$httpProvider', function ($httpProvider) {
 }]);
 
 app.controller('flashCardsCtrl', function($scope, $http, $sce) {
-	
 	$scope.currentUser;
 	$scope.showLogin = false;
 	$scope.categories;
 	$scope.myboxes;
-	$scope.flashcards;
 	$scope.currentboxid;
+	$scope.boxcontent;
+	$scope.flashcards;
+	
 	
 	$scope.getUser = function () {
 		$http.get(baseUrl + 'users/me').then($scope.getUserCallback);
@@ -63,7 +64,7 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 	$scope.logout = function(){
 	     var data = angular.toJson($scope.request);
 	     
-	     $http.get(baseUrl + 'users/logout').then($scope.logoutCallback);
+	     $http.get(baseUrl + 'users/logout', data).then($scope.logoutCallback);
 	}
 	
 	$scope.logoutCallback = function(response) {
@@ -76,7 +77,6 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
     	var delurl = 'http://localhost:8080/flashcards/api/v1/users/' + delid;
     	console.log(delurl);
     	 $http({
-    		 withCredentials: true,
     	    method: 'DELETE',
     	    url: 'http://localhost:8080/flashcards/api/v1/users/'+delid
     	          
@@ -88,7 +88,7 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 	
 	
 	$scope.getCategories = function(){
-		$http.get(baseUrl + 'boxes/categories' ).then(function successCallback(response) {
+		$http.get(baseUrl + 'boxes/categories').then(function successCallback(response) {
 			$scope.categories = response.data;
 		}, function errorCallback(response) {
 		});
@@ -116,18 +116,26 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 		console.log('XXXXXXXXXX');
 	}
 	
-	$scope.getCards = function(){
-		$http.get(baseUrl + '/{box_id}/cards').then(function successCallback(response) {
-			$scope.categories = response.data;
-		}, function errorCallback(response) {
-		});
-	}
-	
-	$scope.setCurrentBoxID = function(id){
-		$scope.currentboxid = id;
+	$scope.setCurrentBoxID = function(nummer){
+		console.log(nummer);
+		$scope.currentboxid = nummer;
 		setTimeout(() => {
 			window.location.href = "./editbox";
 		}, 100);
+	}
+	
+	$scope.getBoxContent = function(){
+		console.log('XXXXXXXXXX' + $scope.currentboxid)
+		$http.get(baseUrl + '/boxes/' + $scope.currentboxid + '/flashcards').then(function successCallback(response) {
+			$scope.flashcards = response.data;
+		}, function errorCallback(response) {
+		});
+
+		$http.get(baseUrl + '/boxes/' + $scope.currentboxid).then(function successCallback(response) {
+			$scope.boxcontent = response.data;
+		}, function errorCallback(response) {
+		});
+
 	}
 	
 	//Try to get user on init

@@ -20,7 +20,7 @@
 @show
 </head>
 
-<body ng-controller="flashCardsCtrl as appController">
+<body ng-controller="flashCardsCtrl as appController" @yield('body-data')>
 	@include('shared.navbar')
 	<div id="wrapper">
 

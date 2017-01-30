@@ -27,6 +27,6 @@ Route::get ( '/newbox', function () {
 	return view ( 'newbox' );
 } );
 
-Route::get ( '/', function () {
-	return view ( 'index' );
+Route::get ( '/editbox', function () {
+	return view ( 'editbox' );
 } );

@@ -35,3 +35,7 @@
 </div>
 @endverbatim
 @endsection
+
+@section('body-data')
+ng-init="getCategories()"
+@endsection
