@@ -15,6 +15,7 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 	$scope.currentboxid;
 	$scope.boxcontent;
 	$scope.flashcards;
+	$scope.boxes;
 	
 	
 	$scope.getUser = function () {
@@ -115,6 +116,15 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 		console.log('XXXXXXXXXX');
 	}
 	
+	$scope.getAllBoxes = function (){
+    $http.get(baseUrl + 'boxes').then(function successCallback(response) {
+      $scope.boxes = response.data;
+      console.log(response.data);
+    }, function errorCallback(response) {
+      $scope.getAllBoxes();
+    });
+ 	}
+
 	$scope.setCurrentBoxID = function(nummer){
 		console.log(nummer);
 		$scope.currentboxid = nummer;

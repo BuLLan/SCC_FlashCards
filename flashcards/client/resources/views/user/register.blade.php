@@ -2,11 +2,9 @@
 
 @section('content')
 @verbatim
-<!-- Page Content -->
-<div id="page-content-wrapper">
 	<div class="container-fluid">
 		<div class="row">
-			<div class="loginbox col-lg-4 col-lg-offset-4">
+			<div class="loginbox col-lg-4 col-lg-offset-3">
 				<h1>Benutzer erstellen</h1>
 				<hr />
 				<form class="login" ng-submit="register()">
@@ -19,11 +17,10 @@
 					<button type="submit">senden</button>
 				</form>
 				<p>
-					Schon registriert? <a href="./index">Login</a>
+					Schon registriert? <a href="/">Login</a>
 				</p>
 			</div>
 		</div>
 	</div>
-</div>
 @endverbatim
 @endsection

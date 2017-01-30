@@ -94,8 +94,25 @@ hr{
 }
 
 .karteninfo{
-	width: 100%;
+	width: 90%;
+	height:100px;
 	background-color: #525252;
+	padding: 0  5% 0 5%;
+	background-color: #fffde2;
+	color:darkblue;
+	text-align: center;
+    webkit-box-shadow: 10px 11px 39px -12px rgba(0,0,0,0.75);
+    moz-box-shadow: 10px 11px 39px -12px rgba(0,0,0,0.75);
+    box-shadow: 10px 11px 39px -12px rgba(0,0,0,0.75);
+}
+
+.karteninfo p{
+	color:black;
+	text-align: left;
+}
+
+.aktionen {
+	background-color:black;
 }
 
 .box-config a{
