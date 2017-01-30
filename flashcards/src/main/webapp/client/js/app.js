@@ -6,6 +6,7 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 	$scope.currentUser;
 	$scope.showLogin = false;
 	$scope.categories;
+	$scope.boxes;
 	$scope.myboxes;
 	$scope.currentboxid;
 	$scope.boxcontent;
@@ -88,6 +89,15 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 		}, function errorCallback(response) {
 		});
 	}
+	
+	$scope.getAllBoxes = function (){
+	    $http.get(baseUrl + 'boxes').then(function successCallback(response) {
+	      $scope.boxes = response.data;
+	      console.log(response.data);
+	    }, function errorCallback(response) {
+	      $scope.getAllBoxes();
+	    });
+	  }
 	
 	$scope.addBox = function(){
 		var data = angular.toJson($scope.request);
