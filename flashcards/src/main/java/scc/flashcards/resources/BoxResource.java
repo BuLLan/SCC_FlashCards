@@ -3,6 +3,7 @@ package scc.flashcards.resources;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -312,6 +313,31 @@ public class BoxResource {
 		try {
 			FlashCard fc = PersistenceHelper.getById(fc_id, FlashCard.class);
 			return Response.ok(new Genson().serialize(fc)).build();
+		} catch (HibernateException e) {
+			// Something went wrong with the Database
+			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
+					.build();
+		} catch (ClientErrorException e) {
+			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
+					.build();
+		} catch (Exception e) {
+			// Something else went wrong
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
+					.build();
+		} finally {
+			PersistenceHelper.closeSession();
+		}
+	}
+	
+	@GET
+	@Path("/{box_id}/flashcards")
+	@ApiOperation(value = "Returns all flashcards", notes = "Fetches a FlashCard", response = FlashCard.class, responseContainer="Set")
+	public Response getAllCards(@ApiParam(value = "box_id", required = true) @PathParam("box_id") int box_id)
+	{
+		PersistenceHelper.openSession();
+		try {
+			Set<FlashCard> cards = PersistenceHelper.getById(box_id, Box.class).getFlashcards();
+			return Response.ok(new Genson().serialize(cards)).build();
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
 			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))

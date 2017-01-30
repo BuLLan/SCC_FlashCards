@@ -32,7 +32,7 @@ public class Box extends AbstractModel {
 	private String title;
 	
 	@ApiModelProperty(required=true)
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne
 	@JoinColumn(name="category_id", referencedColumnName="id")
 	private Category category;
 	
