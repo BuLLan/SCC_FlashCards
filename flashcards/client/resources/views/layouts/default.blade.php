@@ -11,23 +11,32 @@
 <link rel="stylesheet" type="text/css" href="css/style.css">
 
 @section('jsHeader')
-	<script	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-	<script	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-	<script	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script
+	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
 @show
 </head>
 
 <body ng-controller="flashCardsCtrl as appController">
 	@include('shared.navbar')
 	<div id="wrapper">
-	
-		@include('shared.sidebar')
-		
-		<div id="page-content-wrapper">
-		@section('content')
-			Kein Inhalt
-		@show
+
+		@section('sidebar')
+		<div ng-show="currentUser">
+			<div id="sidebar-wrapper">
+				<ul class="sidebar-nav nav">
+				</ul>
+			</div>
+			<button id='menu-toggle' type="button" class="btn btn-circle">
+				<i id='side' class="glyphicon glyphicon-chevron-left"></i>
+			</button>
 		</div>
+		@show
+
+		<div id="page-content-wrapper">@section('content') Kein Inhalt @show</div>
 		<!-- /#page-content-wrapper -->
 
 	</div>
@@ -48,9 +57,9 @@
         };
     });
     </script>
-    @endverbatim
+	@endverbatim
 </body>
 @section('jsFooter')
-	<script src="js/flashcardapp.js"></script>
+<script src="js/flashcardapp.js"></script>
 @show
 </html>

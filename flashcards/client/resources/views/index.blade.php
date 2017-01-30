@@ -1,6 +1,7 @@
 @extends('layouts.default')
 
 @section('content')
+@verbatim
 <div class="container-fluid">
 	<div class="row">
 		<div class="loginbox col-lg-4 col-lg-offset-3" ng-hide="currentUser">
@@ -18,4 +19,5 @@
 		</div>
 	</div>
 </div>
+@endverbatim
 @endsection
