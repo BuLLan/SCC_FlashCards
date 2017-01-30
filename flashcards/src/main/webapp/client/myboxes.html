@@ -88,18 +88,16 @@
                 </div>
                 <br/>
                  <div class="row">
-                    <div ng-repeat="b in myboxes" class="loginbox col-lg-3 kachel">
-                        <h3>Softwaretechnologie</h3>
+                    <div ng-repeat="box in myboxes" class="loginbox col-lg-3 kachel">
+                        <h3>{{box.title}}</h3>
                         <hr/>
                         <ul>
-                          <li>Informatik</li>
-                            <li>UML</li>
-                            <li>Java</li>
+                          <li ng-repeat="tag in box.tags">Informatik</li>
                         </ul>
-                        <p>Die Inhalte der Vorlesung Softwaretechnologie mit ausgewählten Fragen.</p>
+                        <p>{{box.description}}</p>
                         <div class='row box-config'>
                           <div class='col-md-4'><a href="start.html"><icon class='glyphicon glyphicon-user'></icon> starten</a></div>
-                          <div class='col-md-4'><a href="editbox.html"><icon class='glyphicon glyphicon-user'></icon> bearbeiten</a></div>
+                          <div class='col-md-4'><a ng-click="setCurrentBoxID({{box.id}})"><icon class='glyphicon glyphicon-user'></icon> bearbeiten</a></div>
                           <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> löschen</a></div>
                       </div>
                     </div>
