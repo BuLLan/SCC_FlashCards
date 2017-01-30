@@ -93,7 +93,7 @@ hr{
 	padding: 4.16666% !important;
 }
 
-.karteninfo{
+.karteninfo2{
 	width: 90%;
 	height:100px;
 	background-color: #525252;
@@ -106,7 +106,7 @@ hr{
     box-shadow: 10px 11px 39px -12px rgba(0,0,0,0.75);
 }
 
-.karteninfo p{
+.karteninfo2 p{
 	color:black;
 	text-align: left;
 }

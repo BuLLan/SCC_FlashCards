@@ -23,7 +23,7 @@
 		</div>
 		<div class="loginbox col-lg-10 kachel">
 			<div class="col-lg-4 karte" ng-repeat="card in flashcards">
-				<div class="karteninfo">
+				<div class="karteninfo2">
 					<p>#{{$index + 1}}</p>
 					<h5>{{card.frontpage.content}}</h5>
 					<div class='row box-config aktionen'>
