@@ -1,0 +1,114 @@
+hr{
+	width: 100%;
+	border-color: #fff;
+	margin-bottom: 50px;
+}
+
+.loginbox{
+	margin-top: 20px;
+	padding: 20px;
+	box-shadow: 0px 0px 5px #000;
+	background-color: rgba(82,82,82,1.00);
+	border-radius: 3px;
+}
+
+.loginbox h1,
+.loginbox h3,
+.loginbox p{
+	color: #fff;
+}
+
+.loginbox p a{
+	color: #FFA600;
+}
+
+.loginbox .col-lg-6{
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+.login input,
+.login textarea{
+	width: 100%;
+	margin-bottom: 20px;
+	background: rgba(82,82,82,1.00);
+	border: none;
+	border-bottom: 2px solid #fff;
+	color: #fff;
+}
+
+.login button{
+	background: #fff;
+	border: none;
+	margin-bottom: 20px;
+	padding: 10px;
+	border-radius: 3px;
+}
+
+.kachel{
+	margin: 4.16666666%;
+}
+
+.kachel h3{
+	margin-top: 10px;
+}
+
+.kachel ul{
+	padding: 0px;
+	height: 30px;
+	width: 100%;
+}
+
+.kachel ul li{
+	padding: 3px 7px;
+	border-radius: 3px;
+	float: left;
+	list-style-type: none;
+	margin: 5px;
+	color: #fff;
+	background-color: #000D36;
+}
+
+.kachel ul li:nth-child(1){background-color: #268BA5;}
+.kachel ul li:nth-child(2){background-color: #FF4F2B;}
+.kachel ul li:nth-child(3){background-color: #FFBE2D;}
+.kachel ul li:nth-child(4){background-color: #ABE840;}
+.kachel ul li:nth-child(5){background-color: #89F3FF;}
+
+.kachel p{
+	float: none;
+	clear: both;
+}
+
+.kachel .check,
+.kachel .check input{
+	width: inherit;
+}
+
+.kachel .checkbox{
+	color: #fff;
+}
+
+.karte{
+	padding: 4.16666% !important;
+}
+
+.karteninfo{
+	width: 100%;
+	background-color: #525252;
+}
+
+.box-config a{
+  font-size: 12px;
+  color: #FFF;
+  text-decoration: none;
+}
+
+.box-config a:hover{
+  color: #FFA600;
+  cursor: pointer;
+}
+
+#tags_tagsinput{
+	margin-bottom: 20px;
+}

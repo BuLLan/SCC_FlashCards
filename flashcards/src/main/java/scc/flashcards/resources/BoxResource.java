@@ -18,6 +18,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.ws.soap.AddressingFeature.Responses;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -74,18 +75,15 @@ public class BoxResource {
 				query.select(root).where(builder.equal(root.get("isPublic"), true));
 			}
 			List<Box> resultList = session.createQuery(query).getResultList();
-			return Response.ok(new Genson().serialize(resultList)).build();
+			return ResourceUtil.getResponse(Response.Status.OK, resultList);
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
-			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
-					.build();
+			return ResourceUtil.getResponse(Response.Status.SERVICE_UNAVAILABLE, e.getMessage());
 		} catch (ClientErrorException e) {
-			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
-					.build();
+			return ResourceUtil.getResponse(e.getResponse().getStatusInfo(), e.getMessage());
 		} catch (Exception e) {
 			// Something else went wrong
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
-					.build();
+			return ResourceUtil.getResponse(Response.Status.INTERNAL_SERVER_ERROR, e.getMessage());
 		} finally {
 			PersistenceHelper.closeSession();
 		}
