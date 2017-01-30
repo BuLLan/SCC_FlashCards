@@ -56,7 +56,18 @@ public class PersistenceHelper {
 	 */
 	public static Session getSession(){
 		if(session == null || !session.isOpen()){
-			session = getInstance().getSessionFactory().openSession();
+			try{
+				session = getInstance().getSessionFactory().getCurrentSession();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		if(session == null || !session.isOpen()){
+			try {
+				session = getInstance().getSessionFactory().openSession();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
 		return session;
 	}
@@ -67,10 +78,10 @@ public class PersistenceHelper {
 	}
 	
 	public static void closeSession() {
-		if(getSession() == null){
-			return;
-		}
-		getSession().close();
+//		if(getSession() == null){
+//			return;
+//		}
+//		getSession().close();
 	}
 
 	/**
