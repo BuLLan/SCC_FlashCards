@@ -1,17 +1,19 @@
 <!doctype html>
-<html>
+<html  ng-app="flashcardApp">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=100%" />
     <title>FlashCrads Dashboard</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="css/jquery.multiselect.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="css/style2.css">
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-    <link href="css/jquery.multiselect.css" rel="stylesheet" type="text/css">
-    <script src="js/jquery.tagsinput.js"></script>
-    <script type="text/javascript">
+    <script src="js/jquery.tagsinput.js" type="text/javascript"></script>
+    <script	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+    <script src="js/app.js"></script>
 
     $(function() {
       $('#tags_1').tagsInput({width:'600px'});
@@ -27,7 +29,7 @@
         <img src="Logo.png" height="50px"/>
         <a class="navbar-brand" href="#">FlashCards</a>
       </div>
-      <ul class="nav navbar-nav navbar-right">
+      <ul class="nav navbar-nav navbar-right" ng-show="currentUser">
         <li><a href="index.html">Home</a></li>
         <li class="active"><a href="#">Boxen</a></li>
         <li><a href="#">Gruppen</a></li>

@@ -5,7 +5,7 @@ var app = angular.module('flashcardApp', []);
 app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 	$scope.currentUser;
 	$scope.showLogin = false;
-	
+	$scope.categories;
 	$scope.getUser = function () {
 		$http.get(baseUrl + 'users/me').then($scope.getUserCallback);
 	}
@@ -73,8 +73,30 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
     	    $scope.getAllUsers();
     	}); 
     	    
-     } 
+     }
+	
+	
+	$scope.getCategories = function(){
+		$http.get(baseUrl + 'boxes/categories').then(function successCallback(response) {
+			$scope.categories = response.data;
+			console.log(response.data);
+		}, function errorCallback(response) {
+		});
+	}
+	
+	$scope.addBox = function(){
+		var data = angular.toJson($scope.request);
+		$http.post(baseUrl + 'users/me/boxes', data).then(function successCallback(response) {
+			setTimeout(() => {
+				window.location.href = "./myboxes.html";
+				$scope.getUser();
+			}, 100);
+		}, function errorCallback(response) {
+			alert()
+		});
+	}
 	
 	//Try to get user on init
 	$scope.getUser();
+	$scope.getCategories();
 });
