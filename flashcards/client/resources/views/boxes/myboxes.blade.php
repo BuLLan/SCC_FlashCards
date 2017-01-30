@@ -17,7 +17,7 @@
                     <option value="4">Cat4</option>
                     <option value="5">Cat5</option>
                   </select>
-                    <script src="js/jquery.multiselect.js"></script>
+                    <script src="/js/jquery.multiselect.js"></script>
                     <script>
                     $('#langOpt').multiselect({
                         columns: 1,
@@ -43,7 +43,7 @@
                         <p>{{box.description}}</p>
                         <div class='row box-config'>
                           <div class='col-md-4'><a href="start.html"><icon class='glyphicon glyphicon-user'></icon> starten</a></div>
-                          <div class='col-md-4'><a ng-click="setCurrentBoxID(box.id)"><icon class='glyphicon glyphicon-user'></icon> bearbeiten</a></div>
+                          <div class='col-md-4'><a href="/editbox/{{box.id}}"><icon class='glyphicon glyphicon-user'></icon> bearbeiten</a></div>
                           <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> löschen</a></div>
                       </div>
                     </div>
