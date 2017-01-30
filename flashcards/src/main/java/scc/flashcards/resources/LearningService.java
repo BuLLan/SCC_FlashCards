@@ -90,7 +90,7 @@ public class LearningService {
 			Map<FlashCard, Integer> dueCards = getNextDueCards(currentUser.getId(), box_id, halfLimit);
 			
 			if(dueCards.size() < halfLimit){
-				halfLimit += dueCards.size()-halfLimit;
+				halfLimit += halfLimit-dueCards.size();
 			}
 			
 			List<FlashCard> newCards = getNewCards(currentUser.getId(), box_id, halfLimit);
@@ -226,12 +226,17 @@ public class LearningService {
 		
 		List<FlashCard> scoredCards = session.createQuery(critQuery).getResultList();
 		
+		CriteriaQuery<FlashCard> critQuery_b = builder.createQuery(FlashCard.class);
+		
+		Root<Box> boxRoot_b = critQuery_b.from(Box.class);
+		SetJoin<Box, FlashCard> boxCardsJoin_b = boxRoot_b.joinSet("flashcards");
+		
 		//Get all cards which belong to the box
-		critQuery.select(boxCardsJoin).where(builder.and(
-				builder.equal(boxRoot, boxId)
+		critQuery_b.select(boxCardsJoin_b).where(builder.and(
+				builder.equal(boxRoot_b, boxId)
 			)).distinct(true);
 		
-		List<FlashCard> allCards = session.createQuery(critQuery).getResultList();
+		List<FlashCard> allCards = session.createQuery(critQuery_b).getResultList();
 		
 		//Remove the scored cards from the list
 		allCards.removeAll(scoredCards);

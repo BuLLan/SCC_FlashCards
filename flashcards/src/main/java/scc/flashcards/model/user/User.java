@@ -4,8 +4,10 @@ package scc.flashcards.model.user;
 import java.io.Serializable;
 import java.util.Set;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -37,6 +39,8 @@ public class User extends AbstractModel implements Serializable {
 	private String salt;
 
 	@ManyToMany(fetch=FetchType.LAZY)
+	@CollectionTable(name="group_users",
+    joinColumns=@JoinColumn(name="user_id"))
 	private Set<Group> groups;
 
 	@ManyToMany(fetch=FetchType.LAZY)
