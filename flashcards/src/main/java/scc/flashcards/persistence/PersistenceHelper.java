@@ -5,7 +5,6 @@ import javax.ws.rs.NotFoundException;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -16,7 +15,7 @@ public class PersistenceHelper {
 	private static PersistenceHelper instance;
 	private SessionFactory sessionFactory;
 	private static Session session;
-	private static Transaction tx;
+
 
 	protected PersistenceHelper() {
 		// A SessionFactory is set up once for an application!

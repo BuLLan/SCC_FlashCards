@@ -30,8 +30,12 @@ public abstract class AbstractModel implements Comparable<AbstractModel> {
 	 */
 	public void persist() {
 		Transaction tx = PersistenceHelper.getSession().beginTransaction();
-		PersistenceHelper.getSession().saveOrUpdate(this);
-		tx.commit();
+		try{
+			PersistenceHelper.getSession().saveOrUpdate(this);
+			tx.commit();
+		} catch (Exception e) {
+			tx.rollback();
+		}
 	}
 	
 	/**
@@ -39,8 +43,13 @@ public abstract class AbstractModel implements Comparable<AbstractModel> {
 	 */
 	public void delete() {
 		Transaction tx = PersistenceHelper.getSession().beginTransaction();
-		PersistenceHelper.getSession().delete(this);
-		tx.commit();
+		
+		try{
+			PersistenceHelper.getSession().delete(this);
+			tx.commit();
+		} catch (Exception e) {
+			tx.rollback();
+		}
 	}
 	
 	@Override

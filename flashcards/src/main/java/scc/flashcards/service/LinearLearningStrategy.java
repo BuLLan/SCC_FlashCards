@@ -6,7 +6,7 @@ import java.util.Date;
 import scc.flashcards.model.learning.CardScore;
 
 /**
- * Each time a card is answered correctly, it's due date will be set one day longer than the previous time.
+ * Nnumber of Days to next due equals the cards score
  * 
  * @author Timi
  *
@@ -14,7 +14,9 @@ import scc.flashcards.model.learning.CardScore;
 public class LinearLearningStrategy implements LearningStrategy{
 
 	public CardScore scoreCard(CardScore score, boolean isCorrect) {
-		score.setScore(score.getScore() + 1);
+		int newScore = score.getScore();
+		newScore += (isCorrect) ? 1 : -1 ; 
+		score.setScore(newScore);
 		score.setDue(calculateDueDate(score.getScore()));
 		score.setLastUpdate(Date.from(Instant.now()));
 		
