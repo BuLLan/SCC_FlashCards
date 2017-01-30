@@ -1,18 +1,7 @@
 @extends('layouts.default') 
 
 @section('sidebar')
-<div ng-show="currentUser">
-	<div id="sidebar-wrapper">
-		<ul class="sidebar-nav nav">
-			<li class="activ"><a href="myboxes.html">Meine Boxen</a></li>
-			<li><a href="allboxes.html">Alle Boxen</a></li>
-			<li><a href="newbox.html">Box anlegen</a></li>
-		</ul>
-	</div>
-	<button id='menu-toggle' type="button" class="btn btn-circle">
-		<i id='side' class="glyphicon glyphicon-chevron-left"></i>
-	</button>
-</div>
+	@include('boxes.sidebar')
 @endsection
 
 @section('content')
@@ -36,7 +25,7 @@
                                 <hr/>
                                 <p>{{card.frontpage.content}}</p>
                                 <div class='row box-config'>
-                                  <div class='col-xs-6'><a href="editcard.html"><icon class='glyphicon glyphicon-user'></icon> bearbeiten</a></div>
+                                  <div class='col-xs-6'><a href="editcard"><icon class='glyphicon glyphicon-user'></icon> bearbeiten</a></div>
                                   <div class='col-xs-6'><a><icon class='glyphicon glyphicon-user'></icon> löschen</a></div>
                                 </div>
                             </div>

@@ -16,17 +16,17 @@ Route::get ( '/', function () {
 
 
 Route::get ( '/register', function () {
-	return view ( 'register' );
+	return view ( 'user.register' );
 } );
 
 Route::get ( '/myboxes', function () {
-	return view ( 'myboxes' );
+	return view ( 'boxes.myboxes' );
 } );
 
 Route::get ( '/newbox', function () {
-	return view ( 'newbox' );
+	return view ( 'boxes.newbox' );
 } );
 
 Route::get ( '/editbox', function () {
-	return view ( 'editbox' );
+	return view ( 'boxes.editbox' );
 } );

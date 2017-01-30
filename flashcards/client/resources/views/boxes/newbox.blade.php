@@ -1,5 +1,9 @@
 @extends('layouts.default') 
 
+@section('sidebar')
+	@include('boxes.sidebar')
+@endsection
+
 @section('content')
 @verbatim
 <div class="container-fluid">
