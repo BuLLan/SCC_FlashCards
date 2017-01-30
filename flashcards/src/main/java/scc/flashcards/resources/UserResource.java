@@ -454,10 +454,13 @@ public class UserResource {
 			box.setTitle(request.getTitle());
 			box.setCategory(PersistenceHelper.getById(request.getCategoryId(), Category.class));
 			box.setOwner(currentUser);
+			box.setDescription(request.getDescription());
 			box.setTags(request.getTags());
 			box.setPublic(request.isPublic());
 			// Try to Save Box Object
 			box.persist();
+			currentUser.getBoxes().add(box);
+			currentUser.persist();
 			return Response.ok(new Genson().serialize(box)).build();
 		} catch (HibernateException e) {
 			// Something went wrong with the Database

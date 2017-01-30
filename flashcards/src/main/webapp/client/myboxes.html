@@ -22,7 +22,7 @@
     <link rel="stylesheet" type="text/css" href="css/jquery.tagsinput.css" />
   </head>
 
-  <body id="body" ng-controller="flashCardsCtrl as appController">
+  <body id="body" ng-controller="flashCardsCtrl as appController" ng-init="getMyBoxes()">
   <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
       <div class="navbar-header">
@@ -88,7 +88,7 @@
                 </div>
                 <br/>
                  <div class="row">
-                    <div class="loginbox col-lg-3 kachel">
+                    <div ng-repeat="b in myboxes" class="loginbox col-lg-3 kachel">
                         <h3>Softwaretechnologie</h3>
                         <hr/>
                         <ul>
@@ -100,126 +100,6 @@
                         <div class='row box-config'>
                           <div class='col-md-4'><a href="start.html"><icon class='glyphicon glyphicon-user'></icon> starten</a></div>
                           <div class='col-md-4'><a href="editbox.html"><icon class='glyphicon glyphicon-user'></icon> bearbeiten</a></div>
-                          <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> löschen</a></div>
-                      </div>
-                    </div>
-                    <div class="loginbox col-lg-3 kachel">
-                        <h3>Softwaretechnologie</h3>
-                        <hr/>
-                        <ul>
-                          <li>Informatik</li>
-                            <li>UML</li>
-                            <li>Java</li>
-                        </ul>
-                        <p>Die Inhalte der Vorlesung Softwaretechnologie mit ausgewählten Fragen.</p>
-                        <div class='row box-config'>
-                          <div class='col-md-4'><a href="start.html"><icon class='glyphicon glyphicon-user'></icon> starten</a></div>
-                          <div class='col-md-4'><a href="editbox.html"><icon class='glyphicon glyphicon-user'></icon> bearbeiten</a></div>
-                          <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> löschen</a></div>
-                      </div>
-                    </div>
-                    <div class="loginbox col-lg-3 kachel">
-                        <h3>Softwaretechnologie</h3>
-                        <hr/>
-                        <ul>
-                          <li>Informatik</li>
-                            <li>UML</li>
-                            <li>Java</li>
-                        </ul>
-                        <p>Die Inhalte der Vorlesung Softwaretechnologie mit ausgewählten Fragen.</p>
-                        <div class='row box-config'>
-                          <div class='col-md-4'><a href="start.html"><icon class='glyphicon glyphicon-user'></icon> starten</a></div>
-                          <div class='col-md-4'><a href="editbox.html"><icon class='glyphicon glyphicon-user'></icon> bearbeiten</a></div>
-                          <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> löschen</a></div>
-                      </div>
-                    </div>
-                    <div class="loginbox col-lg-3 kachel">
-                        <h3>Softwaretechnologie</h3>
-                        <hr/>
-                        <ul>
-                          <li>Informatik</li>
-                            <li>UML</li>
-                            <li>Java</li>
-                        </ul>
-                        <p>Die Inhalte der Vorlesung Softwaretechnologie mit ausgewählten Fragen.</p>
-                        <div class='row box-config'>
-                          <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> starten</a></div>
-                          <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> bearbeiten</a></div>
-                          <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> löschen</a></div>
-                      </div>
-                    </div>
-                    <div class="loginbox col-lg-3 kachel">
-                        <h3>Softwaretechnologie</h3>
-                        <hr/>
-                        <ul>
-                          <li>Informatik</li>
-                            <li>UML</li>
-                            <li>Java</li>
-                        </ul>
-                        <p>Die Inhalte der Vorlesung Softwaretechnologie mit ausgewählten Fragen.</p>
-                        <div class='row box-config'>
-                          <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> starten</a></div>
-                          <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> bearbeiten</a></div>
-                          <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> löschen</a></div>
-                      </div>
-                    </div>
-                    <div class="loginbox col-lg-3 kachel">
-                        <h3>Softwaretechnologie</h3>
-                        <hr/>
-                        <ul>
-                          <li>Informatik</li>
-                            <li>UML</li>
-                            <li>Java</li>
-                        </ul>
-                        <p>Die Inhalte der Vorlesung Softwaretechnologie mit ausgewählten Fragen.</p>
-                        <div class='row box-config'>
-                          <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> starten</a></div>
-                          <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> bearbeiten</a></div>
-                          <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> löschen</a></div>
-                      </div>
-                    </div>
-                    <div class="loginbox col-lg-3 kachel">
-                        <h3>Softwaretechnologie</h3>
-                        <hr/>
-                        <ul>
-                          <li>Informatik</li>
-                            <li>UML</li>
-                            <li>Java</li>
-                        </ul>
-                        <p>Die Inhalte der Vorlesung Softwaretechnologie mit ausgewählten Fragen.</p>
-                        <div class='row box-config'>
-                          <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> starten</a></div>
-                          <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> bearbeiten</a></div>
-                          <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> löschen</a></div>
-                      </div>
-                    </div>
-                    <div class="loginbox col-lg-3 kachel">
-                        <h3>Softwaretechnologie</h3>
-                        <hr/>
-                        <ul>
-                          <li>Informatik</li>
-                            <li>UML</li>
-                            <li>Java</li>
-                        </ul>
-                        <p>Die Inhalte der Vorlesung Softwaretechnologie mit ausgewählten Fragen.</p>
-                        <div class='row box-config'>
-                          <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> starten</a></div>
-                          <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> bearbeiten</a></div>
-                          <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> löschen</a></div>
-                      </div>
-                    </div>
-                    <div class="loginbox col-lg-3 kachel">
-                        <h3>Softwaretechnologie</h3>
-                        <hr/>
-                        <ul>
-                          <li>Informatik</li>
-                            <li>UML</li>
-                            <li>Java</li>
-                        </ul>
-                        <p>Die Inhalte der Vorlesung Softwaretechnologie mit ausgewählten Fragen.</p>
-                        <div class='row box-config'>
-                          <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> starten</a></div>
-                          <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> bearbeiten</a></div>
                           <div class='col-md-4'><a><icon class='glyphicon glyphicon-user'></icon> löschen</a></div>
                       </div>
                     </div>

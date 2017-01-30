@@ -15,6 +15,9 @@ public class NewBoxRequest extends JsonRequest{
 	
 	@ApiModelProperty(required=true)
 	private String title;
+	
+	@ApiModelProperty(required=true)
+	private String description;
 		
 	@ApiModelProperty(required=true)
 	private Long categoryId;
@@ -54,6 +57,14 @@ public class NewBoxRequest extends JsonRequest{
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public long getCategoryId() {
