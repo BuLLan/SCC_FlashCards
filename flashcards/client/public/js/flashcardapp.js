@@ -86,7 +86,6 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
     	    
      }
 	
-	
 	$scope.getCategories = function(){
 		$http.get(baseUrl + 'boxes/categories').then(function successCallback(response) {
 			$scope.categories = response.data;
@@ -125,19 +124,18 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 	}
 	
 	$scope.getBoxContent = function(){
-		console.log('XXXXXXXXXX' + $scope.currentboxid)
-		$http.get(baseUrl + '/boxes/' + $scope.currentboxid + '/flashcards').then(function successCallback(response) {
-			$scope.flashcards = response.data;
-		}, function errorCallback(response) {
-		});
-
-		$http.get(baseUrl + '/boxes/' + $scope.currentboxid).then(function successCallback(response) {
+				$http.get(baseUrl + 'boxes/' + boxId).then(function successCallback(response) {
 			$scope.boxcontent = response.data;
+			$http.get(baseUrl + 'boxes/' + boxId + '/flashcards').then(
+					function successCallback(response) {
+						$scope.flashcards = response.data;
+					}, function errorCallback(response) {
+			});
 		}, function errorCallback(response) {
 		});
 
 	}
 	
-	//Try to get user on init
+	// Try to get user on init
 	$scope.getUser();
 });

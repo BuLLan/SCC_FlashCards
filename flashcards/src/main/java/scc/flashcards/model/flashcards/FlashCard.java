@@ -47,6 +47,7 @@ public class FlashCard extends AbstractModel{
 	private Page backpage;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
+	@XmlTransient
 	@JoinColumn(name="box_id", referencedColumnName="id")
 	private Box box;
 	

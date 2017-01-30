@@ -2,7 +2,7 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<img src="img/Logo.png" height="50px" /> <a class="navbar-brand" href="#">FlashCards</a>
+			<img src="/img/Logo.png" height="50px" /> <a class="navbar-brand" href="#">FlashCards</a>
 		</div>
 		<ul class="nav navbar-nav navbar-right" ng-show="currentUser">
 			<li class="active"><a href="#">Home</a></li>

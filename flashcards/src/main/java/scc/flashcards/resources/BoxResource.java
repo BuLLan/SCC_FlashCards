@@ -75,7 +75,8 @@ public class BoxResource {
 				query.select(root).where(builder.equal(root.get("isPublic"), true));
 			}
 			List<Box> resultList = session.createQuery(query).getResultList();
-			return ResourceUtil.getResponse(Response.Status.OK, resultList);
+			Response response = ResourceUtil.getResponse(Response.Status.OK, resultList);
+			return response;
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
 			return ResourceUtil.getResponse(Response.Status.SERVICE_UNAVAILABLE, e.getMessage());
@@ -102,7 +103,8 @@ public class BoxResource {
 		PersistenceHelper.openSession();
 		try {
 			Box box = PersistenceHelper.getById(boxid, Box.class);
-			return Response.ok(new Genson().serialize(box)).build();
+			Response response = Response.ok(new Genson().serialize(box)).build();
+			return response;
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
 			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
@@ -335,7 +337,8 @@ public class BoxResource {
 		PersistenceHelper.openSession();
 		try {
 			Set<FlashCard> cards = PersistenceHelper.getById(box_id, Box.class).getFlashcards();
-			return Response.ok(new Genson().serialize(cards)).build();
+			Response response = Response.ok(new Genson().serialize(cards)).build();
+			return response;
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
 			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))

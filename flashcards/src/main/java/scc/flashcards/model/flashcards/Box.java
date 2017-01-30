@@ -1,5 +1,6 @@
 package scc.flashcards.model.flashcards;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -40,8 +41,8 @@ public class Box extends AbstractModel {
 	@JoinColumn(name="category_id", referencedColumnName="id")
 	private Category category;
 	
-	@ElementCollection
-	private List<String> tags;
+	@ElementCollection(fetch=FetchType.EAGER)
+	private List<String> tags = new ArrayList<String>();
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	private User owner;
@@ -51,8 +52,8 @@ public class Box extends AbstractModel {
 	private List<User> user;
 	
 	@ApiModelProperty(hidden = true)
-	@ElementCollection
-	@OneToMany(mappedBy="box",fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@XmlTransient
+	@OneToMany(mappedBy="box", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	private Set<FlashCard> flashcards;
 	
 	@ApiModelProperty(required=true)
