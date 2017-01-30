@@ -117,8 +117,6 @@ public class UserResource {
 		} catch (Exception e) {
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e)).build();
-		} finally {
-			PersistenceHelper.closeSession();
 		}
 	}
 
@@ -153,8 +151,6 @@ public class UserResource {
 		} catch (Exception e) {
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e)).build();
-		} finally {
-			PersistenceHelper.closeSession();
 		}
 	}
 
@@ -183,8 +179,6 @@ public class UserResource {
 		} catch (Exception e) {
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e)).build();
-		} finally {
-			PersistenceHelper.closeSession();
 		}
 	}
 
@@ -215,8 +209,6 @@ public class UserResource {
 		} catch (Exception e) {
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e)).build();
-		} finally {
-			PersistenceHelper.closeSession();
 		}
 	}
 
@@ -258,8 +250,6 @@ public class UserResource {
 		} catch (Exception e) {
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e)).build();
-		} finally {
-			PersistenceHelper.closeSession();
 		}
 	}
 
@@ -351,8 +341,6 @@ public class UserResource {
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
 					.build();
-		} finally {
-			PersistenceHelper.closeSession();
 		}
 	}
 
@@ -390,8 +378,6 @@ public class UserResource {
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
 					.build();
-		} finally {
-			PersistenceHelper.closeSession();
 		}
 	}
 
