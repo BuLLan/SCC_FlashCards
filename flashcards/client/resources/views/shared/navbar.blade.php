@@ -6,7 +6,7 @@
 		</div>
 		<ul class="nav navbar-nav navbar-right" ng-show="currentUser">
 			<li class="active"><a href="#">Home</a></li>
-			<li><a href="myboxes.html">Boxen</a></li>
+			<li><a href="myboxes">Boxen</a></li>
 			<li><a href="#">Gruppen</a></li>
 			<li class="dropdown"><a class="dropdown-toggle"
 				data-toggle="dropdown" href="#"> {{currentUser.firstName}}

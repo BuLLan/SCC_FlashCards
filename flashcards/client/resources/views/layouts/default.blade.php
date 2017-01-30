@@ -7,8 +7,8 @@
 
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="css/style2.css">
-<link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="stylesheet" type="text/css" href="/css/style2.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css">
 
 @section('jsHeader')
 <script
@@ -20,7 +20,7 @@
 @show
 </head>
 
-<body ng-controller="flashCardsCtrl as appController">
+<body ng-controller="flashCardsCtrl as appController" @yield('body-data')>
 	@include('shared.navbar')
 	<div id="wrapper">
 
@@ -60,6 +60,6 @@
 	@endverbatim
 </body>
 @section('jsFooter')
-<script src="js/flashcardapp.js"></script>
+<script src="/js/flashcardapp.js"></script>
 @show
 </html>

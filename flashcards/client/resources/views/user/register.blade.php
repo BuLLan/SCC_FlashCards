@@ -19,7 +19,7 @@
 					<button type="submit">senden</button>
 				</form>
 				<p>
-					Schon registriert? <a href="./index.html">Login</a>
+					Schon registriert? <a href="./index">Login</a>
 				</p>
 			</div>
 		</div>
