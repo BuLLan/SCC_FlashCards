@@ -2,7 +2,13 @@ var baseUrl = "http://localhost:8080/flashcards/api/v1/";
 
 var app = angular.module('flashcardApp', []);
 
+app.config(['$httpProvider', function ($httpProvider) {
+	
+	$httpProvider.defaults.withCredentials = true;
+}]);
+
 app.controller('flashCardsCtrl', function($scope, $http, $sce) {
+	
 	$scope.currentUser;
 	$scope.showLogin = false;
 	$scope.categories;
@@ -11,7 +17,7 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 	$scope.currentboxid;
 	
 	$scope.getUser = function () {
-		$http.get(baseUrl + 'users/me', {withCredentials: true}).then($scope.getUserCallback);
+		$http.get(baseUrl + 'users/me').then($scope.getUserCallback);
 	}
 	
 	$scope.getUserCallback = function (response) {
@@ -26,7 +32,7 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 	$scope.register = function(){	     
 	     var data = angular.toJson($scope.request);
 
-	     $http.post(baseUrl + 'users/register', data, {withCredentials: true}).then($scope.registerCallback);
+	     $http.post(baseUrl + 'users/register', data).then($scope.registerCallback);
 	}
 	
 	$scope.registerCallback = function(response) {
@@ -34,14 +40,14 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 			var data = angular.toJson(
 				$scope.request
 			);
-			$http.post(baseUrl + 'users/login', data, {withCredentials: true}).then($scope.loginCallback);
+			$http.post(baseUrl + 'users/login', data).then($scope.loginCallback);
 		}
 	}
 	
 	$scope.login = function(){
 	     var data = angular.toJson($scope.request);
 	     
-	     $http.post(baseUrl + 'users/login', data, {withCredentials: true}).then($scope.loginCallback);
+	     $http.post(baseUrl + 'users/login', data).then($scope.loginCallback);
 	}
 	
 	$scope.loginCallback = function(response) {
@@ -57,7 +63,7 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 	$scope.logout = function(){
 	     var data = angular.toJson($scope.request);
 	     
-	     $http.get(baseUrl + 'users/logout', {withCredentials: true}).then($scope.logoutCallback);
+	     $http.get(baseUrl + 'users/logout').then($scope.logoutCallback);
 	}
 	
 	$scope.logoutCallback = function(response) {
@@ -82,7 +88,7 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 	
 	
 	$scope.getCategories = function(){
-		$http.get(baseUrl + 'boxes/categories', {withCredentials: true} ).then(function successCallback(response) {
+		$http.get(baseUrl + 'boxes/categories' ).then(function successCallback(response) {
 			$scope.categories = response.data;
 		}, function errorCallback(response) {
 		});
@@ -90,7 +96,7 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 	
 	$scope.addBox = function(){
 		var data = angular.toJson($scope.request);
-		$http.post(baseUrl + 'users/me/boxes', data, {withCredentials: true}).then(function successCallback(response) {
+		$http.post(baseUrl + 'users/me/boxes', data).then(function successCallback(response) {
 			setTimeout(() => {
 				window.location.href = "./myboxes";
 				$scope.getUser();
@@ -101,7 +107,7 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 	}
 	
 	$scope.getMyBoxes = function(){
-		$http.get(baseUrl + 'users/me/boxes', {withCredentials: true}).then(function successCallback(response) {
+		$http.get(baseUrl + 'users/me/boxes').then(function successCallback(response) {
 			$scope.myboxes = response.data;
 		}, function errorCallback(response) {
 			$scope.getMyBoxes();
@@ -111,7 +117,7 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 	}
 	
 	$scope.getCards = function(){
-		$http.get(baseUrl + '/{box_id}/cards', {withCredentials: true}).then(function successCallback(response) {
+		$http.get(baseUrl + '/{box_id}/cards').then(function successCallback(response) {
 			$scope.categories = response.data;
 		}, function errorCallback(response) {
 		});
