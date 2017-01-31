@@ -3,11 +3,11 @@ var baseUrl = "http://localhost:8080/flashcards/api/v1/";
 var app = angular.module('flashcardApp', []);
 
 app.config(['$httpProvider', function ($httpProvider) {
-	
 	$httpProvider.defaults.withCredentials = true;
 }]);
 
-app.controller('flashCardsCtrl', function($scope, $http, $sce) {
+app.controller('flashCardsCtrl', function($scope, $http, $sce, $window) {
+
 	$scope.currentUser;
 	$scope.showLogin = false;
 	$scope.categories;
@@ -24,12 +24,11 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 	
 	$scope.getUserCallback = function (response) {
 		if(response.status!=200 || !response.data.id){
-			$scope.showLogin = true;
+			$window.location.href = '/login';
 			return;
 		}
 		$scope.currentUser = response.data;
-		
-	}
+	};
 	
 	$scope.register = function(){	     
 	     var data = angular.toJson($scope.request);
@@ -97,7 +96,7 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 	$scope.addBox = function(){
 		var data = angular.toJson($scope.request);
 		$http.post(baseUrl + 'users/me/boxes', data).then(function successCallback(response) {
-			setTimeout(() => {
+			setTimeout(function () {
 				window.location.href = "./myboxes";
 				$scope.getUser();
 			}, 100);
@@ -145,7 +144,4 @@ app.controller('flashCardsCtrl', function($scope, $http, $sce) {
 		});
 
 	}
-	
-	// Try to get user on init
-	$scope.getUser();
 });

@@ -1,5 +1,5 @@
 @extends('layouts.default')
 
 @section('content')
-	@include('user.login')
+    @include('boxes.myboxes')
 @endsection
