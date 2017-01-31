@@ -46,7 +46,16 @@ public class PersistenceHelper {
 	 * Opens a Session
 	 */
 	public static void openSession() {
-		getSession();
+		session = getInstance().getSessionFactory().openSession();
+	}
+	
+	public static void filterCloseSession() {
+		if(session != null) {
+			if(session.isDirty()){
+				session.flush();
+			}
+			session.close();
+		}
 	}
 	
 	/**
@@ -54,32 +63,32 @@ public class PersistenceHelper {
 	 * @return
 	 */
 	public static Session getSession(){
-		if(session == null || !session.isOpen()){
-			try{
-				session = getInstance().getSessionFactory().getCurrentSession();
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-		}
-		if(session == null || !session.isOpen()){
-			try {
-				session = getInstance().getSessionFactory().openSession();
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-		}
+//		if(session == null || !session.isOpen()){
+//			try{
+//				session = getInstance().getSessionFactory().getCurrentSession();
+//			} catch (Exception e) {
+//				// TODO: handle exception
+//			}
+//		}
+//		if(session == null || !session.isOpen()){
+//			try {
+//				session = getInstance().getSessionFactory().openSession();
+//			} catch (Exception e) {
+//				// TODO: handle exception
+//			}
+//		}
 		return session;
 	}
 	
 	public static void flushAndCloseCurrentSession(){
-		getSession().flush();
-		closeSession();
+//		getSession().flush();
+//		closeSession();
 	}
 	
 	public static void closeSession() {
-		if(getSession() == null){
-			return;
-		}
+//		if(getSession() == null){
+//			return;
+//		}
 	}
 
 	/**

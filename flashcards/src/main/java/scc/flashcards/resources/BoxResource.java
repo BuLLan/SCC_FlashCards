@@ -100,7 +100,6 @@ public class BoxResource {
 	@GET
 	@ApiOperation(value = "Get Box by ID", notes = "Returns the box object which has the given ID", response = Box.class)
 	public Response getBoxById(@ApiParam(value = "The ID of the box", required = true) @PathParam("box_id") int boxid) {
-		PersistenceHelper.openSession();
 		try {
 			Box box = PersistenceHelper.getById(boxid, Box.class);
 			Response response = Response.ok(new Genson().serialize(box)).build();
@@ -360,6 +359,7 @@ public class BoxResource {
 	@ApiOperation(value = "removeFlashCard", notes = "Removes a FlashCard")
 	public Response deleteFlashCard(@ApiParam(value = "box_id", required = true) @PathParam("box_id") int box_id,
 			@ApiParam(value = "fc_id", required = true) @PathParam("fc_id") int fc_id) {
+		Transaction tx = PersistenceHelper.getSession().beginTransaction();
 		try {
 			PersistenceHelper.openSession();
 			FlashCard fc = PersistenceHelper.getById(fc_id, FlashCard.class);
@@ -368,16 +368,21 @@ public class BoxResource {
 			if(currentUser == null || currentUser.getId() != box.getOwner().getId()){
 				return Response.status(Response.Status.FORBIDDEN).build();
 			}
+			
 			box.getFlashcards().remove(fc);
-			box.persist();
+			PersistenceHelper.getSession().saveOrUpdate(box);
+			tx.commit();
 		} catch (HibernateException e) {
+			tx.rollback();
 			// Something went wrong with the Database
 			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (ClientErrorException e) {
+			tx.rollback();
 			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (Exception e) {
+			tx.rollback();
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
 					.build();
