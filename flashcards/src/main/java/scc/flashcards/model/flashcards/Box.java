@@ -29,11 +29,9 @@ import scc.flashcards.model.user.User;
 public class Box extends AbstractModel {
 	
 	@ApiModelProperty(required=true)
-	@XmlAttribute(required=true)
 	private String title;
 	
 	@ApiModelProperty(required=true)
-	@XmlAttribute(required=true)
 	private String description;
 	
 	@ApiModelProperty(required=true)
