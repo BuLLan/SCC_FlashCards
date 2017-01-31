@@ -27,6 +27,14 @@ Route::get ( '/newbox', function () {
 	return view ( 'boxes.newbox' );
 } );
 
+Route::get('/newcard/{boxid}', function($boxid)
+{
+    //return view ('boxes.newcard' );
+    //return View::make('boxes.newcard', array('boxId' => $boxid));
+    return view('boxes.newcard', ['b_id' => $boxid]);
+
+});
+
 Route::get ( '/editbox/{boxid}', ['uses' =>'Controller@editBox']);
 
 Route::get ( '/allboxes', function () {

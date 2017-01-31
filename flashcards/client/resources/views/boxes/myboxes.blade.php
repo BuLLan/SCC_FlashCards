@@ -24,7 +24,7 @@
                         <div class='row box-config'>
                           <div class='col-md-4'><a href="start.html"><icon class='glyphicon glyphicon-play'></icon><br/>starten</a></div>
                           <div class='col-md-4'><a href="/editbox/{{box.id}}"><icon class='glyphicon glyphicon-pencil'></icon><br/>bearbeiten</a></div>
-                          <div class='col-md-4'><a><icon class='glyphicon glyphicon-remove'></icon><br/>löschen</a></div>
+                          <div class='col-md-4'><a ng-click="deleteOwnersBox(box.id)"><icon class='glyphicon glyphicon-remove'></icon><br/>löschen</a></div>
                       </div>
                     </div>
                 </div>
