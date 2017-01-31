@@ -105,8 +105,10 @@ public class UserResource {
 				return Response.ok(new Genson().serialize("Not logged in")).build();
 			}
 
-			return Response.ok(new Genson().serialize(currentUser)).status(Response.Status.OK)
+			Response response = Response.ok(new Genson().serialize(currentUser)).status(Response.Status.OK)
 					.build();
+			
+			return response;
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
 			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
@@ -117,6 +119,8 @@ public class UserResource {
 		} catch (Exception e) {
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e)).build();
+		} finally {
+			PersistenceHelper.getSession();
 		}
 	}
 
@@ -395,7 +399,8 @@ public class UserResource {
 				return Response.status(Response.Status.FORBIDDEN).build();
 			}
 			Set<Box> groups = currentUser.getBoxes();
-			return Response.ok(new Genson().serialize(groups)).build();
+			Response response = Response.ok(new Genson().serialize(groups)).build();
+			return response;
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
 			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))

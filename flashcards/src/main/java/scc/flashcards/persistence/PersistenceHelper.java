@@ -77,10 +77,12 @@ public class PersistenceHelper {
 	}
 	
 	public static void closeSession() {
-//		if(getSession() == null){
-//			return;
-//		}
-//		getSession().close();
+		if(getSession() == null){
+			return;
+		}
+		if(getSession().isJoinedToTransaction()){
+			getSession().getTransaction().commit();
+		}
 	}
 
 	/**
