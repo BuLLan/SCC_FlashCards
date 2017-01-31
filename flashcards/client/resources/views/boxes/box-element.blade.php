@@ -21,14 +21,15 @@
                         <icon class='glyphicon glyphicon-pencil'></icon>
                         <br/>bearbeiten</a></div>
                 <div class='col-md-4'><a>
-                        <icon class='glyphicon glyphicon-remove'></icon>
+                        <icon class='glyphicon glyphicon-remove' ng-click="deleteOwnersBox(box.id)></icon>
                         <br/>löschen</a></div>
             @endif
-            @unless($allow_edit)
-                <div class='col-md-12'><a href="/learn/@{{ box.id }}">
+                        @unless($allow_edit)
+                                <div class='col-md-12'><a href="
+                        /learn/@{{ box.id }}">
                         <icon class='glyphicon glyphicon-play'></icon>
                         starten</a></div>
-            @endunless
+                @endunless
         </div>
     </div>
 </div>
