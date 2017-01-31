@@ -27,12 +27,18 @@
 					<p>#{{$index + 1}}</p>
 					<h5>{{card.frontpage.content}}</h5>
 					<div class='row box-config aktionen'>
-						<div class='col-xs-6'>
-							<a class="aktionen" href="editcard"><icon class='glyphicon glyphicon-pencil'></icon>
-								<br/>bearbeiten</a>
+						<div class='col-xs-12'>
+							<a ng-click="deleteCard(card.id)"><icon class='glyphicon glyphicon-remove'></icon><br/>löschen</a>
 						</div>
-						<div class='col-xs-6'>
-							<a class="aktionen" ><icon class='glyphicon glyphicon-remove'></icon><br/>löschen</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4 karte">
+				<div class="karteninfo2">
+					<p>#NEU</p>
+					<div class='row box-config aktionen'>
+						<div class='col-xs-12' style='background-color:green'>
+							<a href='/newcard/{{boxcontent.id}}'><icon class='glyphicon glyphicon-plus'></icon><br/>Karte hinzufügen</a>
 						</div>
 					</div>
 				</div>

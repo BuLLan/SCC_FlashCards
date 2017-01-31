@@ -16,11 +16,9 @@ app.controller('flashCardsCtrl', function ($scope, $http, $sce, $window) {
     $scope.boxcontent;
     $scope.flashcards;
     $scope.boxes;
-
     $scope.currentCard = {};
     $scope.currentIndex = 0;
-
-
+    
     $scope.getUser = function () {
         $http.get(baseUrl + 'users/me').then($scope.getUserCallback);
     };
@@ -32,48 +30,76 @@ app.controller('flashCardsCtrl', function ($scope, $http, $sce, $window) {
         }
         $scope.currentUser = response.data;
     };
-
+    
     $scope.register = function () {
         var data = angular.toJson($scope.request);
 
         $http.post(baseUrl + 'users/register', data).then($scope.registerCallback);
     };
+	
+	$scope.registerCallback = function(response) {
+		if(response.status==200){
+			var data = angular.toJson(
+				$scope.request
+			);
+			$http.post(baseUrl + 'users/login', data).then($scope.loginCallback);
+		}
+	};
+	
+	$scope.login = function(){
+	     var data = angular.toJson($scope.request);
+	     
+	     $http.post(baseUrl + 'users/login', data).then($scope.loginCallback);
+	};
+	
+	$scope.loginCallback = function(response) {
+		if(response.status==200){
+			$scope.getUser();
+			setTimeout(() => {
+				window.location.href = "./myboxes";
+				$scope.getUser();
+			}, 100);
+		}
+	};
+	
+	$scope.logout = function(){
+	     var data = angular.toJson($scope.request);
+	     
+	     $http.get(baseUrl + 'users/logout', data).then($scope.logoutCallback);
+	};
+	
+	$scope.logoutCallback = function(response) {
+		if(response.status==200){
+			$scope.currentUser = null;
+		}
+	};
+	
+	
+     $scope.deleteOwnersBox = function(boxid){
+    	var delurl = 'http://localhost:8080/flashcards/api/v1/users/me/boxes/' + boxid;
+    	console.log(delurl);
+    	 $http({
+    	    method: 'DELETE',
+    	    url: delurl
+    	          
+    	}).then(function(){
+    	    $scope.getAllBoxes();
+    	}); 
+    	    
+     };
 
-    $scope.registerCallback = function (response) {
-        if (response.status == 200) {
-            var data = angular.toJson(
-                $scope.request
-            );
-            $http.post(baseUrl + 'users/login', data).then($scope.loginCallback);
-        }
-    };
-
-    $scope.login = function () {
-        var data = angular.toJson($scope.request);
-
-        $http.post(baseUrl + 'users/login', data).then($scope.loginCallback);
-    };
-
-    $scope.loginCallback = function (response) {
-        if (response.status == 200) {
-            $scope.getUser();
-            setTimeout(function () {
-                window.location.href = "./myboxes";
-            }, 100);
-        }
-    };
-
-    $scope.logout = function () {
-        var data = angular.toJson($scope.request);
-
-        $http.get(baseUrl + 'users/logout', data).then($scope.logoutCallback);
-    };
-
-    $scope.logoutCallback = function (response) {
-        if (response.status == 200) {
-            $scope.currentUser = null;
-        }
-    };
+     $scope.deleteCard = function(fcid){
+    	var delurl = 'http://localhost:8080/flashcards/boxes/'+ boxId +'/' + fcid;
+    	console.log(delurl);
+    	 $http({
+    	    method: 'DELETE',
+    	    url: delurl
+    	          
+    	}).then(function(){
+    	    $scope.getAllBoxes();
+    	}); 
+    	    
+     };
 
     $scope.deleteUser = function (delid) {
         var delurl = 'http://localhost:8080/flashcards/api/v1/users/' + delid;
@@ -172,5 +198,5 @@ app.controller('flashCardsCtrl', function ($scope, $http, $sce, $window) {
         $http.post(baseUrl + 'users/me/boxes/' + boxId + '/service/scorecard/' + $scope.currentCard.id);
 
         $scope.getNextCard();
-    }
+    };
 });
