@@ -17,6 +17,9 @@ app.controller('flashCardsCtrl', function ($scope, $http, $sce, $window) {
     $scope.flashcards;
     $scope.boxes;
 
+    $scope.currentCard = {};
+    $scope.currentIndex = 0;
+
 
     $scope.getUser = function () {
         $http.get(baseUrl + 'users/me').then($scope.getUserCallback);
@@ -56,7 +59,6 @@ app.controller('flashCardsCtrl', function ($scope, $http, $sce, $window) {
             $scope.getUser();
             setTimeout(function () {
                 window.location.href = "./myboxes";
-                $scope.getUser();
             }, 100);
         }
     };
@@ -81,7 +83,7 @@ app.controller('flashCardsCtrl', function ($scope, $http, $sce, $window) {
             url: 'http://localhost:8080/flashcards/api/v1/users/' + delid
 
         }).then(function () {
-            $scope.getAllUsers();
+            //$scope.getAllUsers();
         });
 
     };
@@ -101,7 +103,7 @@ app.controller('flashCardsCtrl', function ($scope, $http, $sce, $window) {
                 $scope.getUser();
             }, 100);
         }, function errorCallback(response) {
-            alert()
+            //alert()
         });
     };
 
@@ -109,23 +111,19 @@ app.controller('flashCardsCtrl', function ($scope, $http, $sce, $window) {
         $http.get(baseUrl + 'users/me/boxes').then(function successCallback(response) {
             $scope.myboxes = response.data;
         }, function errorCallback(response) {
-            $scope.getMyBoxes();
+            //$scope.getMyBoxes();
         });
-
-        console.log('XXXXXXXXXX');
     };
 
     $scope.getAllBoxes = function () {
         $http.get(baseUrl + 'boxes').then(function successCallback(response) {
             $scope.boxes = response.data;
-            console.log(response.data);
         }, function errorCallback(response) {
-            $scope.getAllBoxes();
+            //$scope.getAllBoxes();
         });
     };
 
     $scope.setCurrentBoxID = function (nummer) {
-        console.log(nummer);
         $scope.currentboxid = nummer;
         setTimeout(function () {
             window.location.href = "./editbox";
@@ -143,4 +141,36 @@ app.controller('flashCardsCtrl', function ($scope, $http, $sce, $window) {
         }, function errorCallback(response) {
         });
     };
+
+    /**
+     * No saving of session implemented yet,
+     * just fetch 20 cards from server
+     */
+    $scope.getCurrentSession = function () {
+        $http.post(baseUrl + 'users/me/boxes/' + boxId + '/service/nextCard')
+            .then(function (response) {//Success
+                $scope.flashcards = response.data;
+                $scope.currentCard = $scope.flashcards[0];
+            }, function (response) { //Error
+
+            });
+    };
+
+    $scope.getNextCard = function () {
+        $scope.currentIndex++;
+        if ($scope.currentIndex > $scope.flashcards.length + 1) {
+            $scope.currentCard = null;
+        }
+        $scope.currentCard = $scope.flashcards[$scope.currentIndex];
+    };
+
+    $scope.scoreCard = function (isCorrect) {
+        var data = {
+            'isCorrect': isCorrect
+        };
+
+        $http.post(baseUrl + 'users/me/boxes/' + boxId + '/service/scorecard/' + $scope.currentCard.id);
+
+        $scope.getNextCard();
+    }
 });

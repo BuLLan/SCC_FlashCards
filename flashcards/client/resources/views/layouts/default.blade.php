@@ -9,6 +9,7 @@
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/css/style2.css">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
+    @stack('styles')
 
     @section('jsHeader')
         <script
@@ -66,5 +67,6 @@
 </body>
 @section('jsFooter')
     <script src="/js/flashcardapp.js"></script>
+    @stack('footerScripts')
 @show
 </html>

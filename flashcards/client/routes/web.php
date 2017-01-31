@@ -35,3 +35,5 @@ Route::get('/editbox/{boxid}', ['uses' => 'Controller@editBox']);
 Route::get('/allboxes', function () {
     return view('boxes.allboxes');
 });
+
+Route::get('/learn/{boxid}', ['uses' => 'Controller@learn']);

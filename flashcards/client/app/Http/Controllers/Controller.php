@@ -10,8 +10,14 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-    
-    public function editBox($boxId) {
-    	return view('boxes.editbox', compact('boxId'));
+
+    public function editBox($boxId)
+    {
+        return view('boxes.editbox', compact('boxId'));
+    }
+
+    public function learn($boxId)
+    {
+        return view('boxes.learn', compact('boxId'));
     }
 }

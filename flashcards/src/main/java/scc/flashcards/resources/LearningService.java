@@ -84,8 +84,11 @@ public class LearningService {
 			if(currentUser == null){
 				return Response.status(Response.Status.FORBIDDEN).build();
 			}
+			int limit = 20;
+			if(request != null) {
+				limit = (request.getNumber() > 0) ? request.getNumber() : 20;
+			}
 			
-			int limit = (request.getNumber() > 0) ? request.getNumber() : 20;
 			int halfLimit = limit / 2;
 			Map<FlashCard, Integer> dueCards = getNextDueCards(currentUser.getId(), box_id, halfLimit);
 			
@@ -103,7 +106,9 @@ public class LearningService {
 				response.add(new ScoredFlashCard(flashCard, 0));
 			}
 			
-			return Response.ok(new Genson().serialize(response)).build();
+			Response r = Response.ok(new Genson().serialize(response)).build();
+			
+			return r;
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
 			return Response.status(Response.Status.SERVICE_UNAVAILABLE)
@@ -115,8 +120,6 @@ public class LearningService {
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
 					.entity(new Genson().serialize(e.getMessage())).build();
-		} finally {
-			PersistenceHelper.closeSession();
 		}
 
 	}

@@ -14,7 +14,7 @@
         <hr>
         <div class='row box-config'>
             @if($allow_edit)
-                <div class='col-md-4'><a href="start.html">
+                <div class='col-md-4'><a href="/learn/@{{ box.id }}">
                         <icon class='glyphicon glyphicon-play'></icon>
                         <br/>starten</a></div>
                 <div class='col-md-4'><a href="/editbox/@{{box.id}}">
@@ -25,7 +25,7 @@
                         <br/>löschen</a></div>
             @endif
             @unless($allow_edit)
-                <div class='col-md-12'><a>
+                <div class='col-md-12'><a href="/learn/@{{ box.id }}">
                         <icon class='glyphicon glyphicon-play'></icon>
                         starten</a></div>
             @endunless
