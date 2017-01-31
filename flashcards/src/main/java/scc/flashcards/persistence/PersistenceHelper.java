@@ -80,9 +80,6 @@ public class PersistenceHelper {
 		if(getSession() == null){
 			return;
 		}
-		if(getSession().isJoinedToTransaction()){
-			getSession().getTransaction().commit();
-		}
 	}
 
 	/**

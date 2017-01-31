@@ -13,15 +13,22 @@
         </div>
         <hr>
         <div class='row box-config'>
-            <div class='col-md-4'><a href="start.html">
-                    <icon class='glyphicon glyphicon-play'></icon>
-                    <br/>starten</a></div>
-            <div class='col-md-4'><a href="/editbox/@{{box.id}}">
-                    <icon class='glyphicon glyphicon-pencil'></icon>
-                    <br/>bearbeiten</a></div>
-            <div class='col-md-4'><a>
-                    <icon class='glyphicon glyphicon-remove'></icon>
-                    <br/>löschen</a></div>
+            @if($allow_edit)
+                <div class='col-md-4'><a href="start.html">
+                        <icon class='glyphicon glyphicon-play'></icon>
+                        <br/>starten</a></div>
+                <div class='col-md-4'><a href="/editbox/@{{box.id}}">
+                        <icon class='glyphicon glyphicon-pencil'></icon>
+                        <br/>bearbeiten</a></div>
+                <div class='col-md-4'><a>
+                        <icon class='glyphicon glyphicon-remove'></icon>
+                        <br/>löschen</a></div>
+            @endif
+            @unless($allow_edit)
+                <div class='col-md-12'><a>
+                        <icon class='glyphicon glyphicon-play'></icon>
+                        starten</a></div>
+            @endunless
         </div>
     </div>
 </div>

@@ -14,7 +14,7 @@
     <br/>
     <div class="row">
         <div class="kachel col-lg-3" ng-repeat="box in myboxes | filter:searchText">
-            @include('boxes.box-element' , ['box' => 'box'])
+            @include('boxes.box-element' , ['box' => 'box', 'allow_edit' => false])
         </div>
     </div>
 @endsection
