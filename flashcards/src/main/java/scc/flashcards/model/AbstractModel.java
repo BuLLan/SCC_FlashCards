@@ -29,27 +29,16 @@ public abstract class AbstractModel implements Comparable<AbstractModel> {
 	 * Adds or updates Entity in database
 	 */
 	public void persist() {
-		Transaction tx = PersistenceHelper.getSession().beginTransaction();
-		try{
-			PersistenceHelper.getSession().saveOrUpdate(this);
-			tx.commit();
-		} catch (Exception e) {
-			tx.rollback();
-		}
+		PersistenceHelper.getSession().beginTransaction();
+		PersistenceHelper.getSession().saveOrUpdate(this);
 	}
 	
 	/**
 	 * Removes Entity from Database
 	 */
 	public void delete() {
-		Transaction tx = PersistenceHelper.getSession().beginTransaction();
-		
-		try{
+		PersistenceHelper.getSession().beginTransaction();
 			PersistenceHelper.getSession().delete(this);
-			tx.commit();
-		} catch (Exception e) {
-			tx.rollback();
-		}
 	}
 	
 	@Override

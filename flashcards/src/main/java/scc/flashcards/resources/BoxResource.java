@@ -284,7 +284,6 @@ public class BoxResource {
 			session.beginTransaction();
 			session.saveOrUpdate(fc);
 			session.saveOrUpdate(box);
-			session.getTransaction().commit();
 
 			return Response.ok(new Genson().serialize(fc)).build();
 		} catch (HibernateException e) {
@@ -371,18 +370,14 @@ public class BoxResource {
 			
 			box.getFlashcards().remove(fc);
 			PersistenceHelper.getSession().saveOrUpdate(box);
-			tx.commit();
 		} catch (HibernateException e) {
-			tx.rollback();
 			// Something went wrong with the Database
 			return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (ClientErrorException e) {
-			tx.rollback();
 			return Response.status(e.getResponse().getStatusInfo()).entity(new Genson().serialize(e.getMessage()))
 					.build();
 		} catch (Exception e) {
-			tx.rollback();
 			// Something else went wrong
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Genson().serialize(e.getMessage()))
 					.build();
@@ -442,7 +437,6 @@ public class BoxResource {
 			Transaction tx = session.beginTransaction();
 			session.saveOrUpdate(comment);
 			session.saveOrUpdate(fc);
-			tx.commit();
 			return Response.ok().build();
 		} catch (HibernateException e) {
 			// Something went wrong with the Database
@@ -480,7 +474,6 @@ public class BoxResource {
 			Transaction tx = session.beginTransaction();
 			session.delete(comment);
 			session.saveOrUpdate(fc);
-			tx.commit();
 
 			return Response.ok().status(Response.Status.OK).build();
 		} catch (HibernateException e) {
